@@ -14,7 +14,12 @@ class BaseHandler(RequestHandler):
         self.set_header('Content-type', 'application/json')
         self.set_header('Access-Control-Allow-Methods', 'POST, GET, DELETE, PUT, PATCH, OPTIONS')
         self.set_header('Access-Control-Allow-Headers',
-                        'Content-Type, tsessionid, Access-Control-Allow-Origin, Access-Control-Allow-Headers, X-Requested-By, Access-Control-Allow-Methods')
+                        'Content-Type, Authorization,Access-Control-Allow-Origin, Access-Control-Allow-Headers, X-Requested-By, Access-Control-Allow-Methods')
+
+        print(self._headers)
+
+    def options(self, *args, **kwargs):
+        pass
 
     @property
     def db(self):

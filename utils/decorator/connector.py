@@ -1,19 +1,43 @@
 
-import json
+import json,re
 from functools import wraps
 from loguru import logger
 
-from utils.exceptions import PubErrorCustom
+from utils.exceptions import PubErrorCustom,InnerErrorCustom
 from utils.http.response import HttpResponse
 from utils.aes import decrypt,encrypt
+
+# import tornado.httputil.HttPHeaders
 
 class Core_connector:
 
     def __init__(self,**kwargs):
         #是否加密
-        self.isPasswd = kwargs.get('isPasswd', False)
+        self.isPasswd = kwargs.get('isPasswd', True)
 
-    def __request_validate(self,outside_self,**kwargs):
+        #是否校验ticket
+        self.isTicket = kwargs.get('isTicket', True)
+
+    async def __request_validate(self,outside_self,**kwargs):
+
+        #校验凭证并获取用户数据
+        if self.isTicket:
+            token = outside_self.request.headers.get_list("Authorization")
+            if len(token)<=0:
+                raise InnerErrorCustom(code="20001", msg="拒绝访问!")
+            else:
+                token = token[0]
+            c = outside_self.redisC(key=token)
+            result = await c.get_dict()
+            if not result:
+                raise InnerErrorCustom(code="20002",msg="拒绝访问")
+
+            if result.get("status") == '1':
+                raise PubErrorCustom("账户已到期!")
+            elif result.get("status") == '2':
+                raise PubErrorCustom("账户已冻结!")
+            outside_self.user = result
+            outside_self.token = token
 
         if outside_self.request.method == 'POST':
             outside_self.data = outside_self.get_body_argument("data",None)
@@ -58,12 +82,15 @@ class Core_connector:
         @wraps(func)
         async def wrapper(outside_self,*args, **kwargs):
             try:
-                self.__request_validate(outside_self,**kwargs)
+                await self.__request_validate(outside_self,**kwargs)
                 response = await self.__run(func,outside_self,*args, **kwargs)
                 self.__response__validate(outside_self,func)
 
                 outside_self.finish(response)
             except PubErrorCustom as e:
+                outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None))
+                logger.warning(e.msg)
+            except InnerErrorCustom as e:
                 outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None))
                 logger.warning(e.msg)
             except Exception as e:

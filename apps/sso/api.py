@@ -31,13 +31,13 @@ class TestHandler(BaseHandler):
         }}
 
 
-class LoginHandler(BaseHandler):
+class login(BaseHandler):
 
-    @Core_connector(isPasswd=True)
+    @Core_connector(isTicket=False)
     async def post(self, *args, **kwargs):
 
         try:
-            user = await self.db.get(User,uuid=self.data.get('loginname'))
+            user = await self.db.get(User,uuid=self.data.get('username'))
         except User.DoesNotExist:
             raise PubErrorCustom("登录账户或密码错误！")
 
@@ -60,5 +60,18 @@ class LoginHandler(BaseHandler):
             "pic": user.pic
         })
 
+        # print(c.key)
+        # print(await c.get_dict())
+
         return {"data":token}
 
+
+class logout(BaseHandler):
+
+    @Core_connector()
+    async def post(self, *args, **kwargs):
+
+        c = self.redisC(key=self.token)
+        await c.delete()
+
+        return None

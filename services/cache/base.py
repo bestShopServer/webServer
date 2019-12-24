@@ -14,5 +14,5 @@ class RedisBase(object):
         res = await self.redis.get(self.key)
         return json.loads(res) if res else res
 
-    async def delete(self,key):
-        await self.redis.delete(key)
+    async def delete(self):
+        await self.redis.delete(self.key)

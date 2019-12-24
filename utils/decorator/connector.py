@@ -50,7 +50,10 @@ class Core_connector:
             raise PubErrorCustom("拒绝访问!")
 
         if self.isPasswd:
-            outside_self.data = json.loads(decrypt(outside_self.data))
+            if outside_self.data != '{}':
+                outside_self.data = json.loads(decrypt(outside_self.data))
+            else:
+                outside_self.data = json.loads(outside_self.data)
         else:
             outside_self.data = json.loads(outside_self.data)
 
@@ -72,6 +75,13 @@ class Core_connector:
         logger.info("返回的参数: {}".format(res['data']))
         if self.isPasswd and res['data']:
             res['data'] = encrypt(json.dumps(res['data'])).decode('ascii')
+
+        if 'caches' in res and res['caches']:
+            print("caches")
+            c = outside_self.redisC(key=None)
+            for item in res['caches']:
+                c.key = item['table']
+                await c.set_hash(item['key'],item['value'])
 
         return HttpResponse(self=outside_self,data=res['data'], headers=res['header'], msg=res['msg'])
 

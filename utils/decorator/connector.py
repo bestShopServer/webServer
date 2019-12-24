@@ -54,6 +54,9 @@ class Core_connector:
         else:
             outside_self.data = json.loads(outside_self.data)
 
+
+        logger.info("请求的参数: {}".format(outside_self.data))
+
     async def __run(self, func, outside_self, *args, **kwargs):
         res = await func(outside_self, *args, **kwargs)
 
@@ -66,11 +69,9 @@ class Core_connector:
         if 'header' not in res:
             res['header'] = None
 
-        print(res['data'])
+        logger.info("返回的参数: {}".format(res['data']))
         if self.isPasswd and res['data']:
             res['data'] = encrypt(json.dumps(res['data'])).decode('ascii')
-
-        print(res['data'])
 
         return HttpResponse(self=outside_self,data=res['data'], headers=res['header'], msg=res['msg'])
 

@@ -33,11 +33,15 @@ class TestHandler(BaseHandler):
 
 class login(BaseHandler):
 
+    """
+    登录
+    """
+
     @Core_connector(isTicket=False)
     async def post(self, *args, **kwargs):
 
         try:
-            user = await self.db.get(User,uuid=self.data.get('username'))
+            user = await self.db.get(User,uuid=self.data.get('loginname'))
         except User.DoesNotExist:
             raise PubErrorCustom("登录账户或密码错误！")
 
@@ -65,8 +69,10 @@ class login(BaseHandler):
 
         return {"data":token}
 
-
 class logout(BaseHandler):
+    """
+    登出
+    """
 
     @Core_connector()
     async def post(self, *args, **kwargs):

@@ -16,8 +16,6 @@ class BaseHandler(RequestHandler):
         self.set_header('Access-Control-Allow-Headers',
                         'Content-Type, Authorization,Access-Control-Allow-Origin, Access-Control-Allow-Headers, X-Requested-By, Access-Control-Allow-Methods')
 
-        print(self._headers)
-
     def options(self, *args, **kwargs):
         pass
 

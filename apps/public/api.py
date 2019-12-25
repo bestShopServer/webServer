@@ -12,7 +12,7 @@ class attachmentgroup(BaseHandler):
     素材分组
     """
 
-    @Core_connector(isPasswd=None)
+    @Core_connector()
     async def post(self):
 
         if not self.data.get("name",None):
@@ -31,7 +31,7 @@ class attachmentgroup(BaseHandler):
 
         return None
 
-    @Core_connector(isPasswd=None)
+    @Core_connector()
     async def put(self,pk=None):
 
         try:
@@ -44,7 +44,7 @@ class attachmentgroup(BaseHandler):
 
         return None
 
-    @Core_connector(isPasswd=None)
+    @Core_connector()
     async def delete(self,pk=None):
 
         try:
@@ -56,7 +56,7 @@ class attachmentgroup(BaseHandler):
 
         return None
 
-    @Core_connector(isPasswd=None,isTransaction=False)
+    @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
         # try:
@@ -103,7 +103,7 @@ class attachment(BaseHandler):
     素材
     """
 
-    @Core_connector(isPasswd=None)
+    @Core_connector()
     async def post(self):
 
         if not self.data.get("name",None):
@@ -128,7 +128,7 @@ class attachment(BaseHandler):
 
         return None
 
-    @Core_connector(isPasswd=None)
+    @Core_connector()
     async def put(self,pk=None):
 
         try:
@@ -149,7 +149,7 @@ class attachment(BaseHandler):
 
         return None
 
-    @Core_connector(isPasswd=None)
+    @Core_connector()
     async def delete(self,pk=None):
 
         try:
@@ -161,7 +161,7 @@ class attachment(BaseHandler):
 
         return None
 
-    @Core_connector(isPasswd=None,isTransaction=False)
+    @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
         query = AttachMent.select()

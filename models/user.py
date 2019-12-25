@@ -34,7 +34,7 @@ class User(BaseModel):
             self.passwd = md5('123456')
         if not self.pay_passwd:
             self.pay_passwd = md5('123456')
-        return super(Users, self).save(*args, **kwargs)
+        return super(User, self).save(*args, **kwargs)
 
 
 class Role(BaseModel):

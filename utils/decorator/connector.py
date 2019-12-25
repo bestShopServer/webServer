@@ -6,12 +6,17 @@ from loguru import logger
 from utils.exceptions import PubErrorCustom,InnerErrorCustom
 from utils.http.response import HttpResponse
 from utils.aes import decrypt,encrypt
+from utils.database import MysqlPool
 
 # import tornado.httputil.HttPHeaders
 
 class Core_connector:
 
     def __init__(self,**kwargs):
+
+        #是否加数据库事务
+        self.isTransaction = kwargs.get('isTransaction',True)
+
         #是否加密
         self.isPasswd = kwargs.get('isPasswd', True)
 
@@ -39,12 +44,16 @@ class Core_connector:
             outside_self.user = result
             outside_self.token = token
 
-        if outside_self.request.method == 'POST':
+        if outside_self.request.method in ['POST','PUT']:
             outside_self.data = outside_self.get_body_argument("data",None)
             if not outside_self.data:
                 outside_self.data = json.loads(outside_self.request.body.decode('utf-8')).get("data",None)
         elif outside_self.request.method == 'GET':
             outside_self.data = outside_self.get_argument("data",None)
+        elif outside_self.request.method == 'DELETE':
+            outside_self.data='{}'
+        else:
+            raise PubErrorCustom("拒绝访问!")
 
         if not outside_self.data:
             raise PubErrorCustom("拒绝访问!")
@@ -61,7 +70,12 @@ class Core_connector:
         logger.info("请求的参数: {}".format(outside_self.data))
 
     async def __run(self, func, outside_self, *args, **kwargs):
-        res = await func(outside_self, *args, **kwargs)
+
+        if self.isTransaction:
+            async with MysqlPool().get_conn.atomic_async():
+                res = await func(outside_self, *args, **kwargs)
+        else:
+            res = await func(outside_self, *args, **kwargs)
 
         if not isinstance(res, dict):
             res = {'data': None, 'msg': None, 'header': None}
@@ -76,12 +90,16 @@ class Core_connector:
         if self.isPasswd and res['data']:
             res['data'] = encrypt(json.dumps(res['data'])).decode('ascii')
 
-        if 'caches' in res and res['caches']:
-            print("caches")
-            c = outside_self.redisC(key=None)
-            for item in res['caches']:
-                c.key = item['table']
-                await c.set_hash(item['key'],item['value'])
+        # if 'caches' in res and res['caches']:
+        #     c = outside_self.redisC(key=None)
+        #     for item in res['caches']:
+        #         c.key = item['table']
+        #         if item['method'] == 'save':
+        #             await c.save(**item)
+        #         elif item['method'] == 'delete':
+        #             await c.delete(**item)
+        #         elif item['method'] == 'save_ex':
+        #             await c.save_ex(**item)
 
         return HttpResponse(self=outside_self,data=res['data'], headers=res['header'], msg=res['msg'])
 

@@ -37,7 +37,7 @@ class login(BaseHandler):
     登录
     """
 
-    @Core_connector(isTicket=False)
+    @Core_connector(isTicket=False,isTransaction=False)
     async def post(self, *args, **kwargs):
 
         try:
@@ -78,6 +78,6 @@ class logout(BaseHandler):
     async def post(self, *args, **kwargs):
 
         c = self.redisC(key=self.token)
-        await c.delete()
+        await c.del_dict()
 
         return None

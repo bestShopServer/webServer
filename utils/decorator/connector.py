@@ -18,7 +18,7 @@ class Core_connector:
         self.isTransaction = kwargs.get('isTransaction',True)
 
         #是否加密
-        self.isPasswd = kwargs.get('isPasswd', True)
+        self.isPasswd = kwargs.get('isPasswd', False)
 
         #是否校验ticket
         self.isTicket = kwargs.get('isTicket', True)

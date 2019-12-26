@@ -47,7 +47,7 @@ class Core_connector:
         if outside_self.request.method in ['POST','PUT']:
             outside_self.data = outside_self.get_body_argument("data",None)
             if not outside_self.data:
-                outside_self.data = json.loads(outside_self.request.body.decode('utf-8')).get("data",None) if outside_self.request.body \
+                outside_self.data = json.dumps(json.loads(outside_self.request.body.decode('utf-8')).get("data",None)) if outside_self.request.body \
                     else '{}'
             if not outside_self.data:
                 outside_self.data='{}'

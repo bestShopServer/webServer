@@ -8,12 +8,6 @@ from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.public import AttachMentGroup,AttachMent
 import uuid
-# from peewee import JOIN
-
-
-# class MyFile(StaticFileHandler):
-#     def set_extra_headers(self, path):
-#         self.set_header("Cache-control", "no-cache")
 
 class file(BaseHandler):
     """
@@ -49,7 +43,7 @@ class attachmentgroup(BaseHandler):
             raise PubErrorCustom("名称是空!")
 
         if not self.data.get("type",None):
-            raise PubErrorCustom("类型时空!")
+            raise PubErrorCustom("类型是空!")
 
         await self.db.create(
             AttachMentGroup,

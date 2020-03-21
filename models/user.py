@@ -1,4 +1,5 @@
 
+
 from peewee import *
 from models.base import BaseModel
 
@@ -18,7 +19,6 @@ class User(BaseModel):
     addr = CharField(max_length=255, verbose_name="地址", default='', null=True)
     sex = CharField(max_length=10, verbose_name="性别", default='', null=True)
 
-    appid = CharField(max_length=60, verbose_name="用户小程序应用ID", default='', null=True)
     uuid =  CharField(max_length=60, verbose_name="用户小程序ID/用户账号", default='', null=True)
     mobile = CharField(max_length=60, verbose_name="手机号", default='', null=True)
 
@@ -27,6 +27,18 @@ class User(BaseModel):
     status = CharField(max_length=1,default='0',verbose_name="状态:0-正常，1-到期,2-冻结",null=True)
 
     bal = DecimalField(max_digits=18,decimal_places=6,default=0.000,verbose_name="余额")
+
+    shopinfo = TextField(verbose_name="""
+                            店铺基础信息
+                                wechat:微信小程序数据
+                                    appid:微信小程序appid,
+                                    secret:微信小程序appkey,
+                                    pay_mchid:微信小程序支付商户ID,
+                                    pay_key:微信小程序支付key
+                                goodscategory_level:分类层级,最多3级
+                                shopname:店铺名称
+                        """,
+                         default="""{"wechat":{"appid":"","secret":"","pay_mchid":"","pay_key":""},"goodscategory_level":0,"shopname":"店铺"}""")
 
     def save(self, *args, **kwargs):
 

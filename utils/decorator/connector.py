@@ -2,7 +2,7 @@
 import json,re
 from functools import wraps
 from loguru import logger
-
+import traceback
 from utils.exceptions import PubErrorCustom,InnerErrorCustom
 from utils.http.response import HttpResponse
 from utils.aes import decrypt,encrypt
@@ -128,11 +128,14 @@ class Core_connector:
             except PubErrorCustom as e:
                 outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None))
                 logger.warning(e.msg)
+                logger.warning(str(traceback.print_exc()))
             except InnerErrorCustom as e:
                 outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None,rescode=e.code))
                 logger.warning(e.msg)
+                logger.warning(str(traceback.print_exc()))
             except Exception as e:
                 outside_self.finish(HttpResponse(success=False, msg=str(e), data=None))
                 logger.exception("err")
+                logger.warning(str(traceback.print_exc()))
 
         return wrapper

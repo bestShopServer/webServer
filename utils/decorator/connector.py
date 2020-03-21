@@ -129,7 +129,7 @@ class Core_connector:
                 outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None))
                 logger.warning(e.msg)
             except InnerErrorCustom as e:
-                outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None))
+                outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None,rescode=e.code))
                 logger.warning(e.msg)
             except Exception as e:
                 outside_self.finish(HttpResponse(success=False, msg=str(e), data=None))

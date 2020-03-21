@@ -23,6 +23,9 @@ class Core_connector:
         #是否校验ticket
         self.isTicket = kwargs.get('isTicket', True)
 
+        #是否获取参数
+        self.isParams = kwargs.get('isParams',True)
+
     async def __request_validate(self,outside_self,**kwargs):
 
         #校验凭证并获取用户数据
@@ -44,30 +47,33 @@ class Core_connector:
             outside_self.user = result
             outside_self.token = token
 
-        if outside_self.request.method in ['POST','PUT']:
-            outside_self.data = outside_self.get_body_argument("data",None)
-            if not outside_self.data:
-                outside_self.data = json.dumps(json.loads(outside_self.request.body.decode('utf-8')).get("data",None)) if outside_self.request.body \
-                    else '{}'
-            if not outside_self.data:
+        outside_self.data = None
+
+        if self.isParams:
+            if outside_self.request.method in ['POST','PUT']:
+                outside_self.data = outside_self.get_body_argument("data",None)
+                if not outside_self.data:
+                    outside_self.data = json.dumps(json.loads(outside_self.request.body.decode('utf-8')).get("data",None)) if outside_self.request.body \
+                        else '{}'
+                if not outside_self.data:
+                    outside_self.data='{}'
+            elif outside_self.request.method == 'GET':
+                outside_self.data = outside_self.get_argument("data",None)
+            elif outside_self.request.method == 'DELETE':
                 outside_self.data='{}'
-        elif outside_self.request.method == 'GET':
-            outside_self.data = outside_self.get_argument("data",None)
-        elif outside_self.request.method == 'DELETE':
-            outside_self.data='{}'
-        else:
-            raise PubErrorCustom("拒绝访问!")
+            else:
+                raise PubErrorCustom("拒绝访问!")
 
-        if not outside_self.data:
-            raise PubErrorCustom("拒绝访问!")
+            if not outside_self.data:
+                raise PubErrorCustom("拒绝访问!")
 
-        if self.isPasswd:
-            if outside_self.data != '{}':
-                outside_self.data = json.loads(decrypt(outside_self.data))
+            if self.isPasswd:
+                if outside_self.data != '{}':
+                    outside_self.data = json.loads(decrypt(outside_self.data))
+                else:
+                    outside_self.data = json.loads(outside_self.data)
             else:
                 outside_self.data = json.loads(outside_self.data)
-        else:
-            outside_self.data = json.loads(outside_self.data)
 
 
         logger.info("请求的参数: {}".format(outside_self.data))

@@ -19,7 +19,7 @@ class file(BaseHandler):
     """
     文件上传
     """
-    @Core_connector(isTicket=False)
+    @Core_connector(isTicket=False,isParams=False)
     async def post(self):
         files = self.request.files.get("filename", None)
         if files:

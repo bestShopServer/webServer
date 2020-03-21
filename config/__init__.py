@@ -5,8 +5,11 @@ common=dict(
     gzip = 'on',
     debug = False,
     basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    port = 8888
+    port = 8888,
+    serverurl = "http://localhost:8888"
 )
+common['static'] = os.path.join(common['basedir'],"static")
+common['images'] = os.path.join(common['static'],"images")
 
 mysql=dict(
 	host = 'localhost',

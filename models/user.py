@@ -7,7 +7,7 @@ from utils.hash import md5
 
 class User(BaseModel):
 
-    id=AutoField(primary_key=True)
+    id=BigIntegerField(primary_key=True)
 
     userid = BigIntegerField(verbose_name="用户ID")
     rolecode=IntegerField(verbose_name="角色代码")

@@ -1,10 +1,40 @@
 
+import os,aiofiles
+from playhouse.shortcuts import model_to_dict
+
+
 from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.public import AttachMentGroup,AttachMent
-from playhouse.shortcuts import model_to_dict
+import uuid
 # from peewee import JOIN
+
+
+# class MyFile(StaticFileHandler):
+#     def set_extra_headers(self, path):
+#         self.set_header("Cache-control", "no-cache")
+
+class file(BaseHandler):
+    """
+    文件上传
+    """
+    @Core_connector(isTicket=False)
+    async def post(self):
+        files = self.request.files.get("filename", None)
+        if files:
+            for file in files:
+                new_file = "{}_{}".format(uuid.uuid4().hex,file['filename'])
+
+                file_path =os.path.join(self.settings['images'], new_file)
+                async with aiofiles.open(file_path, 'wb') as f:
+                    await f.write(file['body'])
+
+                return {"data":{"path":"{}/static/images/{}".format(self.settings['serverurl'],new_file)}}
+
+        else:
+            raise PubErrorCustom("文件上传失败!")
+
 
 class attachmentgroup(BaseHandler):
 

@@ -5,7 +5,7 @@ class RedisBase(object):
 
     def __init__(self,**kwargs):
         self.redis = kwargs.get("redis")
-        self.key = str(kwargs.get("key"))
+        self.key = str(kwargs.get("key",None))
 
     async def set_dict(self,value):
         await self.redis.set(self.key,json.dumps(value))

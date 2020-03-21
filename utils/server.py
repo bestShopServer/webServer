@@ -7,6 +7,7 @@ from tornado.options import options
 from utils.database import RedisPool,MysqlPool
 from loguru import logger
 from router import urlpattern
+from config import common
 
 
 class Server(object):
@@ -24,7 +25,7 @@ class Server(object):
         logger.add("logs/api.log",enqueue=True,rotation="00:00:01")
 
         #初始化web application
-        apps = tornado.web.Application(urlpattern)
+        apps = tornado.web.Application(handlers=urlpattern,default_host=None,transforms=None,**common)
 
         #初始化redis
         apps.redis = RedisPool(loop=loop).get_conn()

@@ -2,8 +2,11 @@
 from peewee import *
 from models.base import BaseModel
 
-
 class AttachMentGroup(BaseModel):
+
+    """
+    素材分组表
+    """
 
     id=AutoField(primary_key=True)
     userid = BigIntegerField(default=0)
@@ -16,6 +19,10 @@ class AttachMentGroup(BaseModel):
 
 class AttachMent(BaseModel):
 
+    """
+    素材表
+    """
+
     id=AutoField(primary_key=True)
     userid = BigIntegerField(default=0)
     name = CharField(max_length=255,verbose_name="名称",null=True)
@@ -24,3 +31,5 @@ class AttachMent(BaseModel):
 
     class Meta:
         db_table = 'attachment'
+
+

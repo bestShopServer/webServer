@@ -28,6 +28,12 @@ def setup():
     if not os.path.exists(log_path):
         os.makedirs(log_path)
 
+    if not os.path.exists(config_insert['common']['static']):
+        os.makedirs(config_insert['common']['static'])
+
+    if not os.path.exists(config_insert['common']['images']):
+        os.makedirs(config_insert['common']['images'])
+
 if __name__=='__main__':
 
     setup()

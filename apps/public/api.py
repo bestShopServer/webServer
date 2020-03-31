@@ -195,7 +195,9 @@ class attachment(BaseHandler):
 
         if pk:
             query = query.where(AttachMent.id == pk)
-        logger.debug(self.data,type(self.data),self.data.get('grouid', None))
+        logger.debug(self.data)
+        logger.debug(type(self.data))
+        logger.debug(self.data.get('grouid', None))
         if self.data.get('grouid', None):
             query = query.where(AttachMent.grouid == self.data.get('grouid'))
 

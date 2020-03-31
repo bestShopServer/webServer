@@ -97,6 +97,8 @@ class attachmentgroup(BaseHandler):
         if self.data.get('type',None):
             query = query.where(AttachMentGroup.type == self.data.get('type'))
 
+
+
         query = query.where(AttachMentGroup.userid == self.user['userid']).order_by(AttachMentGroup.updtime.desc())
 
 
@@ -193,7 +195,7 @@ class attachment(BaseHandler):
 
         if pk:
             query = query.where(AttachMent.id == pk)
-
+        print(self.data)
         if self.data.get('grouid', None):
             query = query.where(AttachMent.grouid == self.data.get('grouid'))
 

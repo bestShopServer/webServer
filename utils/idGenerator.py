@@ -18,9 +18,10 @@ class idGenerator(object):
         await self.redis.expire(self.key,10)
         return res
 
-    async def goodscategory(self):
+    async def goodscategory(self,level):
         self.key= "goodscategoryById"
-        return "%s%06d" % ("GC", await self.redis.incr(self.key))
+        print(level)
+        return "%s%d%06d" % ("GC",level, await self.redis.incr(self.key))
 
     async def goods(self):
         self.key="goodsById"

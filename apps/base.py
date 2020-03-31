@@ -4,6 +4,7 @@ from aioredis import Redis
 
 from services.cache.base import RedisBase
 from utils.idGenerator import idGenerator
+from utils.exceptions import PubErrorCustom
 
 
 class BaseHandler(RequestHandler):
@@ -35,6 +36,16 @@ class BaseHandler(RequestHandler):
         :return:
         """
         return self.application.redis
+
+    def checkvoid(self,key,memo):
+
+        if not self.data.get(key,None):
+            raise PubErrorCustom(memo)
+
+    def checkmodelvoid(self,model,keys):
+        for key in keys:
+            if not self.data.get(key, None):
+                raise PubErrorCustom("{}为空!".format(                getattr(model,key).verbose_name))
 
     def redisC(self,key):
         """

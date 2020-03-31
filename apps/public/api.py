@@ -195,14 +195,13 @@ class attachment(BaseHandler):
 
         if pk:
             query = query.where(AttachMent.id == pk)
-        logger.debug(self.data)
-        logger.debug(type(self.data))
-        logger.debug(self.data.get('grouid', None))
+
         if self.data.get('grouid', None):
             query = query.where(AttachMent.grouid == self.data.get('grouid'))
 
         query = query.where(AttachMent.userid == self.user['userid']).order_by(AttachMent.updtime.desc())
 
+        logger.debug(str(query))
         data = [model_to_dict(item) for item in await self.db.execute(query)]
         if pk:
             data = data[0] if len(data) else {}

@@ -150,6 +150,7 @@ class attachment(BaseHandler):
         await self.db.create(
             AttachMent,
             name=self.data.get("name"),
+            userid=self.user.get("userid"),
             url=self.data.get("url"),
             grouid=self.data.get("grouid"))
 

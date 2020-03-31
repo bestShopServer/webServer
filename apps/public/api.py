@@ -64,6 +64,7 @@ class attachmentgroup(BaseHandler):
             raise PubErrorCustom("拒绝访问!")
 
         group.name = self.data['name']
+        group.type = self.data.get("type")
         await self.db.update(group)
 
         return None

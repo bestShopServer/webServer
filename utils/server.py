@@ -22,7 +22,10 @@ class Server(object):
         :return:
         """
         #初始化日志管理
-        logger.add("logs/api.log",enqueue=True,rotation="00:00:01")
+
+        # logger.add("logs/api.log",enqueue=True,rotation="00:00:01",backtrace=True,retention='10 days')
+        logger.add("logs/api.log",rotation="00:00:01",retention='10 days',enqueue=True,encoding='utf-8',backtrace=True, diagnose=True)
+        # logger.remove(logserver)
 
         #初始化web application
         apps = tornado.web.Application(handlers=urlpattern,default_host=None,transforms=None,**common)

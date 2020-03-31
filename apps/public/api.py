@@ -2,7 +2,7 @@
 import os,aiofiles
 from playhouse.shortcuts import model_to_dict
 
-
+from loguru import logger
 from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
@@ -195,7 +195,7 @@ class attachment(BaseHandler):
 
         if pk:
             query = query.where(AttachMent.id == pk)
-        print(self.data)
+        logger.debug(self.data)
         if self.data.get('grouid', None):
             query = query.where(AttachMent.grouid == self.data.get('grouid'))
 

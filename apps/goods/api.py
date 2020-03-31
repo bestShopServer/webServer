@@ -6,7 +6,6 @@ from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.goods import GoodsCateGory,Goods
 
-
 class goodscategory(BaseHandler):
 
     @Core_connector()
@@ -92,6 +91,17 @@ class goodscategory(BaseHandler):
             data = data[0] if len(data) else {}
 
         return {"data":data }
+
+    @Core_connector()
+    async def delete(self,pk=None):
+        try:
+            group = await self.db.get(GoodsCateGory,gdcgid=pk,userid=self.user['userid'])
+        except GoodsCateGory.DoesNotExist:
+            raise PubErrorCustom("拒绝访问!")
+
+        await self.db.delete(group)
+
+        return None
 
 class goods(BaseHandler):
 

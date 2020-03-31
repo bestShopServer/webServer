@@ -89,7 +89,7 @@ class attachmentgroup(BaseHandler):
         # except AttachMentGroup.DoesNotExist:
         #     raise PubErrorCustom("拒绝访问!")
 
-        query = AttachMentGroup.select()
+        query = AttachMentGroup.select().paginate(self.data['page'],self.data['size'])
 
         if pk:
             query = query.where(AttachMentGroup.id==pk)
@@ -192,7 +192,7 @@ class attachment(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
-        query = AttachMent.select()
+        query = AttachMent.select().paginate(self.data['page'],self.data['size'])
 
         if pk:
             query = query.where(AttachMent.id == pk)

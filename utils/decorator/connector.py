@@ -74,6 +74,17 @@ class Core_connector:
             else:
                 outside_self.data = json.loads(outside_self.data)
 
+            if outside_self.request.method == 'GET':
+                if outside_self.data.get("page"):
+                    outside_self.data['page'] = int(outside_self.data.get("page"))
+                else:
+                    outside_self.data['page'] = 1
+
+                if outside_self.data.get("size"):
+                    outside_self.data['size'] = int(outside_self.data.get("size"))
+                else:
+                    outside_self.data['size'] = 10
+
 
         logger.info("请求的参数: {}".format(outside_self.data))
 

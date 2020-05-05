@@ -13,7 +13,7 @@ class BaseModel(Model):
 
     def save(self, *args, **kwargs):
 
-        self.createtime = MyTime().timestamp
+        self.updtime = MyTime().timestamp
 
         if not self.createtime:
             self.createtime = MyTime().timestamp

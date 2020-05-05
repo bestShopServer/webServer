@@ -166,6 +166,7 @@ class goods(BaseHandler):
                  gdid = goodsObj.gdid,
                  keyid = item['keyid'],
                  valueid=item['valueid'],
+                 price = item.get("price",0.0),
                  img = item.get("img",""),
                  stock = item.get("stock",0),
                  code = item.get("code",""),

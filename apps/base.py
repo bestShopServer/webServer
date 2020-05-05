@@ -16,7 +16,7 @@ class BaseHandler(RequestHandler):
         self.set_header('Content-type', 'application/json')
         self.set_header('Access-Control-Allow-Methods', 'POST, GET, DELETE, PUT, PATCH, OPTIONS')
         self.set_header('Access-Control-Allow-Headers',
-                        'Content-Type,Count, Authorization,Access-Control-Allow-Origin, Access-Control-Allow-Headers, X-Requested-By, Access-Control-Allow-Methods')
+                        'Content-Type,Count,Content-Count, Authorization,Access-Control-Allow-Origin, Access-Control-Allow-Headers, X-Requested-By, Access-Control-Allow-Methods')
 
     def options(self, *args, **kwargs):
         pass

@@ -6,7 +6,6 @@ from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.goods import GoodsCateGory,Goods,SkuKey,SkuValue,GoodsLinkSku
 
-
 class goodscategory(BaseHandler):
     """
     商品分类
@@ -175,7 +174,6 @@ class goods(BaseHandler):
 
         return None
 
-
 class skugroup(BaseHandler):
     """
     sku组维护
@@ -239,9 +237,8 @@ class skugroup(BaseHandler):
 
         if pk:
             data = data[0] if len(data) else {}
-        self.set_header('Count', count)
+        self.set_header('Content-Count', count)
         return {"data": data}
-
 
 class sku(BaseHandler):
     """

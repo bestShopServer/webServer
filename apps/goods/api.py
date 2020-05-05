@@ -5,8 +5,7 @@ from playhouse.shortcuts import model_to_dict
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.goods import GoodsCateGory,Goods,SkuKey,SkuValue,GoodsLinkSku
-from peewee import JOIN
-from loguru import logger
+
 
 class goodscategory(BaseHandler):
     """
@@ -231,7 +230,7 @@ class skugroup(BaseHandler):
         count = len(await self.db.execute(query))
 
         query = query.paginate(self.data['page'], self.data['size'])
-        logger.info(query)
+        # logger.info(query)
         data = [model_to_dict(item)  for item in await self.db.execute(query) ]
 
         for item in data:

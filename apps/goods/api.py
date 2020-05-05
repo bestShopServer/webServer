@@ -155,7 +155,7 @@ class goods(BaseHandler):
                 此处逻辑暂时未写,添加商品定时上架到定时任务!
             """
 
-        goodsObj = await self.db.create(Goods,createdata)
+        goodsObj = await self.db.create(Goods,**createdata)
 
         """
             Sku处理

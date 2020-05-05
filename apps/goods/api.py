@@ -154,7 +154,7 @@ class goods(BaseHandler):
             """
                 此处逻辑暂时未写,添加商品定时上架到定时任务!
             """
-
+        print(createdata)
         goodsObj = await self.db.create(Goods,**createdata)
 
         """

@@ -118,7 +118,6 @@ class goods(BaseHandler):
         self.checkmodelvoid(Goods,['gdname','sort'])
 
         gdotherinfo={
-            "gdid":await self.idGeneratorClass().goods(),
             "sharememo":self.data.get("sharememo",""),
             "selltype":self.data.get("selltype",""),
             "uptime":self.data.get("uptime",""),
@@ -135,6 +134,7 @@ class goods(BaseHandler):
         }
 
         createdata={
+            "gdid": await self.idGeneratorClass().goods(),
             "gdname" : self.data['gdname'],
             'sort' : self.data['sort'],
             'gdbanners':json.dumps({"gdbanners":self.data.get('gdbanners',[])}),
@@ -145,7 +145,8 @@ class goods(BaseHandler):
             "gdhavetime":self.data.get("gdhavetime",0),
             "gdresidueshow":self.data.get("gdresidueshow",'0'),
             "gdsku":json.dumps({"gdsku":self.data.get("gdsku",[])}),
-            "gdotherinfo":json.dumps(gdotherinfo)
+            "gdotherinfo":json.dumps(gdotherinfo),
+            "userid":self.user['userid']
         }
 
         if self.data.get("uptimeflag",None) == '0':
@@ -162,13 +163,13 @@ class goods(BaseHandler):
         """
         for item in self.data.get("gdsku",[]):
             await self.db.create(GoodsLinkSku,
-                                 gdid = goodsObj.gdid,
-                                 keyid = item['keyid'],
-                                 valueid=item['valueid'],
-                                 img = item.get("img",""),
-                                 stock = item.get("stock",0),
-                                 code = item.get("code",""),
-                                 cost_price = item.get("cost_price",0.0))
+                 gdid = goodsObj.gdid,
+                 keyid = item['keyid'],
+                 valueid=item['valueid'],
+                 img = item.get("img",""),
+                 stock = item.get("stock",0),
+                 code = item.get("code",""),
+                 cost_price = item.get("cost_price",0.0))
 
         return None
 

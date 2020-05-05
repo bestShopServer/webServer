@@ -165,10 +165,10 @@ class goods(BaseHandler):
                                  gdid = goodsObj.gdid,
                                  keyid = item['keyid'],
                                  valueid=item['valueid'],
-                                 img = item['img'],
-                                 stock = item['stock'],
-                                 code = item['code'],
-                                 cost_price = item['cost_price'])
+                                 img = item.get("img",""),
+                                 stock = item.get("stock",0),
+                                 code = item.get("code",""),
+                                 cost_price = item.get("cost_price",0.0))
 
         return None
 

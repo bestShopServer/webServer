@@ -193,9 +193,8 @@ class skugroup(BaseHandler):
             raise PubErrorCustom("拒绝访问!")
 
         obj.key = self.data['key']
-        res = await self.db.update(obj)
-        print(res)
-        return {"data": model_to_dict(res)}
+        await self.db.update(obj)
+        return {"data": model_to_dict(obj)}
 
     @Core_connector()
     async def delete(self,pk=None):
@@ -253,8 +252,8 @@ class sku(BaseHandler):
             raise PubErrorCustom("拒绝访问!")
 
         obj.value = self.data['value']
-        res = await self.db.update(obj)
-        return {"data": model_to_dict(res)}
+        await self.db.update(obj)
+        return {"data": model_to_dict(obj)}
 
     @Core_connector()
     async def delete(self,pk=None):

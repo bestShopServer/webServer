@@ -194,6 +194,7 @@ class skugroup(BaseHandler):
 
         obj.key = self.data['key']
         res = await self.db.update(obj)
+        print(res)
         return {"data": model_to_dict(res)}
 
     @Core_connector()

@@ -5,6 +5,8 @@ from playhouse.shortcuts import model_to_dict
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.goods import GoodsCateGory,Goods,SkuKey,SkuValue,GoodsLinkSku
+from peewee import JOIN
+from loguru import logger
 
 class goodscategory(BaseHandler):
     """
@@ -219,7 +221,8 @@ class skugroup(BaseHandler):
 
     @Core_connector()
     async def get(self, pk=None):
-        query = SkuKey.select().paginate(self.data['page'], self.data['size'])
+        query = SkuKey.select(SkuKey,SkuValue).paginate(self.data['page'], self.data['size']). \
+            join(SkuValue, join_type=JOIN.LEFT_OUTER, on=(SkuKey.id == SkuValue.keyid))
 
         if pk:
             query = query.where(SkuKey.id == pk)
@@ -227,7 +230,7 @@ class skugroup(BaseHandler):
         query = query.where(SkuKey.userid == self.user['userid'])
 
         data = [model_to_dict(item) for item in await self.db.execute(query)]
-
+        logger.info(data)
         if pk:
             data = data[0] if len(data) else {}
 

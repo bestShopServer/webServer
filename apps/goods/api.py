@@ -231,7 +231,7 @@ class skugroup(BaseHandler):
         count = len(await self.db.execute(query))
 
         query = query.paginate(self.data['page'], self.data['size'])
-
+        logger.info(query)
         data = [model_to_dict(item)  for item in await self.db.execute(query) ]
 
         for item in data:

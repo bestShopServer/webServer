@@ -17,7 +17,7 @@ class BaseModel(Model):
 
     def update(self, __data=None, **update):
         self.updtime = MyTime().timestamp
-        return super(BaseModel, self).update(__data=__data, **update)
+        return super(BaseModel, self).update(**update)
 
     class Meta:
         # table_name = 'users'

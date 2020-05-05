@@ -13,11 +13,11 @@ class BaseModel(Model):
 
     def create(self, **query):
         self.createtime = MyTime().timestamp
-        return super(BaseModel, self).create(self,**query)
+        return super(BaseModel, self).create(**query)
 
     def update(self, __data=None, **update):
         self.updtime = MyTime().timestamp
-        return super(BaseModel, self).update(self, __data=__data, **update)
+        return super(BaseModel, self).update(__data=__data, **update)
 
     class Meta:
         # table_name = 'users'

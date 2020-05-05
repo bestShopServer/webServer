@@ -221,16 +221,19 @@ class skugroup(BaseHandler):
 
     @Core_connector()
     async def get(self, pk=None):
-        query = SkuKey.select(SkuKey,SkuValue).paginate(self.data['page'], self.data['size']). \
-            join(SkuValue, join_type=JOIN.LEFT_OUTER, on=(SkuKey.id == SkuValue.keyid))
+        query = SkuKey.select().paginate(self.data['page'], self.data['size'])
 
         if pk:
             query = query.where(SkuKey.id == pk)
 
         query = query.where(SkuKey.userid == self.user['userid'])
 
-        data = [model_to_dict(item) for item in await self.db.execute(query)]
-        logger.info(data)
+        data = [model_to_dict(item)  for item in await self.db.execute(query) ]
+
+        for item in data:
+            query = SkuValue.select().where(SkuValue.keyid == item['id'] )
+            item['data'] = [model_to_dict(item)  for item in await self.db.execute(query) ]
+
         if pk:
             data = data[0] if len(data) else {}
 

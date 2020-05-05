@@ -240,8 +240,8 @@ class skugroup(BaseHandler):
 
         if pk:
             data = data[0] if len(data) else {}
-
-        return {"data": data,"header":{"Count":count}}
+        self.set_header('Count', count)
+        return {"data": data}
 
 
 class sku(BaseHandler):

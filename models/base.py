@@ -11,14 +11,13 @@ class BaseModel(Model):
     createtime = BigIntegerField(default=0, verbose_name="创建时间")
     updtime = BigIntegerField(default=0, verbose_name="修改时间")
 
-    def save(self, *args, **kwargs):
+    def create(self, **query):
+        self.createtime = MyTime().timestamp
+        return super(BaseModel, self).create(self,**query)
 
+    def update(self, __data=None, **update):
         self.updtime = MyTime().timestamp
-
-        if not self.createtime:
-            self.createtime = MyTime().timestamp
-
-        return super(BaseModel, self).save(*args, **kwargs)
+        return super(BaseModel, self).update(self, __data=__data, **update)
 
     class Meta:
         # table_name = 'users'

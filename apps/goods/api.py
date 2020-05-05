@@ -235,7 +235,7 @@ class sku(BaseHandler):
         self.checkmodelvoid(SkuValue,['keyid','value'])
 
         res = await self.db.create(
-            SkuKey,
+            SkuValue,
             userid=self.user['userid'],
             keyid=self.data['keyid'],
             value = self.data['value']

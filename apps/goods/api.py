@@ -1,15 +1,18 @@
 
-
+import json
 from apps.base import BaseHandler
 from playhouse.shortcuts import model_to_dict
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
-from models.goods import GoodsCateGory,Goods
+from models.goods import GoodsCateGory,Goods,SkuKey,SkuValue,GoodsLinkSku
 
 class goodscategory(BaseHandler):
+    """
+    商品分类
+    """
 
     @Core_connector()
-    async def post(self, *args, **kwargs):
+    async def post(self):
 
         self.checkmodelvoid(GoodsCateGory,['gdcgname','url','status','sort'])
 
@@ -105,6 +108,179 @@ class goodscategory(BaseHandler):
 
 class goods(BaseHandler):
 
+    """
+    商品
+    """
+
     @Core_connector()
-    async def get(self, *args, **kwargs):
+    async def post(self):
+
+        self.checkmodelvoid(Goods,['gdname','sort'])
+
+        gdotherinfo={
+            "gdid":await self.idGeneratorClass().goods(),
+            "sharememo":self.data.get("sharememo",""),
+            "selltype":self.data.get("selltype",""),
+            "uptime":self.data.get("uptime",""),
+            "willsell":{
+                "flag":self.data.get("willsellflag",'0'),
+                "type":self.data.get("willselltype",''),
+                "value": self.data.get("willsellvalue",''),
+            },
+            "limitsell": {
+                "flag": self.data.get("limitsellflag", '0'),
+                "type": self.data.get("limitselltype", ''),
+                "value": self.data.get("limitsellvalue", ''),
+            }
+        }
+
+        createdata={
+            "gdname" : self.data['gdname'],
+            'sort' : self.data['sort'],
+            'gdbanners':json.dumps({"gdbanners":self.data.get('gdbanners',[])}),
+            "gdcgid":json.dumps({"gdcgids":self.data.get('gdcgid',[])}),
+            "gdshowprice":self.data.get("gdshowprice","0.0"),
+            "gdshowprice1":self.data.get("gdshowprice1","0.0"),
+            "gdstockdeltype":self.data.get("gdstockdeltype","1"),
+            "gdhavetime":self.data.get("gdhavetime",0),
+            "gdresidueshow":self.data.get("gdresidueshow",'0'),
+            "gdsku":json.dumps({"gdsku":self.data.get("gdsku",[])}),
+            "gdotherinfo":json.dumps(gdotherinfo)
+        }
+
+        if self.data.get("uptimeflag",None) == '0':
+            createdata['gdstatus'] = '0'
+        elif self.data.get("uptimeflag",None) == '1':
+            """
+                此处逻辑暂时未写,添加商品定时上架到定时任务!
+            """
+
+        """
+            Sku处理
+        """
         pass
+
+        await self.db.create(Goods,createdata)
+
+        return None
+
+
+class skugroup(BaseHandler):
+    """
+    sku组维护
+    """
+
+    @Core_connector()
+    async def post(self):
+
+        self.checkmodelvoid(SkuKey,['key'])
+
+        res = await self.db.create(
+            SkuKey,
+            userid=self.user['userid'],
+            key=self.data['key']
+        )
+
+        return {"data": model_to_dict(res)}
+
+    @Core_connector()
+    async def put(self, pk=None):
+
+
+        try:
+            obj = await self.db.get(SkuKey,id=pk,userid=self.user['userid'])
+        except SkuKey.DoesNotExist:
+            raise PubErrorCustom("拒绝访问!")
+
+        obj.key = self.data['key']
+        res = await self.db.update(obj)
+        return {"data": model_to_dict(res)}
+
+    @Core_connector()
+    async def delete(self,pk=None):
+        try:
+            group = await self.db.get(SkuKey,id=pk,userid=self.user['userid'])
+        except SkuKey.DoesNotExist:
+            raise PubErrorCustom("拒绝访问!")
+
+        await self.db.delete(group)
+
+        return None
+
+    @Core_connector()
+    async def get(self, pk=None):
+        query = SkuKey.select().paginate(self.data['page'], self.data['size'])
+
+        if pk:
+            query = query.where(SkuKey.id == pk)
+
+        query = query.where(SkuKey.userid == self.user['userid'])
+
+        data = [model_to_dict(item) for item in await self.db.execute(query)]
+
+        if pk:
+            data = data[0] if len(data) else {}
+
+        return {"data": data}
+
+
+class sku(BaseHandler):
+    """
+    sku值维护
+    """
+
+    @Core_connector()
+    async def post(self):
+
+        self.checkmodelvoid(SkuValue,['keyid','value'])
+
+        res = await self.db.create(
+            SkuKey,
+            userid=self.user['userid'],
+            keyid=self.data['keyid'],
+            value = self.data['value']
+        )
+
+        return {"data": model_to_dict(res)}
+
+    @Core_connector()
+    async def put(self, pk=None):
+
+        try:
+            obj = await self.db.get(SkuValue,id=pk,userid=self.user['userid'])
+        except SkuValue.DoesNotExist:
+            raise PubErrorCustom("拒绝访问!")
+
+        obj.value = self.data['value']
+        res = await self.db.update(obj)
+        return {"data": model_to_dict(res)}
+
+    @Core_connector()
+    async def delete(self,pk=None):
+        try:
+            group = await self.db.get(SkuValue,id=pk,userid=self.user['userid'])
+        except SkuValue.DoesNotExist:
+            raise PubErrorCustom("拒绝访问!")
+
+        await self.db.delete(group)
+
+        return None
+
+    @Core_connector()
+    async def get(self, pk=None):
+        query = SkuValue.select().paginate(self.data['page'], self.data['size'])
+
+        if pk:
+            query = query.where(SkuValue.id == pk)
+
+        if self.data.get("keyid",None):
+            query = query.where(SkuValue.keyid == self.self.data.get("keyid",None))
+
+        query = query.where(SkuValue.userid == self.user['userid'])
+
+        data = [model_to_dict(item) for item in await self.db.execute(query)]
+
+        if pk:
+            data = data[0] if len(data) else {}
+
+        return {"data": data}

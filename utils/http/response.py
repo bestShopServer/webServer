@@ -11,7 +11,7 @@ res = {
     'code': code['success'],
 }
 
-def HttpResponse(self=None,success=True,data=None,rescode=code['success'],msg='',headers=None):
+def HttpResponse(self=None,success=True,data=None,rescode=code['success'],msg='',headers=None,count=None):
     # if self.status_code != 200:
     #     success = False
 
@@ -26,4 +26,5 @@ def HttpResponse(self=None,success=True,data=None,rescode=code['success'],msg=''
             res['code'] = code['error']
             res['msg'] = msg if msg else '请求出错,请稍后再试！'
     res['data'] = data
+    res['count'] = count
     return json.dumps(res)

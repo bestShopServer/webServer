@@ -100,6 +100,8 @@ class Core_connector:
             res = {'data': None, 'msg': None, 'header': None}
         if 'data' not in res:
             res['data'] = None
+        if 'count' not in res:
+            res['count'] = 0
         if 'msg' not in res:
             res['msg'] = {}
         if 'header' not in res:
@@ -120,7 +122,7 @@ class Core_connector:
         #         elif item['method'] == 'save_ex':
         #             await c.save_ex(**item)
 
-        return HttpResponse(self=outside_self,data=res['data'], headers=res['header'], msg=res['msg'])
+        return HttpResponse(self=outside_self,data=res['data'], headers=res['header'], msg=res['msg'],count=res['count'])
 
     def __response__validate(self, outside_self, func):
 

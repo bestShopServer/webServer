@@ -83,8 +83,9 @@ class Goods(BaseModel):
 class GoodsLinkSku(BaseModel):
 
     id = BigAutoField(primary_key=True)
-    keyid = BigIntegerField(verbose_name="Sku key", default=0)
-    valueid = BigIntegerField(verbose_name="Sku value", default=0)
+    gdid = CharField(max_length=10, verbose_name="商品ID", null=True)
+    keyid = BigIntegerField(verbose_name="sku组ID", default=0)
+    valueid = BigIntegerField(verbose_name="sku值ID", default=0)
     img = CharField(verbose_name="图片",max_length=255)
     price = DecimalField(max_digits=18,decimal_places=6,default=0.000,verbose_name="价格")
     stock = IntegerField(verbose_name="库存",default=0)

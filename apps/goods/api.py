@@ -155,12 +155,20 @@ class goods(BaseHandler):
                 此处逻辑暂时未写,添加商品定时上架到定时任务!
             """
 
+        goodsObj = await self.db.create(Goods,createdata)
+
         """
             Sku处理
         """
-        pass
-
-        await self.db.create(Goods,createdata)
+        for item in self.data.get("gdsku",[]):
+            await self.db.create(GoodsLinkSku,
+                                 gdid = goodsObj.gdid,
+                                 keyid = item['keyid'],
+                                 valueid=item['valueid'],
+                                 img = item['img'],
+                                 stock = item['stock'],
+                                 code = item['code'],
+                                 cost_price = item['cost_price'])
 
         return None
 

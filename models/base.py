@@ -8,16 +8,16 @@ from utils.database.mysql import MysqlPool
 
 class BaseModel(Model):
 
-    createtime = BigIntegerField(default=0, verbose_name="创建时间")
-    updtime = BigIntegerField(default=0, verbose_name="修改时间")
+    createtime = BigIntegerField(default=MyTime().timestamp, verbose_name="创建时间")
+    updtime = BigIntegerField(default=MyTime().timestamp, verbose_name="修改时间")
 
-    def create(self, **query):
-        self.createtime = MyTime().timestamp
-        return super(BaseModel, self).create(**query)
-
-    def update(self, __data=None, **update):
-        self.updtime = MyTime().timestamp
-        return super(BaseModel, self).update(**update)
+    # def create(self, **query):
+    #     self.createtime = MyTime().timestamp
+    #     return super(BaseModel, self).create(**query)
+    #
+    # def update(self, __data=None, **update):
+    #     self.updtime = MyTime().timestamp
+    #     return super(BaseModel, self).update(**update)
 
     class Meta:
         # table_name = 'users'

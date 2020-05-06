@@ -195,7 +195,7 @@ class goods(BaseHandler):
 
             sku=[]
             for skuItem in await self.db.execute(skuQuery):
-                t=model_to_dict(item)
+                t=model_to_dict(skuItem)
                 t['key'] = skuItem.skukey.key,
                 t['value'] = skuItem.skukey.skuvalue.value
                 sku.append(t)

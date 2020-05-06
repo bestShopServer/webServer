@@ -6,7 +6,7 @@ from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.goods import GoodsCateGory,Goods,SkuKey,SkuValue,GoodsLinkSku
 from peewee import *
-from decimal import *
+from loguru import logger
 
 class goodscategory(BaseHandler):
     """
@@ -192,7 +192,7 @@ class goods(BaseHandler):
                 join(SkuKey, join_type=JOIN.INNER, on=(GoodsLinkSku.keyid == SkuKey.id)).\
                 join(SkuValue, join_type=JOIN.INNER, on=(GoodsLinkSku.valueid == SkuValue.id)).\
                 where(GoodsLinkSku.gdid == item.gdid )
-
+            logger.info(skuQuery)
             data.append({
                 "gdname":item.gdname,
                 "sharememo":gdotherinfo['sharememo'],

@@ -5,6 +5,7 @@ from playhouse.shortcuts import model_to_dict
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.goods import GoodsCateGory,Goods,SkuKey,SkuValue,GoodsLinkSku
+from peewee import *
 
 class goodscategory(BaseHandler):
     """
@@ -173,6 +174,51 @@ class goods(BaseHandler):
                  cost_price = item.get("cost_price",0.0))
 
         return None
+
+    @Core_connector()
+    async def get(self, pk=None):
+        query = Goods.select().where(Goods.userid == self.user['userid'])
+
+        if pk:
+            query = query.where(Goods.gdid == pk)
+
+        data=[]
+        for item in await self.db.execute(query):
+
+            gdotherinfo = json.loads(item.gdotherinfo)
+
+            skuQuery = GoodsLinkSku.select(GoodsLinkSku,SkuKey,SkuValue). \
+                join(SkuKey, join_type=JOIN.INNER, on=(GoodsLinkSku.keyid == SkuKey.id)).\
+                join(SkuValue, join_type=JOIN.INNER, on=(GoodsLinkSku.valueid == SkuValue.id)).\
+                where(GoodsLinkSku.gdid == item.gdid )
+
+            data.append({
+                "gdname":item.gdname,
+                "sharememo":gdotherinfo['sharememo'],
+                "gdbanners":json.loads(item.gdbanners)['gdbanners'],
+                "gdcgid":json.loads(item.gdcgid)['gdcgids'],
+                "selltype":gdotherinfo['selltype'],
+                "gdsku": [model_to_dict(item)  for item in await self.db.execute(skuQuery) ],
+                "gdshowprice":item.gdshowprice,
+                "gdshowprice1":item.gdshowprice1,
+                "gdstockdeltype":item.gdstockdeltype,
+                "gdhavetime":item.gdhavetime,
+                "gdresidueshow":item.gdresidueshow,
+                "uptimeflag":item.gdstatus,
+                "uptime":gdotherinfo['uptime'],
+                "willsellflag":gdotherinfo['willsell']['flag'],
+                "willselltype":gdotherinfo['willsell']['type'],
+                "willsellvalue":gdotherinfo['willsell']['value'],
+                "limitsellflag":gdotherinfo['limitsell']['flag'],
+                "limitselltype": gdotherinfo['limitsell']['type'],
+                "limitsellvalue": gdotherinfo['limitsell']['value'],
+            })
+
+        if pk:
+            data = data[0] if len(data) else {}
+
+        return {"data": data}
+
 
 class skugroup(BaseHandler):
     """

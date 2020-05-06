@@ -13,13 +13,10 @@ res = {
 }
 
 class DecimalEncoder(json.JSONEncoder):
-    def _iterencode(self, o, markers=None):
+    def default(self, o):
         if isinstance(o, decimal.Decimal):
-            # wanted a simple yield str(o) in the next line,
-            # but that would mean a yield on the line with super(...),
-            # which wouldn't work (see my comment below), so...
-            return (str(o) for o in [o])
-        return super(DecimalEncoder, self)._iterencode(o, markers)
+            return str(o.quantize(decimal.Decimal('0.00')))
+        super(DecimalEncoder, self).default(o)
 
 def HttpResponse(self=None,success=True,data=None,rescode=code['success'],msg='',headers=None,count=None):
     # if self.status_code != 200:

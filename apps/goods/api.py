@@ -6,6 +6,7 @@ from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from models.goods import GoodsCateGory,Goods,SkuKey,SkuValue,GoodsLinkSku
 from peewee import *
+from decimal import *
 
 class goodscategory(BaseHandler):
     """
@@ -199,8 +200,8 @@ class goods(BaseHandler):
                 "gdcgid":json.loads(item.gdcgid)['gdcgids'],
                 "selltype":gdotherinfo['selltype'],
                 "gdsku": [model_to_dict(item)  for item in await self.db.execute(skuQuery) ],
-                "gdshowprice":item.gdshowprice,
-                "gdshowprice1":item.gdshowprice1,
+                "gdshowprice":item.gdshowprice.quantize(Decimal('0.00')),
+                "gdshowprice1":item.gdshowprice1.quantize(Decimal('0.00')),
                 "gdstockdeltype":item.gdstockdeltype,
                 "gdhavetime":item.gdhavetime,
                 "gdresidueshow":item.gdresidueshow,

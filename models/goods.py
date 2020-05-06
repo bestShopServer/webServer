@@ -93,9 +93,6 @@ class GoodsLinkSku(BaseModel):
     cost_price = DecimalField(max_digits=18,decimal_places=6,default=0.000,verbose_name="成本价")
     number = IntegerField(verbose_name="销量",default=0)
 
-    key=None
-    value=None
-
     class Meta:
         db_table = 'goodslinksku'
 

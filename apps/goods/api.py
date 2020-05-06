@@ -188,18 +188,25 @@ class goods(BaseHandler):
 
             gdotherinfo = json.loads(item.gdotherinfo)
 
-            skuQuery = GoodsLinkSku.select(GoodsLinkSku,SkuKey.key,SkuValue.value). \
+            skuQuery = GoodsLinkSku.select(GoodsLinkSku,SkuKey,SkuValue). \
                 join(SkuKey, join_type=JOIN.INNER, on=(GoodsLinkSku.keyid == SkuKey.id)).\
                 join(SkuValue, join_type=JOIN.INNER, on=(GoodsLinkSku.valueid == SkuValue.id)).\
                 where(GoodsLinkSku.gdid == item.gdid )
-            logger.info(skuQuery)
+
+            sku=[]
+            for skuItem in await self.db.execute(skuQuery):
+                t=model_to_dict(item)
+                t['key'] = skuItem.skukey.key,
+                t['value'] = skuItem.skukey.skuvalue.value
+                sku.append(t)
+
             data.append({
                 "gdname":item.gdname,
                 "sharememo":gdotherinfo['sharememo'],
                 "gdbanners":json.loads(item.gdbanners)['gdbanners'],
                 "gdcgid":json.loads(item.gdcgid)['gdcgids'],
                 "selltype":gdotherinfo['selltype'],
-                "gdsku": [model_to_dict(item)  for item in await self.db.execute(skuQuery) ],
+                "gdsku": sku,
                 "gdshowprice":item.gdshowprice,
                 "gdshowprice1":item.gdshowprice1,
                 "gdstockdeltype":item.gdstockdeltype,

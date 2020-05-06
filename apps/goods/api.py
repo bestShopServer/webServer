@@ -188,7 +188,7 @@ class goods(BaseHandler):
 
             gdotherinfo = json.loads(item.gdotherinfo)
 
-            skuQuery = GoodsLinkSku.select(GoodsLinkSku,SkuKey,SkuValue). \
+            skuQuery = GoodsLinkSku.select(GoodsLinkSku,SkuKey.key,SkuValue.value). \
                 join(SkuKey, join_type=JOIN.INNER, on=(GoodsLinkSku.keyid == SkuKey.id)).\
                 join(SkuValue, join_type=JOIN.INNER, on=(GoodsLinkSku.valueid == SkuValue.id)).\
                 where(GoodsLinkSku.gdid == item.gdid )

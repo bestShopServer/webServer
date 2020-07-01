@@ -1,5 +1,5 @@
 from tornado.web import url,URLSpec
-from web.public.api import *
+from apps.web.public.api import *
 from router import api_base_url,join_url
 from config import common
 from tornado.web import StaticFileHandler

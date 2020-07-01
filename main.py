@@ -17,5 +17,6 @@ if __name__ == "__main__":
     from utils import configinit_setup
     from utils import Server
 
+    print(sys.path)
     configinit_setup()
     Server().start()

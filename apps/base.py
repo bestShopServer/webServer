@@ -6,7 +6,6 @@ from services.cache.base import RedisBase
 from utils.idGenerator import idGenerator
 from utils.exceptions import PubErrorCustom
 
-
 class BaseHandler(RequestHandler):
 
     def set_default_headers(self):

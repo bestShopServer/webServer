@@ -33,7 +33,6 @@ class baseinfo(BaseHandler):
 
         return None
 
-
     @Core_connector()
     async def get(self):
 

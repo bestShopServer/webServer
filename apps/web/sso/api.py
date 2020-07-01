@@ -11,16 +11,11 @@ class TestHandler(BaseHandler):
 
     @Core_connector()
     async def get(self, *args, **kwargs):
-        # Role(name="1123")
 
-        # raise PubErrorCustom("12312321312")
         role = await self.db.get(Role,rolecode='1000')
         res = model_to_dict(role)
 
         s = set_dict(res)
-        # #
-        # # print(role.name)
-        # logger.debug("123123fsds")
 
         await self.redis.set("name","张三")
         print(await self.redis.get("name"))
@@ -63,9 +58,6 @@ class login(BaseHandler):
             "name":user.name,
             "pic": user.pic
         })
-
-        # print(c.key)
-        # print(await c.get_dict())
 
         return {"data":token}
 

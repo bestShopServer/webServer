@@ -1,9 +1,9 @@
 
-from web.sso import urls as sso_urls
-from web.public import urls as public_urls
-from web.user import urls as user_urls
-from web.shop import urls as shop_urls
-from web.goods import urls as goods_urls
+from apps.web.sso import urls as sso_urls
+from apps.web.public import urls as public_urls
+from apps.web.user import urls as user_urls
+from apps.web.shop import urls as shop_urls
+from apps.web.goods import urls as goods_urls
 
 urlpattern=[
     #

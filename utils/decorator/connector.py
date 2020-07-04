@@ -58,7 +58,10 @@ class Core_connector:
         self.is_query_standard = kwargs.get("is_query_standard", True)
 
     async def __request_validate(self,outside_self,*args,**kwargs):
-
+        logger.info("\n请求IP：{}\n请求方法：{}".format(
+            outside_self.request.remote_ip,
+            outside_self.request.uri,
+        ))
         #校验凭证并获取用户数据
         if self.isTicket:
             token = outside_self.request.headers.get_list("Authorization")
@@ -118,7 +121,7 @@ class Core_connector:
                 else:
                     outside_self.data['size'] = 10
 
-        logger.info("请求的参数: {}".format(outside_self.data))
+        logger.info("\n请求的数据: {}".format(outside_self.data))
 
     async def __run_before_handler(self,outside_self,*args,**kwargs):
 
@@ -214,7 +217,7 @@ class Core_connector:
         if 'header' not in res:
             res['header'] = None
 
-        logger.info("返回的参数: {}".format(res['data']))
+        logger.info("\n返回的数据: {}".format(res['data']))
         if self.isPasswd and res['data']:
             res['data'] = encrypt(json.dumps(res['data'])).decode('ascii')
 

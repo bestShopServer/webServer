@@ -47,11 +47,11 @@ class attachmentgroup(BaseHandler):
         if isinstance(pk,list):
             for item in await self.db.execute(AttachMent.select().where(AttachMent.grouid << pk)):
                 item.grouid = 0
-                self.db.update(item)
+                await self.db.update(item)
         else:
             for item in await self.db.execute(AttachMent.select().where(AttachMent.grouid == pk)):
                 item.grouid = 0
-                self.db.update(item)
+                await self.db.update(item)
 
     @Core_connector(form_class=AttachMentGroupForm,model_class=AttachMentGroup,pk_key="id")
     async def post(self,*args,**kwargs):

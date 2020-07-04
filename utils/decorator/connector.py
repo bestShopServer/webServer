@@ -58,8 +58,9 @@ class Core_connector:
         self.is_query_standard = kwargs.get("is_query_standard", True)
 
     async def __request_validate(self,outside_self,*args,**kwargs):
-        logger.info("\n请求IP：{}\n请求方法：{}".format(
+        logger.info("\n请求IP：{}\n请求方法：{}->{}".format(
             outside_self.request.remote_ip,
+            outside_self.request.method,
             outside_self.request.uri,
         ))
         #校验凭证并获取用户数据

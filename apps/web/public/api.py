@@ -45,11 +45,11 @@ class attachmentgroup(BaseHandler):
     async def del_before_handler(self,pk):
 
         if isinstance(pk,list):
-            for item in await self.db.execute(AttachMentGroup.select().where(AttachMentGroup.id << pk)):
+            for item in await self.db.execute(AttachMent.select().where(AttachMent.grouid << pk)):
                 item.grouid = 0
                 self.db.update(item)
         else:
-            for item in await self.db.execute(AttachMentGroup.select().where(AttachMentGroup.id == pk)):
+            for item in await self.db.execute(AttachMent.select().where(AttachMent.grouid == pk)):
                 item.grouid = 0
                 self.db.update(item)
 

@@ -94,7 +94,9 @@ class attachmentgroupbatch(BaseHandler):
             except AttachMentGroup.DoesNotExist:
                 raise PubErrorCustom("无此分组!")
 
-        await self.db.execute( AttachMent.select().where( AttachMent.id << ids).update(grouid=grouid))
+        for item in await self.db.execute( AttachMent.select().where( AttachMent.id << ids)):
+            item.grouid = grouid
+            await self.db.update(item)
 
 class attachment(BaseHandler):
 

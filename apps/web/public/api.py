@@ -90,7 +90,7 @@ class attachmentgroupbatch(BaseHandler):
 
         if grouid!=0:
             try:
-                await self.db.get(AttachMentGroup,userid=self.user['userid'],grouid=grouid)
+                await self.db.get(AttachMentGroup,userid=self.user['userid'],id=grouid)
             except AttachMentGroup.DoesNotExist:
                 raise PubErrorCustom("无此分组!")
 

@@ -4,7 +4,7 @@ import requests,json
 class TestUnitBase(object):
 
     def __init__(self):
-        self.base_url =  "http://localhost:8888/api/v1"
+        self.base_url =  "http://62.234.150.156/api/v1"
         self.token = None
 
         self.get_token()
@@ -53,3 +53,8 @@ class TestUnitBase(object):
             }
         )['data']
 
+if __name__=='__main__':
+
+    s = TestUnitBase()
+
+    print(s.token)

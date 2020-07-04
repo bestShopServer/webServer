@@ -77,6 +77,25 @@ class attachmentgroup(BaseHandler):
             "count":count
         }
 
+class attachmentgroupbatch(BaseHandler):
+
+    @Core_connector()
+    async def post(self,*args,**kwargs):
+
+        grouid = self.data.get("grouid",0)
+        ids = self.data.get("ids",[])
+
+        if not len(ids):
+            raise PubErrorCustom("请选择素材!")
+
+        if grouid!=0:
+            try:
+                await self.db.get(AttachMentGroup,userid=self.user['userid'],grouid=grouid)
+            except AttachMentGroup.DoesNotExist:
+                raise PubErrorCustom("无此分组!")
+
+        await self.db.execute( AttachMent.select().where( AttachMent.id << ids).update(grouid=grouid))
+
 class attachment(BaseHandler):
 
     """

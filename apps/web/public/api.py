@@ -42,6 +42,17 @@ class attachmentgroup(BaseHandler):
     素材分组
     """
 
+    async def del_before_handler(self,pk):
+
+        if isinstance(pk,list):
+            for item in await self.db.execute(AttachMentGroup.select().where(AttachMentGroup.id << pk)):
+                item.grouid = 0
+                self.db.update(item)
+        else:
+            for item in await self.db.execute(AttachMentGroup.select().where(AttachMentGroup.id == pk)):
+                item.grouid = 0
+                self.db.update(item)
+
     @Core_connector(form_class=AttachMentGroupForm,model_class=AttachMentGroup,pk_key="id")
     async def post(self,*args,**kwargs):
         pass
@@ -50,7 +61,10 @@ class attachmentgroup(BaseHandler):
     async def put(self,*args,**kwargs):
         pass
 
-    @Core_connector(model_class=AttachMentGroup,pk_key="id")
+    @Core_connector(
+        model_class=AttachMentGroup,
+        pk_key="id",
+        del_before_handler=del_before_handler)
     async def delete(self,*args,**kwargs):
         pass
 

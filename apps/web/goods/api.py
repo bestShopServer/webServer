@@ -26,7 +26,7 @@ from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
         SkuGroup,SkuSpecValue
 
-from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,SkuGroupRules,SkuSpecValueRules
+from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,SkuGroupRules,SkuSpecValueRules,GoodsRules
 
 class goodscategorystyle(BaseHandler):
 
@@ -196,111 +196,99 @@ class goods(BaseHandler):
     async def del_before_handler(self,pk):
         pass
 
-    @Core_connector(
-        form_class=GoodsForm,
-        model_class=Goods,
-        add_before_handler=add_before_handler,
-        add_after_handler=add_after_handler)
+    @Core_connector(**GoodsRules.post())
     async def post(self, *args, **kwargs):
-        return {"data": kwargs.get("instance").gdid}
+        pass
 
-    @Core_connector(
-        form_class=GoodsForm,
-        model_class=Goods,
-        pk_key="gdid",
-        upd_before_handler=add_before_handler,
-        upd_after_handler=add_after_handler)
+    @Core_connector(**GoodsRules.put())
     async def put(self, *args, **kwargs):
-        return {"data":kwargs.get("instance").gdid}
+        pass
 
-    @Core_connector(
-        model_class=Goods,
-        pk_key="gdid",
-        del_before_handler=del_before_handler)
+    @Core_connector(**GoodsRules.delete())
     async def delete(self, *args, **kwargs):
         pass
 
-    @Core_connector(isTransaction=False,is_query_standard=False)
-    async def get(self, pk=None):
-
-        #查询详情
-        if self.data.get('detail'):
-            if not pk:
-                raise PubErrorCustom("查询详情时商品ID不能为空!")
-
-            try:
-                obj = await self.db.get(Goods, gdid=pk)
-            except Goods.DoesNotExist:
-                raise PubErrorCustom("此商品不存在!")
-
-            query = GoodsLinkCateGory.select(GoodsLinkCateGory,GoodsCateGory.gdcgname). \
-                join(GoodsCateGory, join_type=JOIN.INNER, on=(GoodsLinkCateGory.gdcgid == GoodsCateGory.gdcgid)).\
-                where(GoodsLinkCateGory.gdid == obj.gdid,GoodsCateGory.status == '0')
-
-            obj.gd_link_type = await self.db.execute(query)
-
-            # logger.info(obj.gd_link_type)
-            query = GoodsLinkCity.select().where(GoodsLinkCity.gdid == obj.gdid)
-
-            obj.gd_allow_area = await self.db.execute(query)
-
-            query = GoodsLinkSku.select().where(GoodsLinkSku.id << json.loads(obj.gd_sku_links)).order_by(GoodsLinkSku.sort)
-
-            obj.gd_sku_links = await self.db.execute(query)
-
-            for item in obj.gd_sku_links:
-
-                skus = []
-
-                for skuItem in json.loads(item.skus):
-
-                    try:
-                        skuGroupObj = await self.db.get(SkuGroup, group_id=skuItem['group_id'])
-                    except SkuGroup.DoesNotExist:
-                        skuGroupObj = None
-
-                    try:
-                        skuSpecValueObj = await self.db.get(SkuSpecValue, spec_id=skuItem['spec_id'])
-                    except SkuGroup.DoesNotExist:
-                        skuSpecValueObj = None
-
-                    if skuGroupObj and skuSpecValueObj and skuSpecValueObj.group_id == skuGroupObj.group_id:
-                        skus.append(dict(
-                            group_id = skuSpecValueObj.group_id,
-                            spec_id = skuSpecValueObj.spec_id,
-                            group_name = skuGroupObj.group_name,
-                            spec_value = skuSpecValueObj.spec_value
-                        ))
-
-                item.skus = skus
-
-            return {"data": GoodsDetailSerializer([obj], many=True).data[0]}
-
-        #查询列表
-        else:
-            query = Goods.select().where(Goods.userid == self.user['userid'])
-
-            if self.data.get("gdcgids"):
-                gdids = [ item.gdid for item in await self.db.execute(GoodsCateGory.select().where(GoodsCateGory.gdcgid << self.data.get("gdcgids"))) ]
-                query = query.where(Goods.gdid << gdids)
-
-            if self.data.get("start_datetime") and self.data.get("end_datetime"):
-                ut = UtilTime()
-                start_datetime = ut.string_to_timestamp(self.data.get("start_datetime"))
-                end_datetime = ut.string_to_timestamp(self.data.get("end_datetime"))
-
-                query = query.where(Goods.createtime>=start_datetime,Goods.createtime<=end_datetime)
-
-            query = query.order_by(Goods.createtime.desc())
-
-            count = len(await self.db.execute(query))
-
-            query = query.paginate(self.data['page'], self.data['size'])
-
-            return {
-                "data": GoodsSerializer(await self.db.execute(query), many=True).data,
-                "count":count
-            }
+    # @Core_connector(isTransaction=False,is_query_standard=False)
+    # async def get(self, pk=None):
+    #
+    #     #查询详情
+    #     if self.data.get('detail'):
+    #         if not pk:
+    #             raise PubErrorCustom("查询详情时商品ID不能为空!")
+    #
+    #         try:
+    #             obj = await self.db.get(Goods, gdid=pk)
+    #         except Goods.DoesNotExist:
+    #             raise PubErrorCustom("此商品不存在!")
+    #
+    #         query = GoodsLinkCateGory.select(GoodsLinkCateGory,GoodsCateGory.gdcgname). \
+    #             join(GoodsCateGory, join_type=JOIN.INNER, on=(GoodsLinkCateGory.gdcgid == GoodsCateGory.gdcgid)).\
+    #             where(GoodsLinkCateGory.gdid == obj.gdid,GoodsCateGory.status == '0')
+    #
+    #         obj.gd_link_type = await self.db.execute(query)
+    #
+    #         # logger.info(obj.gd_link_type)
+    #         query = GoodsLinkCity.select().where(GoodsLinkCity.gdid == obj.gdid)
+    #
+    #         obj.gd_allow_area = await self.db.execute(query)
+    #
+    #         query = GoodsLinkSku.select().where(GoodsLinkSku.id << json.loads(obj.gd_sku_links)).order_by(GoodsLinkSku.sort)
+    #
+    #         obj.gd_sku_links = await self.db.execute(query)
+    #
+    #         for item in obj.gd_sku_links:
+    #
+    #             skus = []
+    #
+    #             for skuItem in json.loads(item.skus):
+    #
+    #                 try:
+    #                     skuGroupObj = await self.db.get(SkuGroup, group_id=skuItem['group_id'])
+    #                 except SkuGroup.DoesNotExist:
+    #                     skuGroupObj = None
+    #
+    #                 try:
+    #                     skuSpecValueObj = await self.db.get(SkuSpecValue, spec_id=skuItem['spec_id'])
+    #                 except SkuGroup.DoesNotExist:
+    #                     skuSpecValueObj = None
+    #
+    #                 if skuGroupObj and skuSpecValueObj and skuSpecValueObj.group_id == skuGroupObj.group_id:
+    #                     skus.append(dict(
+    #                         group_id = skuSpecValueObj.group_id,
+    #                         spec_id = skuSpecValueObj.spec_id,
+    #                         group_name = skuGroupObj.group_name,
+    #                         spec_value = skuSpecValueObj.spec_value
+    #                     ))
+    #
+    #             item.skus = skus
+    #
+    #         return {"data": GoodsDetailSerializer([obj], many=True).data[0]}
+    #
+    #     #查询列表
+    #     else:
+    #         query = Goods.select().where(Goods.userid == self.user['userid'])
+    #
+    #         if self.data.get("gdcgids"):
+    #             gdids = [ item.gdid for item in await self.db.execute(GoodsCateGory.select().where(GoodsCateGory.gdcgid << self.data.get("gdcgids"))) ]
+    #             query = query.where(Goods.gdid << gdids)
+    #
+    #         if self.data.get("start_datetime") and self.data.get("end_datetime"):
+    #             ut = UtilTime()
+    #             start_datetime = ut.string_to_timestamp(self.data.get("start_datetime"))
+    #             end_datetime = ut.string_to_timestamp(self.data.get("end_datetime"))
+    #
+    #             query = query.where(Goods.createtime>=start_datetime,Goods.createtime<=end_datetime)
+    #
+    #         query = query.order_by(Goods.createtime.desc())
+    #
+    #         count = len(await self.db.execute(query))
+    #
+    #         query = query.paginate(self.data['page'], self.data['size'])
+    #
+    #         return {
+    #             "data": GoodsSerializer(await self.db.execute(query), many=True).data,
+    #             "count":count
+    #         }
 
 class skugroup(BaseHandler):
 

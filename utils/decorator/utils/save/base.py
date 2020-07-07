@@ -70,7 +70,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
             if not new_data.get(key, None):
                 if form_data.get(key, None):
-                    new_data[key] = form_data.get(key)
+                    new_data[key] = form_data.get(key) if not isinstance(form_data.get(key),list) else json.dumps(form_data.get(key))
 
         robot_table_value['instance_data'] = new_data
 

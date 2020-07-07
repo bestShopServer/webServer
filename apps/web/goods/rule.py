@@ -12,6 +12,123 @@ from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
         SkuGroup,SkuSpecValue
 
+class GoodsRules:
+
+    @staticmethod
+    def post():
+        return dict(
+            robot={
+                "pk_key": "gdid",
+                "goods" : {
+                    "form_class": GoodsForm,
+                    "model_class": Goods,
+                    "child_form_link": {
+                        "goodslinkcity": "gd_allow_area"
+                    },
+                    "child": {
+                        "goodslinkcity": {
+                            "model_class": GoodsLinkCity,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid",
+                                    "gdid": "gdid"
+                                }
+                            }
+                        },
+                        "goodslinkcategory": {
+                            "model_class": GoodsLinkCateGory,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid",
+                                    "gdid": "gdid"
+                                }
+                            }
+                        },
+                        "goodslinksku": {
+                            "model_class": GoodsLinkSku,
+                            "last_ids_key":"gd_sku_links",
+                            "last_ids_level":1,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid",
+                                    "gdid": "gdid"
+                                }
+                            }
+                        },
+                    }
+                }
+            }
+        )
+
+    @staticmethod
+    def put():
+        return dict(
+            robot={
+                "pk_key": "gdid",
+                "goods": {
+                    "form_class": GoodsForm,
+                    "model_class": Goods,
+                    "father":True,
+                    "child_form_link": {
+                        "goodslinkcity": "gd_allow_area"
+                    },
+                    "child": {
+                        "goodslinkcity": {
+                            "model_class": GoodsLinkCity,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid",
+                                    "gdid": "gdid"
+                                }
+                            }
+                        },
+                        "goodslinkcategory": {
+                            "model_class": GoodsLinkCateGory,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid",
+                                    "gdid": "gdid"
+                                }
+                            }
+                        },
+                        "goodslinksku": {
+                            "model_class": GoodsLinkSku,
+                            "last_ids_key": "gd_sku_links",
+                            "last_ids_level": 1,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid",
+                                    "gdid": "gdid"
+                                }
+                            }
+                        },
+                    }
+                }
+            }
+        )
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "gdid",
+                "goods": {
+                    "model_class": Goods,
+                    "child": {
+                        "goodslinkcity": {
+                            "model_class": GoodsLinkCity,
+                        },
+                        "goodslinkcategory": {
+                            "model_class": GoodsLinkCateGory,
+                        },
+                        "goodslinksku": {
+                            "model_class": GoodsLinkSku,
+                        }
+                    }
+                }
+            }
+        )
+
 class GoodsCateGoryStyleRules:
 
     @staticmethod

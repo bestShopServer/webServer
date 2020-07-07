@@ -26,7 +26,7 @@ from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
         SkuGroup,SkuSpecValue
 
-from apps.web.goods.rule import GoodsCateGoryStyleRules
+from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules
 
 class goodscategorystyle(BaseHandler):
 
@@ -65,11 +65,8 @@ class goodscategory(BaseHandler):
     商品分类设置
     """
 
-    async def add_before_handler(self,obj):
+    async def add_before_handler(self,**kwargs):
 
-        """
-        新增/修改前置处理
-        """
         try:
             gcgsObj = await self.db.get(GoodsCateGoryStyle,userid=self.user['userid'])
         except GoodsCateGoryStyle.DoesNotExist:
@@ -78,18 +75,17 @@ class goodscategory(BaseHandler):
         if self.data.get("gdcglastid",None):
             try:
                 lastcategory = await self.db.get(GoodsCateGory, gdcgid=self.data.get("gdcglastid",None), userid=self.user['userid'])
-                obj['level'] = lastcategory.level+1
+                self.data['level'] = lastcategory.level+1
             except GoodsCateGory.DoesNotExist:
                 raise PubErrorCustom("上级分类有误!")
         else:
-            obj['level'] = 1
+            self.data['level'] = 1
 
-        if obj['level']>gcgsObj.type:
+        if self.data['level']>gcgsObj.type:
             raise PubErrorCustom("分类层级不能超过{}级".format(gcgsObj.type))
 
-        return obj
-
-    async def del_before_handler(self,pk):
+    async def del_before_handler(self,**kwargs):
+        pk = kwargs.get("pk")
 
         if isinstance(pk,list):
             if len(await self.db.execute(GoodsCateGory.select().where(GoodsCateGory.gdcglastid << pk))):
@@ -98,41 +94,21 @@ class goodscategory(BaseHandler):
             if len(await self.db.execute(GoodsCateGory.select().where(GoodsCateGory.gdcglastid == pk))):
                 raise PubErrorCustom("分类下还存在子分类,不能直接删除!")
 
-    @Core_connector(
-        form_class=GoodsCateGoryForm,
-        model_class=GoodsCateGory,
-        add_before_handler=add_before_handler)
+    @Core_connector(**{**GoodsCateGoryRules.post(),**{"add_before_handler":add_before_handler}})
     async def post(self, *args, **kwargs):
         return {"data":kwargs.get("instance").gdcgid}
 
-    @Core_connector(
-        form_class=GoodsCateGoryForm,
-        model_class=GoodsCateGory,
-        pk_key="gdcgid",
-        upd_before_handler=add_before_handler)
+    @Core_connector(**{**GoodsCateGoryRules.put(),**{"upd_before_handler":add_before_handler}})
     async def put(self, *args, **kwargs):
         return {"data": kwargs.get("instance").gdcgid}
 
-    @Core_connector(
-        model_class=GoodsCateGory,
-        pk_key="gdcgid",
-        del_before_handler=del_before_handler)
+    @Core_connector(**{**GoodsCateGoryRules.put(),**{"del_before_handler":del_before_handler}})
     async def delete(self, *args, **kwargs):
         pass
 
-    @Core_connector(isTransaction=False)
+    @Core_connector(**GoodsCateGoryRules.get())
     async def get(self, pk=None):
-        query = GoodsCateGory.select().where(GoodsCateGory.userid == self.user['userid'])
-
-        if pk:
-            query = query.where(GoodsCateGory.gdcgid == pk)
-
-        if self.data.get("gdcglastid"):
-            query = query.where(GoodsCateGory.gdcglastid == self.data.get("gdcglastid"))
-
-        query = query.order_by(GoodsCateGory.sort)
-
-        return {"data": GoodsCateGorySerializer(await self.db.execute(query), many=True).data}
+        pass
 
 class goods(BaseHandler):
 

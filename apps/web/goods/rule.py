@@ -39,15 +39,15 @@ class GoodsCateGoryStyleRules:
         return dict(
             robot={
                 "pk_key":"id",
-                "unique": [
-                    {
-                        "key": "userid",
-                        "value": "user.userid",
-                        "data_src": "data_pool",
-                        "pool": "self"
-                    }
-                ],
                 "goodscategorystyle": {
+                    "unique": [
+                        {
+                            "key": "userid",
+                            "value": "user.userid",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        }
+                    ],
                     "form_class": GoodsCateGoryStyleForm,
                     "model_class": GoodsCateGoryStyle,
                     "father":True
@@ -80,6 +80,72 @@ class GoodsCateGoryStyleRules:
                         {
                             "key":"userid",
                             "value":"user.userid",
+                            "data_src":"data_pool",
+                            "pool":"self"
+                        }
+                    ],
+                }
+            }
+        )
+
+class GoodsCateGoryRules:
+
+    @staticmethod
+    def post():
+        return dict(
+            robot={
+                "pk_key": "gdcgid",
+                "goodscategory" : {
+                    "form_class": GoodsCateGoryForm,
+                    "model_class": GoodsCateGory
+                }
+            }
+        )
+
+    @staticmethod
+    def put():
+        return dict(
+            robot={
+                "pk_key":"gdcgid",
+                "goodscategory": {
+                    "form_class": GoodsCateGoryForm,
+                    "model_class": GoodsCateGory,
+                    "father":True
+                }
+            }
+        )
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "gdcgid",
+                "goodscategory": {
+                    "model_class": GoodsCateGory
+                }
+            }
+        )
+
+    @staticmethod
+    def get():
+        return dict(
+            isTransaction=False,
+            robot={
+                "pk_key": "gdcgid",
+                "goodscategory": {
+                    "model_class": GoodsCateGory,
+                    "serializers":GoodsCateGorySerializer,
+                    "sort":GoodsCateGory.sort,
+                    "query_params":[
+                        {
+                            "key":"userid",
+                            "value":"user.userid",
+                            "data_src":"data_pool",
+                            "pool":"self"
+                        },
+                        {
+                            "key":"gdcglastid",
+                            "value": "data.gdcglastid",
                             "data_src":"data_pool",
                             "pool":"self"
                         }

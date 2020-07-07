@@ -47,7 +47,10 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
             for item in value['query_params']:
                 query = self.filter(model_class,query,item)
 
-            query = query.order_by(model_class.createtime.desc())
+            if value.get("sort",None):
+                query = query.order_by(value.get("sort",None))
+            else:
+                query = query.order_by(model_class.createtime.desc())
 
             count = 0
             if value.get("page"):

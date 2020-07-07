@@ -39,6 +39,14 @@ class GoodsCateGoryStyleRules:
         return dict(
             robot={
                 "pk_key":"id",
+                "unique": [
+                    {
+                        "key": "userid",
+                        "value": "user.userid",
+                        "data_src": "data_pool",
+                        "pool": "self"
+                    }
+                ],
                 "goodscategorystyle": {
                     "form_class": GoodsCateGoryStyleForm,
                     "model_class": GoodsCateGoryStyle,

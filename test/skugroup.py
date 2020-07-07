@@ -10,16 +10,14 @@ class SkuGroupTest(TestUnitBase):
 
         self.pk = None
 
-        self.api_url = "/goods/skugroup"
+        self.api_url = "/goods/goodscategorystyle"
 
     def post(self):
 
         self.pk = self.request_handler(
             method="POST",
             url=self.api_url,
-            data={
-                "group_name":"测试分组2"
-            }
+            data={"typecode": "ST1001", "type": 1}
         )['data']
         print("{}添加成功!".format(self.pk))
 
@@ -52,4 +50,4 @@ if __name__ == '__main__':
 
     s = SkuGroupTest()
     # s.pk = 6
-    s.get()
+    s.post()

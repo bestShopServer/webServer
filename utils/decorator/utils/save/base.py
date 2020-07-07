@@ -173,12 +173,11 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         robot_table = kwargs.get("robot_table")
         model_class = robot_table["model_class"]
 
-        print(robot_table)
         if robot_table.get("unique",None):
             try:
                 await self.connector_app.db.get(model_class,
                         **{
-                            getattr(model_class,item['key']) :  self.filter(item)\
+                            item['key'] :  self.filter(item)\
                             for item in robot_table.get("unique")
                         }
                     )

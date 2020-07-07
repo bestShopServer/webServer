@@ -372,7 +372,7 @@ class SkuSpecValueRules:
             robot={
                 "pk_key": "spec_id",
                 "skuspecvalue": {
-                    "model_class": SkuGroup
+                    "model_class": SkuSpecValue
                 }
             }
         )

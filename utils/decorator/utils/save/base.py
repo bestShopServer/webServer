@@ -199,9 +199,11 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                 res = model_class(**instance_data)
                 await self.connector_app.db.update(res)
             else:
+                await self.check_unique(robot_table=robot_table)
                 res = await self.connector_app.db.create(model_class, **instance_data)
             self.delete_by_put_handler(robot_table=robot_table, res=res)
         else:
+            await self.check_unique(robot_table=robot_table)
             res =  await self.connector_app.db.create(model_class, **instance_data)
 
         self.add_link_by_post_or_put_hander(robot_table=robot_table,res=res)

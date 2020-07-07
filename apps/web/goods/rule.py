@@ -221,3 +221,41 @@ class SkuGroupRules:
                 }
             }
         )
+
+class SkuSpecValueRules:
+
+    @staticmethod
+    def post():
+        return dict(
+            robot={
+                "pk_key": "spec_id",
+                "skuspecvalue" : {
+                    "form_class": SkuSpecValueForm,
+                    "model_class": SkuSpecValue
+                }
+            }
+        )
+
+    @staticmethod
+    def put():
+        return dict(
+            robot={
+                "pk_key":"spec_id",
+                "skuspecvalue": {
+                    "form_class": SkuSpecValueForm,
+                    "model_class": SkuSpecValue,
+                    "father":True
+                }
+            }
+        )
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "spec_id",
+                "skuspecvalue": {
+                    "model_class": SkuGroup
+                }
+            }
+        )

@@ -134,6 +134,12 @@ class AttachMentRules:
                             "pool": "self",
                             "default":0
                         },
+                        {
+                            "key": "type",
+                            "value": "data.type",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        },
                     ],
                 }
             }

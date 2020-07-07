@@ -132,7 +132,7 @@ class AttachMentRules:
                             "value": "data.grouid",
                             "data_src": "data_pool",
                             "pool": "self",
-                            "default":'0'
+                            "default":0
                         },
                     ],
                 }

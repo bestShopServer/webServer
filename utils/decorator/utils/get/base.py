@@ -41,7 +41,7 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                 value = self.value_recursion(self.connector_app, query_param['value'].split("."))
                 if value:
                     query = query.where(getattr(model_class, query_param['key']) == value)
-                elif not value and  query_param.get("default",None):
+                elif not value and  query_param.get("default",None) != None:
                     query = query.where(getattr(model_class, query_param['key']) == query_param.get("default", None))
 
         return query

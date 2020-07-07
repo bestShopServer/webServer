@@ -26,7 +26,7 @@ from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
         SkuGroup,SkuSpecValue
 
-from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules
+from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,SkuGroupRules
 
 class goodscategorystyle(BaseHandler):
 
@@ -308,7 +308,9 @@ class skugroup(BaseHandler):
     Sku分组维护
     """
 
-    async def del_before_handler(self,pk):
+    async def del_before_handler(self,**kwargs):
+
+        pk = kwargs.get("pk")
 
         if isinstance(pk,list):
             if len(await self.db.execute(SkuSpecValue.select().where(SkuSpecValue.group_id << pk))):
@@ -317,45 +319,21 @@ class skugroup(BaseHandler):
             if len(await self.db.execute(SkuSpecValue.select().where(SkuSpecValue.group_id == pk))):
                 raise PubErrorCustom("该分组下还存在值,不能直接删除!")
 
-    @Core_connector(
-        form_class=SkuGroupForm,
-        model_class=SkuGroup)
+    @Core_connector(**SkuGroupRules.post())
     async def post(self,*args,**kwargs):
-        return {"data":kwargs.get("instance").group_id}
+        pass
 
-    @Core_connector(
-        form_class=SkuGroupForm,
-        model_class=SkuGroup,
-        pk_key="group_id")
+    @Core_connector(**SkuGroupRules.put())
     async def put(self,*args,**kwargs):
-        return {"data":kwargs.get("instance").group_id}
+        pass
 
-    @Core_connector(
-        model_class=SkuGroup,
-        del_before_handler=del_before_handler,
-        pk_key="group_id"
-    )
+    @Core_connector(**{**SkuGroupRules.delete(),**{"del_before_handler":del_before_handler}})
     async def delete(self,*args,**kwargs):
         pass
 
-    @Core_connector(isTransaction=False)
+    @Core_connector(**SkuGroupRules.get())
     async def get(self, pk=None):
-
-        query = SkuGroup.select().where(SkuGroup.userid == self.user['userid'])
-
-        if pk:
-            query = query.where(SkuGroup.group_id == pk)
-
-        count = len(await self.db.execute(query))
-
-        query  = query.paginate(self.data['page'], self.data['size'])
-
-        skugroupObj = await self.db.execute(query)
-
-        for item in skugroupObj:
-            item.spec_values = await self.db.execute(SkuSpecValue.select().where(SkuSpecValue.group_id == item.group_id ))
-
-        return {"data": SkuGroupSerializer(skugroupObj,many=True).data,"count":count}
+        pass
 
 class skuspecvalue(BaseHandler):
 

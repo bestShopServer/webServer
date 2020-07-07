@@ -153,3 +153,71 @@ class GoodsCateGoryRules:
                 }
             }
         )
+
+class SkuGroupRules:
+
+    @staticmethod
+    def post():
+        return dict(
+            robot={
+                "pk_key": "group_id",
+                "skugroup" : {
+                    "form_class": SkuGroupForm,
+                    "model_class": SkuGroup
+                }
+            }
+        )
+
+    @staticmethod
+    def put():
+        return dict(
+            robot={
+                "pk_key":"group_id",
+                "skugroup": {
+                    "form_class": SkuGroupForm,
+                    "model_class": SkuGroup,
+                    "father":True
+                }
+            }
+        )
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "group_id",
+                "skugroup": {
+                    "model_class": SkuGroup
+                }
+            }
+        )
+
+    @staticmethod
+    def get():
+        return dict(
+            isTransaction=False,
+            robot={
+                "pk_key": "group_id",
+                "skugroup": {
+                    "model_class": SkuGroup,
+                    "serializers":SkuGroupSerializer,
+                    "page": True,
+                    "query_params":[
+                        {
+                            "key":"userid",
+                            "value":"user.userid",
+                            "data_src":"data_pool",
+                            "pool":"self"
+                        }
+                    ],
+                    "child_form_link": {
+                        "skuspecvalue": "spec_values"
+                    },
+                    "child": {
+                        "skuspecvalue": {
+                            "model_class": SkuSpecValue,
+                        }
+                    }
+                }
+            }
+        )

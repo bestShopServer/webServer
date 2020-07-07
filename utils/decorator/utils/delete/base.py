@@ -54,8 +54,8 @@ class ConnectorFuncsDeleteBase(ConnectorFuncsBase):
             raise PubErrorCustom("请选择数据!")
 
         if self.connector.del_before_handler:
-            await self.connector.del_before_handler(\
-                self.connector_app, self.pk if self.pk else self.connector_app.data.get("ids"))
+            await self.connector.del_before_handler(
+                self.connector_app, pk=self.pk if self.pk else self.connector_app.data.get("ids"))
 
         if self.connector_app.data.get("ids"):
 

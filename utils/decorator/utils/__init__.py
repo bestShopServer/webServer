@@ -40,17 +40,15 @@ async def run_before_func_run(**kwargs):
     if connector.robot:
         if connector_app.request.method in ['POST','PUT']:
             if connector.add_before_handler:
-                await connector.add_before_handler(**kwargs)
+                await connector.add_before_handler(connector_app,**kwargs)
             if connector.upd_before_handler:
-                await connector.upd_before_handler(**kwargs)
+                await connector.upd_before_handler(connector_app,**kwargs)
             await ConnectorFuncsSaveBase(**kwargs).run()
             if connector.add_after_handler:
-                await connector.add_after_handler(**kwargs)
+                await connector.add_after_handler(connector_app,**kwargs)
             if connector.upd_after_handler:
-                await connector.upd_after_handler(**kwargs)
+                await connector.upd_after_handler(connector_app,**kwargs)
         elif connector_app.request.method == 'DELETE':
-            if connector.del_before_handler:
-                await connector.del_before_handler(kwargs)
             await ConnectorFuncsDeleteBase(**kwargs).run()
         elif connector_app.request.method == 'GET':
             return await ConnectorFuncsGetBase(**kwargs).run()

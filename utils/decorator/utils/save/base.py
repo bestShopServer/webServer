@@ -20,21 +20,6 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         self.delete_by_put = None
         self.add_link_by_post_or_put = None
 
-    def value_recursion(self, pool, value):
-
-        if value and len(value):
-
-            value_tmp = value.pop(0)
-
-            if isinstance(pool, dict):
-                pool_tmp = pool[value_tmp]
-            else:
-                pool_tmp = getattr(pool, value_tmp)
-
-            return self.value_recursion(pool_tmp, value)
-        else:
-            return pool
-
     def model_map(self,**kwargs):
 
         """
@@ -177,6 +162,28 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                     self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp)]['instance'] = instance
                     self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp)]['ids_key'].append(
                         last_ids_key)
+
+    def filter(self,query_param):
+
+        if query_param['data_src'] == 'data_pool':
+            if query_param['pool'] == 'self':
+                return self.value_recursion(self.connector_app, query_param['value'].split("."))
+
+    async def check_unique(self,**kwargs):
+        robot_table = kwargs.get("robot_table")
+        model_class = robot_table["model_class"]
+
+        if robot_table.get("unique"):
+            try:
+                await self.connector_app.db.get(model_class,
+                        **{
+                            getattr(model_class,item['key']) :  self.filter(item)\
+                            for item in robot_table.get("unique")
+                        }
+                    )
+                raise PubErrorCustom("已存在!")
+            except model_class.DoesNotExist:
+                pass
 
     async def _save(self,**kwargs):
 

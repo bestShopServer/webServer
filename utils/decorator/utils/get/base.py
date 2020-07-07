@@ -16,21 +16,6 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
         if not self.pk_key:
             raise PubErrorCustom("pk_key是空!")
 
-    def value_recursion(self, pool, value):
-
-        if value and len(value):
-
-            value_tmp = value.pop(0)
-
-            if isinstance(pool, dict):
-                pool_tmp = pool.get(value_tmp,None)
-            else:
-                pool_tmp = getattr(pool, value_tmp)
-
-            return self.value_recursion(pool_tmp, value)
-        else:
-            return pool
-
     async def run(self):
         return await self.get()
 

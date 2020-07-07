@@ -20,6 +20,14 @@ class GoodsCateGoryStyleRules:
             robot={
                 "pk_key": "id",
                 "goodscategorystyle" : {
+                    "unique": [
+                        {
+                            "key":"userid",
+                            "value":"user.userid",
+                            "data_src":"data_pool",
+                            "pool":"self"
+                        }
+                    ],
                     "form_class": GoodsCateGoryStyleForm,
                     "model_class": GoodsCateGoryStyle
                 }

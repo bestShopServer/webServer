@@ -17,6 +17,21 @@ class ConnectorFuncsBase(object):
 
         return model._meta.primary_key.name
 
+    def value_recursion(self, pool, value):
+
+        if value and len(value):
+
+            value_tmp = value.pop(0)
+
+            if isinstance(pool, dict):
+                pool_tmp = pool.get(value_tmp,None)
+            else:
+                pool_tmp = getattr(pool, value_tmp)
+
+            return self.value_recursion(pool_tmp, value)
+        else:
+            return pool
+
     # def get_pk_key(self,**kwargs):
     #
     #     model_dict = kwargs.get("model_dict")

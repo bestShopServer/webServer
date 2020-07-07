@@ -26,53 +26,39 @@ from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
         SkuGroup,SkuSpecValue
 
+from apps.web.goods.rule import GoodsCateGoryStyleRules
+
 class goodscategorystyle(BaseHandler):
 
     """
     商品分类样式设置
     """
 
-    async def add_before_handler(self,obj):
+    async def add_before_handler(self,**kwargs):
 
         """
         新增/修改前置处理
         """
         for item in GoodsCateGoryStyleTypecode().data:
-            if item[0] == obj['typecode']:
-                if item[1] != obj['type']:
+            if item[0] == self.data['typecode']:
+                if item[1] != self.data['type']:
                     raise PubErrorCustom("分类代码和分类层级不符!")
-        return obj
 
-    @Core_connector(
-        form_class=GoodsCateGoryStyleForm,
-        model_class=GoodsCateGoryStyle,
-        add_before_handler=add_before_handler)
-    async def post(self,*args,**kwargs):
-        return {"data":kwargs.get("instance").id}
+    @Core_connector(**{**GoodsCateGoryStyleRules.post(),**{"add_before_handler":add_before_handler}})
+    async def post(self, *args, **kwargs):
+        pass
 
-    @Core_connector(
-        form_class=GoodsCateGoryStyleForm,
-        model_class=GoodsCateGoryStyle,
-        upd_before_handler=add_before_handler,
-        pk_key="id")
+    @Core_connector(**{**GoodsCateGoryStyleRules.put(),**{"upd_before_handler":add_before_handler}})
     async def put(self,*args,**kwargs):
-        return {"data":kwargs.get("instance").id}
+        pass
 
-    @Core_connector(model_class=GoodsCateGoryStyle,pk_key="id")
+    @Core_connector(**GoodsCateGoryStyleRules.delete())
     async def delete(self,*args,**kwargs):
         pass
 
-    @Core_connector(isTransaction=False)
+    @Core_connector(**GoodsCateGoryStyleRules.get())
     async def get(self, pk=None):
-
-        query = GoodsCateGoryStyle.select().paginate(self.data['page'],self.data['size'])
-        if pk:
-            query = query.where(GoodsCateGoryStyle.id == pk)
-
-        query = query.where(GoodsCateGoryStyle.userid == self.user['userid']).order_by(GoodsCateGoryStyle.createtime.desc())
-
-
-        return {"data": GoodsCateGoryStyleSerializer(await self.db.execute(query),many=True).data}
+        pass
 
 class goodscategory(BaseHandler):
     """

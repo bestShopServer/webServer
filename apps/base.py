@@ -60,3 +60,10 @@ class BaseHandler(RequestHandler):
         :return:
         """
         return idGenerator(redis=self.redis)
+
+    def get_model_table_name(self,model):
+        return model._meta.table_name
+
+    def get_model_auto_increment_key(self,model):
+
+        return model._meta.primary_key.name

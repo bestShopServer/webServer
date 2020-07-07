@@ -21,7 +21,7 @@ async def request_before_func_run(**kwargs):
     await ConnectorParams(**kwargs).run()
 
     logger.info("\n请求的数据: {}".format(
-        connector_app.data)
+        connector_app.data if hasattr(connector_app,'data') else None)
     )
 
 async def run_before_func_run(**kwargs):

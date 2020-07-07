@@ -20,6 +20,8 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         self.delete_by_put = None
         self.add_link_by_post_or_put = None
 
+        self.count = 0
+
     def model_map(self,**kwargs):
 
         """
@@ -192,9 +194,14 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         instance_data = robot_table['instance_data']
         model_class = robot_table["model_class"]
         auto_increment_key = robot_table['auto_increment_key']
+        sort_key  = robot_table.get("sort_key",None)
+
+        self.count += 1
+
+        if sort_key:
+            instance_data.setdefault(sort_key, self.count)
 
         if self.connector_app.request.method == 'PUT':
-
             if instance_data.get(auto_increment_key, None):
                 res = model_class(**instance_data)
                 await self.connector_app.db.update(res)

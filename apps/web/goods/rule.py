@@ -50,6 +50,7 @@ class GoodsRules:
                             "model_class": GoodsLinkSku,
                             "last_ids_key":"gd_sku_links",
                             "last_ids_level":1,
+                            "sort_key":"sort",
                             "data_pool": {
                                 "instance": {
                                     "userid": "userid",

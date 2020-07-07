@@ -96,11 +96,11 @@ class goodscategory(BaseHandler):
 
     @Core_connector(**{**GoodsCateGoryRules.post(),**{"add_before_handler":add_before_handler}})
     async def post(self, *args, **kwargs):
-        return {"data":kwargs.get("instance").gdcgid}
+        pass
 
     @Core_connector(**{**GoodsCateGoryRules.put(),**{"upd_before_handler":add_before_handler}})
     async def put(self, *args, **kwargs):
-        return {"data": kwargs.get("instance").gdcgid}
+        pass
 
     @Core_connector(**{**GoodsCateGoryRules.put(),**{"del_before_handler":del_before_handler}})
     async def delete(self, *args, **kwargs):

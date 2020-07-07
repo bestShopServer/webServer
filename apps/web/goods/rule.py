@@ -72,8 +72,8 @@ class GoodsCateGoryStyleRules:
             isTransaction=False,
             robot={
                 "pk_key": "id",
-                "page":True,
                 "goodscategorystyle": {
+                    "page": True,
                     "model_class": GoodsCateGoryStyle,
                     "serializers":GoodsCateGoryStyleSerializer,
                     "query_params":[

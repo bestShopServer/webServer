@@ -1,7 +1,6 @@
 
 import json
 from apps.base import BaseHandler
-from playhouse.shortcuts import model_to_dict
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from loguru import logger
@@ -116,85 +115,74 @@ class goods(BaseHandler):
     商品管理
     """
 
-    async def add_before_handler(self,obj):
-
-        """
-        新增/修改前置处理
-        """
-        obj['gd_banners'] = json.dumps(obj['gd_banners'])
-        return obj
-
-    async def add_after_handler(self,obj,instance):
-
-        """
-        新增/修改后置
-        """
-        #区域购买处理
-        if instance.gd_allow_area_flag == '0':
-            await self.db.execute(GoodsLinkCity.delete().where(GoodsLinkCity.gdid==instance.gdid))
-            for item in obj['gd_allow_area']:
-                await self.db.create(GoodsLinkCity,**dict(
-                    userid = instance.userid,
-                    gdid = instance.gdid,
-                    province = item.get("province",""),
-                    province_name = item.get("province_name",""),
-                    city = item.get("city",""),
-                    city_name = item.get("city_name",""),
-                    country = item.get("country",""),
-                    country_name = item.get("country_name","")
-                ))
-
-        #商品分类关联处理
-        await self.db.execute(GoodsLinkCateGory.delete().where(GoodsLinkCateGory.gdid==instance.gdid))
-        for item in obj['gd_link_type']:
-            await self.db.create(GoodsLinkCateGory,**dict(
-                userid = instance.userid,
-                gdid = instance.gdid,
-                gdcgid = item
-            ))
-
-        #商品sku关联处理
-        if instance.gd_specs_name_default_flag == '1':
-            instance.gd_sku_links = []
-
-            for index,item in enumerate(obj['gd_sku_link']):
-                if item.get("id"):
-                    try:
-                        link_sku_obj = await self.db.get(GoodsLinkSku,id=item.get("id"))
-                        link_sku_obj.userid=instance.userid,
-                        link_sku_obj.gdid=instance.gdid,
-                        link_sku_obj.skus=json.dumps(item['skus'])
-                        link_sku_obj.image = item.get("image","")
-                        link_sku_obj.price = item.get("price",0.0)
-                        link_sku_obj.stock = item.get("stock",0)
-                        link_sku_obj.item_no = item.get("item_no","")
-                        link_sku_obj.weight = item.get("weight",0)
-                        link_sku_obj.cost_price = item.get("cost_price",0.0)
-                        # link_sku_obj.number = item.get("number",0)
-                        link_sku_obj.sort = index+1
-                        self.db.update(link_sku_obj)
-                    except GoodsLinkSku.DoesNotExist:
-                        raise PubErrorCustom("sku关联id[{}]是无效的!".format(item.get("id")))
-                else:
-                    link_sku_obj = await self.db.create(GoodsLinkSku,**dict(
-                        userid=instance.userid,
-                        gdid=instance.gdid,
-                        skus=json.dumps(item['skus']),
-                        image = item.get("image",""),
-                        price = item.get("price",0.0),
-                        stock = item.get("stock",0),
-                        item_no = item.get("item_no",""),
-                        weight = item.get("weight",0),
-                        cost_price = item.get("cost_price",0.0),
-                        # number = item.get("number",0),
-                        sort = index+1
-                    ))
-                instance.gd_sku_links.append(link_sku_obj.id)
-            await self.db.update(instance)
-        return instance
-
-    async def del_before_handler(self,pk):
-        pass
+    # async def add_after_handler(self,obj,instance):
+    #
+    #     """
+    #     新增/修改后置
+    #     """
+    #     #区域购买处理
+    #     if instance.gd_allow_area_flag == '0':
+    #         await self.db.execute(GoodsLinkCity.delete().where(GoodsLinkCity.gdid==instance.gdid))
+    #         for item in obj['gd_allow_area']:
+    #             await self.db.create(GoodsLinkCity,**dict(
+    #                 userid = instance.userid,
+    #                 gdid = instance.gdid,
+    #                 province = item.get("province",""),
+    #                 province_name = item.get("province_name",""),
+    #                 city = item.get("city",""),
+    #                 city_name = item.get("city_name",""),
+    #                 country = item.get("country",""),
+    #                 country_name = item.get("country_name","")
+    #             ))
+    #
+    #     #商品分类关联处理
+    #     await self.db.execute(GoodsLinkCateGory.delete().where(GoodsLinkCateGory.gdid==instance.gdid))
+    #     for item in obj['gd_link_type']:
+    #         await self.db.create(GoodsLinkCateGory,**dict(
+    #             userid = instance.userid,
+    #             gdid = instance.gdid,
+    #             gdcgid = item
+    #         ))
+    #
+    #     #商品sku关联处理
+    #     if instance.gd_specs_name_default_flag == '1':
+    #         instance.gd_sku_links = []
+    #
+    #         for index,item in enumerate(obj['gd_sku_link']):
+    #             if item.get("id"):
+    #                 try:
+    #                     link_sku_obj = await self.db.get(GoodsLinkSku,id=item.get("id"))
+    #                     link_sku_obj.userid=instance.userid,
+    #                     link_sku_obj.gdid=instance.gdid,
+    #                     link_sku_obj.skus=json.dumps(item['skus'])
+    #                     link_sku_obj.image = item.get("image","")
+    #                     link_sku_obj.price = item.get("price",0.0)
+    #                     link_sku_obj.stock = item.get("stock",0)
+    #                     link_sku_obj.item_no = item.get("item_no","")
+    #                     link_sku_obj.weight = item.get("weight",0)
+    #                     link_sku_obj.cost_price = item.get("cost_price",0.0)
+    #                     # link_sku_obj.number = item.get("number",0)
+    #                     link_sku_obj.sort = index+1
+    #                     self.db.update(link_sku_obj)
+    #                 except GoodsLinkSku.DoesNotExist:
+    #                     raise PubErrorCustom("sku关联id[{}]是无效的!".format(item.get("id")))
+    #             else:
+    #                 link_sku_obj = await self.db.create(GoodsLinkSku,**dict(
+    #                     userid=instance.userid,
+    #                     gdid=instance.gdid,
+    #                     skus=json.dumps(item['skus']),
+    #                     image = item.get("image",""),
+    #                     price = item.get("price",0.0),
+    #                     stock = item.get("stock",0),
+    #                     item_no = item.get("item_no",""),
+    #                     weight = item.get("weight",0),
+    #                     cost_price = item.get("cost_price",0.0),
+    #                     # number = item.get("number",0),
+    #                     sort = index+1
+    #                 ))
+    #             instance.gd_sku_links.append(link_sku_obj.id)
+    #         await self.db.update(instance)
+    #     return instance
 
     @Core_connector(**GoodsRules.post())
     async def post(self, *args, **kwargs):

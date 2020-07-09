@@ -46,6 +46,7 @@ class GoodsSerializer(serializers.Serializer):
     gd_name = serializers.CharField()
     gd_banners = serializers.SerializerMethodField()
     gd_show_price = serializers.DecimalField(max_digits=18,decimal_places=2)
+    gd_mark_price = serializers.DecimalField(max_digits=18, decimal_places=2)
     gd_stock_tot = serializers.IntegerField()
     gd_sell_tot_number = serializers.SerializerMethodField()
     gd_status = serializers.SerializerMethodField()

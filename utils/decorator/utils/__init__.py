@@ -12,8 +12,9 @@ async def request_before_func_run(**kwargs):
 
     connector_app = kwargs.get("connector_app")
 
-    logger.info("\n请求IP：{}".format(
-        connector_app.request.remote_ip
+    logger.info("\n请求IP：{}\n请求方法{}\n".format(
+        connector_app.request.remote_ip,
+        connector_app.request.uri,
     ))
 
     await ConnectorTicket(**kwargs).run()

@@ -3,23 +3,12 @@ import json
 from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
-from loguru import logger
 
 from peewee import JOIN
 
-from utils.time_st import UtilTime
-
-from apps.utlis import get_response_handler
-
 from apps.web.goods.customdict import GoodsCateGoryStyleTypecode
 
-from apps.web.goods.forms import \
-        GoodsCateGoryStyleForm,GoodsCateGoryForm,GoodsForm,\
-            SkuGroupForm,SkuSpecValueForm
-
-from apps.web.goods.serializers import \
-        GoodsCateGoryStyleSerializer,GoodsCateGorySerializer,GoodsSerializer,GoodsDetailSerializer,\
-            SkuGroupSerializer
+from apps.web.goods.serializers import GoodsDetailSerializer
 
 from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
@@ -128,7 +117,6 @@ class goodsdetail(BaseHandler):
 
         obj.gd_link_type = await self.db.execute(query)
 
-        # logger.info(obj.gd_link_type)
         query = GoodsLinkCity.select().where(GoodsLinkCity.gdid == obj.gdid)
 
         obj.gd_allow_area = await self.db.execute(query)

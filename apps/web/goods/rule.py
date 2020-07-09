@@ -152,6 +152,18 @@ class GoodsRules:
                             "pool":"self"
                         },
                         {
+                            "key": "gd_name",
+                            "value": "data.gd_name",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        },
+                        {
+                            "key": "gd_status",
+                            "value": "data.gd_status",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        },
+                        {
                             "data_src": "data_pool",
                             "pool": "self",
                             "value":"data.start_datetime",

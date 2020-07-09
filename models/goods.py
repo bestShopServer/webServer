@@ -24,7 +24,7 @@ class GoodsCateGory(BaseModel):
 
     userid = BigIntegerField(verbose_name="用户代码",null=True)
 
-    gdcglastid = CharField(max_length=10,default="",verbose_name="上级代码",null=True)
+    gdcglastid = CharField(max_length=10,default=0,verbose_name="上级代码",null=True)
 
     level = IntegerField(verbose_name="第几层",default=1,null=True)
     sort = IntegerField(verbose_name="排序",default=0,null=True)

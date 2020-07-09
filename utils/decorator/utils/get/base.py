@@ -72,6 +72,7 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                                     )
                                 )
 
+            print(resposne)
             data = value['serializers'](resposne, many=True).data
 
             if self.pk:

@@ -29,12 +29,8 @@ class FareLinkCity(BaseModel):
     id = BigAutoField(primary_key=True,verbose_name="关联ID")
     userid = BigIntegerField(verbose_name="用户代码", null=True)
     fare_rule_id = BigIntegerField(verbose_name="运费规则ID",default=0)
-    province = CharField(max_length=30,verbose_name="省/直辖市代码",default="")
-    province_name = CharField(max_length=60,verbose_name="省名称",default="")
-    city = CharField(max_length=30,verbose_name="市代码",default="")
-    city_name = CharField(max_length=60,verbose_name="市名称",default="")
-    country = CharField(max_length=30,verbose_name="县/区",default="")
-    country_name = CharField(max_length=60,verbose_name="县名称",default="")
+    citycode = CharField(max_length=30,verbose_name="城市代码")
+    cityname = CharField(max_length=60,verbose_name="城市名称")
 
     class Meta:
         db_table = 'farelinkcity'

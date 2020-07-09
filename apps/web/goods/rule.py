@@ -5,7 +5,7 @@ from apps.web.goods.forms import \
             SkuGroupForm,SkuSpecValueForm
 
 from apps.web.goods.serializers import \
-        GoodsCateGoryStyleSerializer,GoodsCateGorySerializer,GoodsSerializer,GoodsDetailSerializer,\
+        GoodsCateGoryStyleSerializer,GoodsCateGorySerializer,GoodsSerializer,\
             SkuGroupSerializer
 
 from models.goods import \

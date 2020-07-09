@@ -52,7 +52,7 @@ class Goods(BaseModel):
 
     gd_name = CharField(max_length=120, verbose_name="商品名称", default='', null=True)
     gd_banners = CharField(max_length=2048, verbose_name="商品轮播,支持图片和视频['image','url'],['video','url']", default='[]')
-    gd_status = CharField(verbose_name="商品状态,0-上架,1-下架",default='1',max_length=1)
+    gd_status = CharField(verbose_name="商品状态,0-上架(销售中),1-下架,2-已售罄",default='1',max_length=1)
     gd_sort = IntegerField(verbose_name="排序", default=0)
 
 
@@ -126,12 +126,8 @@ class GoodsLinkCity(BaseModel):
     id = BigAutoField(primary_key=True,verbose_name="关联ID")
     userid = BigIntegerField(verbose_name="用户代码", null=True)
     gdid = BigIntegerField(verbose_name="商品ID")
-    province = CharField(max_length=30,verbose_name="省/直辖市代码")
-    province_name = CharField(max_length=60,verbose_name="省名称")
-    city = CharField(max_length=30,verbose_name="市代码")
-    city_name = CharField(max_length=60,verbose_name="市名称")
-    country = CharField(max_length=30,verbose_name="县/区")
-    country_name = CharField(max_length=60,verbose_name="县名称")
+    citycode = CharField(max_length=30,verbose_name="城市代码")
+    cityname = CharField(max_length=60,verbose_name="城市名称")
 
     class Meta:
         db_table = 'goodslinkcity'

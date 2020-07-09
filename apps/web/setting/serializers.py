@@ -8,12 +8,8 @@ class FareLinkCitySerializer(serializers.Serializer):
     id =  serializers.IntegerField()
     userid =  serializers.IntegerField()
     fare_rule_id =  serializers.IntegerField()
-    province = serializers.CharField()
-    province_name = serializers.CharField()
-    city = serializers.CharField()
-    city_name = serializers.CharField()
-    country = serializers.CharField()
-    country_name = serializers.CharField()
+    citycode = serializers.CharField()
+    cityname = serializers.CharField()
 
 class FareRuleSerializer(serializers.Serializer):
 

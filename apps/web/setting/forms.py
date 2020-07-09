@@ -44,9 +44,5 @@ class FareRuleForm(Form):
 class FareLinkCityForm(Form):
     id = IntegerField()
     fare_rule_id = IntegerField()
-    province = StringField()
-    province_name = StringField()
-    city = StringField()
-    city_name = StringField()
-    country = StringField()
-    country_name = StringField()
+    citycode = StringField()
+    cityname = StringField()

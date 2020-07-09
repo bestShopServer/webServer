@@ -68,12 +68,8 @@ class GoodsLinkCitySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     userid = serializers.IntegerField()
     gdid = serializers.IntegerField()
-    province = serializers.CharField()
-    province_name = serializers.CharField()
-    city = serializers.CharField()
-    city_name = serializers.CharField()
-    country = serializers.CharField()
-    country_name = serializers.CharField()
+    citycode = serializers.CharField()
+    cityname = serializers.CharField()
 
 
 class GoodsLinkCateGorySerializer(serializers.Serializer):

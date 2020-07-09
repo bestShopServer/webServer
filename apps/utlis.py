@@ -1,7 +1,5 @@
 
 
-
-
 def get_response_handler(pk,res):
 
     if pk:

@@ -12,6 +12,8 @@ from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
         SkuGroup,SkuSpecValue
 
+from utils.time_st import UtilTime
+
 class GoodsRules:
 
     @staticmethod
@@ -128,6 +130,56 @@ class GoodsRules:
                             "model_class": GoodsLinkSku,
                         }
                     }
+                }
+            }
+        )
+
+    @staticmethod
+    def get():
+        return dict(
+            isTransaction=False,
+            robot={
+                "pk_key": "gdcgid",
+                "goods": {
+                    "model_class": Goods,
+                    "serializers":GoodsSerializer,
+                    "page": True,
+                    "query_params":[
+                        {
+                            "key":"userid",
+                            "value":"user.userid",
+                            "data_src":"data_pool",
+                            "pool":"self"
+                        },
+                        {
+                            "data_src": "data_pool",
+                            "pool": "self",
+                            "value":"data.start_datetime",
+                            "value_format_func": lambda x:UtilTime().string_to_timestamp(x),
+                            "query":{
+                                "where": Goods.createtime.__ge__,
+                            }
+                        },
+                        {
+                            "data_src": "data_pool",
+                            "pool": "self",
+                            "value": "data.end_datetime",
+                            "value_format_func": lambda x: UtilTime().string_to_timestamp(x),
+                            "query": {
+                                "where": Goods.createtime.__le__,
+                            }
+                        },
+                        {
+                            "value": "data.gdcgids",
+                            "data_src": "data_pool",
+                            "pool": "self",
+                            "query":{
+                                "link_model_class":GoodsCateGory,
+                                "where":GoodsCateGory.gdcgid.in_,
+                                "last_where":Goods.gdid.in_,
+                            }
+                        }
+                    ]
                 }
             }
         )

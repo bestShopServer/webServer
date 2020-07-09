@@ -109,80 +109,67 @@ class goodscategory(BaseHandler):
     async def get(self, pk=None):
         pass
 
+class goodsdetail(BaseHandler):
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+        if not pk:
+            raise PubErrorCustom("查询详情时商品ID不能为空!")
+
+        try:
+            obj = await self.db.get(Goods, gdid=pk)
+        except Goods.DoesNotExist:
+            raise PubErrorCustom("此商品不存在!")
+
+        query = GoodsLinkCateGory.select(GoodsLinkCateGory,GoodsCateGory.gdcgname). \
+            join(GoodsCateGory, join_type=JOIN.INNER, on=(GoodsLinkCateGory.gdcgid == GoodsCateGory.gdcgid)).\
+            where(GoodsLinkCateGory.gdid == obj.gdid,GoodsCateGory.status == '0')
+
+        obj.gd_link_type = await self.db.execute(query)
+
+        # logger.info(obj.gd_link_type)
+        query = GoodsLinkCity.select().where(GoodsLinkCity.gdid == obj.gdid)
+
+        obj.gd_allow_area = await self.db.execute(query)
+
+        query = GoodsLinkSku.select().where(GoodsLinkSku.id << json.loads(obj.gd_sku_links)).order_by(GoodsLinkSku.sort)
+
+        obj.gd_sku_links = await self.db.execute(query)
+
+        for item in obj.gd_sku_links:
+
+            skus = []
+
+            for skuItem in json.loads(item.skus):
+
+                try:
+                    skuGroupObj = await self.db.get(SkuGroup, group_id=skuItem['group_id'])
+                except SkuGroup.DoesNotExist:
+                    skuGroupObj = None
+
+                try:
+                    skuSpecValueObj = await self.db.get(SkuSpecValue, spec_id=skuItem['spec_id'])
+                except SkuGroup.DoesNotExist:
+                    skuSpecValueObj = None
+
+                if skuGroupObj and skuSpecValueObj and skuSpecValueObj.group_id == skuGroupObj.group_id:
+                    skus.append(dict(
+                        group_id = skuSpecValueObj.group_id,
+                        spec_id = skuSpecValueObj.spec_id,
+                        group_name = skuGroupObj.group_name,
+                        spec_value = skuSpecValueObj.spec_value
+                    ))
+
+            item.skus = skus
+
+        return {"data": GoodsDetailSerializer([obj], many=True).data[0]}
+
 class goods(BaseHandler):
 
     """
     商品管理
     """
-
-    # async def add_after_handler(self,obj,instance):
-    #
-    #     """
-    #     新增/修改后置
-    #     """
-    #     #区域购买处理
-    #     if instance.gd_allow_area_flag == '0':
-    #         await self.db.execute(GoodsLinkCity.delete().where(GoodsLinkCity.gdid==instance.gdid))
-    #         for item in obj['gd_allow_area']:
-    #             await self.db.create(GoodsLinkCity,**dict(
-    #                 userid = instance.userid,
-    #                 gdid = instance.gdid,
-    #                 province = item.get("province",""),
-    #                 province_name = item.get("province_name",""),
-    #                 city = item.get("city",""),
-    #                 city_name = item.get("city_name",""),
-    #                 country = item.get("country",""),
-    #                 country_name = item.get("country_name","")
-    #             ))
-    #
-    #     #商品分类关联处理
-    #     await self.db.execute(GoodsLinkCateGory.delete().where(GoodsLinkCateGory.gdid==instance.gdid))
-    #     for item in obj['gd_link_type']:
-    #         await self.db.create(GoodsLinkCateGory,**dict(
-    #             userid = instance.userid,
-    #             gdid = instance.gdid,
-    #             gdcgid = item
-    #         ))
-    #
-    #     #商品sku关联处理
-    #     if instance.gd_specs_name_default_flag == '1':
-    #         instance.gd_sku_links = []
-    #
-    #         for index,item in enumerate(obj['gd_sku_link']):
-    #             if item.get("id"):
-    #                 try:
-    #                     link_sku_obj = await self.db.get(GoodsLinkSku,id=item.get("id"))
-    #                     link_sku_obj.userid=instance.userid,
-    #                     link_sku_obj.gdid=instance.gdid,
-    #                     link_sku_obj.skus=json.dumps(item['skus'])
-    #                     link_sku_obj.image = item.get("image","")
-    #                     link_sku_obj.price = item.get("price",0.0)
-    #                     link_sku_obj.stock = item.get("stock",0)
-    #                     link_sku_obj.item_no = item.get("item_no","")
-    #                     link_sku_obj.weight = item.get("weight",0)
-    #                     link_sku_obj.cost_price = item.get("cost_price",0.0)
-    #                     # link_sku_obj.number = item.get("number",0)
-    #                     link_sku_obj.sort = index+1
-    #                     self.db.update(link_sku_obj)
-    #                 except GoodsLinkSku.DoesNotExist:
-    #                     raise PubErrorCustom("sku关联id[{}]是无效的!".format(item.get("id")))
-    #             else:
-    #                 link_sku_obj = await self.db.create(GoodsLinkSku,**dict(
-    #                     userid=instance.userid,
-    #                     gdid=instance.gdid,
-    #                     skus=json.dumps(item['skus']),
-    #                     image = item.get("image",""),
-    #                     price = item.get("price",0.0),
-    #                     stock = item.get("stock",0),
-    #                     item_no = item.get("item_no",""),
-    #                     weight = item.get("weight",0),
-    #                     cost_price = item.get("cost_price",0.0),
-    #                     # number = item.get("number",0),
-    #                     sort = index+1
-    #                 ))
-    #             instance.gd_sku_links.append(link_sku_obj.id)
-    #         await self.db.update(instance)
-    #     return instance
 
     @Core_connector(**GoodsRules.post())
     async def post(self, *args, **kwargs):
@@ -196,87 +183,9 @@ class goods(BaseHandler):
     async def delete(self, *args, **kwargs):
         pass
 
-    # @Core_connector(isTransaction=False,is_query_standard=False)
-    # async def get(self, pk=None):
-    #
-    #     #查询详情
-    #     if self.data.get('detail'):
-    #         if not pk:
-    #             raise PubErrorCustom("查询详情时商品ID不能为空!")
-    #
-    #         try:
-    #             obj = await self.db.get(Goods, gdid=pk)
-    #         except Goods.DoesNotExist:
-    #             raise PubErrorCustom("此商品不存在!")
-    #
-    #         query = GoodsLinkCateGory.select(GoodsLinkCateGory,GoodsCateGory.gdcgname). \
-    #             join(GoodsCateGory, join_type=JOIN.INNER, on=(GoodsLinkCateGory.gdcgid == GoodsCateGory.gdcgid)).\
-    #             where(GoodsLinkCateGory.gdid == obj.gdid,GoodsCateGory.status == '0')
-    #
-    #         obj.gd_link_type = await self.db.execute(query)
-    #
-    #         # logger.info(obj.gd_link_type)
-    #         query = GoodsLinkCity.select().where(GoodsLinkCity.gdid == obj.gdid)
-    #
-    #         obj.gd_allow_area = await self.db.execute(query)
-    #
-    #         query = GoodsLinkSku.select().where(GoodsLinkSku.id << json.loads(obj.gd_sku_links)).order_by(GoodsLinkSku.sort)
-    #
-    #         obj.gd_sku_links = await self.db.execute(query)
-    #
-    #         for item in obj.gd_sku_links:
-    #
-    #             skus = []
-    #
-    #             for skuItem in json.loads(item.skus):
-    #
-    #                 try:
-    #                     skuGroupObj = await self.db.get(SkuGroup, group_id=skuItem['group_id'])
-    #                 except SkuGroup.DoesNotExist:
-    #                     skuGroupObj = None
-    #
-    #                 try:
-    #                     skuSpecValueObj = await self.db.get(SkuSpecValue, spec_id=skuItem['spec_id'])
-    #                 except SkuGroup.DoesNotExist:
-    #                     skuSpecValueObj = None
-    #
-    #                 if skuGroupObj and skuSpecValueObj and skuSpecValueObj.group_id == skuGroupObj.group_id:
-    #                     skus.append(dict(
-    #                         group_id = skuSpecValueObj.group_id,
-    #                         spec_id = skuSpecValueObj.spec_id,
-    #                         group_name = skuGroupObj.group_name,
-    #                         spec_value = skuSpecValueObj.spec_value
-    #                     ))
-    #
-    #             item.skus = skus
-    #
-    #         return {"data": GoodsDetailSerializer([obj], many=True).data[0]}
-    #
-    #     #查询列表
-    #     else:
-    #         query = Goods.select().where(Goods.userid == self.user['userid'])
-    #
-    #         if self.data.get("gdcgids"):
-    #             gdids = [ item.gdid for item in await self.db.execute(GoodsCateGory.select().where(GoodsCateGory.gdcgid << self.data.get("gdcgids"))) ]
-    #             query = query.where(Goods.gdid << gdids)
-    #
-    #         if self.data.get("start_datetime") and self.data.get("end_datetime"):
-    #             ut = UtilTime()
-    #             start_datetime = ut.string_to_timestamp(self.data.get("start_datetime"))
-    #             end_datetime = ut.string_to_timestamp(self.data.get("end_datetime"))
-    #
-    #             query = query.where(Goods.createtime>=start_datetime,Goods.createtime<=end_datetime)
-    #
-    #         query = query.order_by(Goods.createtime.desc())
-    #
-    #         count = len(await self.db.execute(query))
-    #
-    #         query = query.paginate(self.data['page'], self.data['size'])
-    #
-    #         return {
-    #             "data": GoodsSerializer(await self.db.execute(query), many=True).data,
-    #             "count":count
-    #         }
+    @Core_connector(**GoodsRules.get())
+    async def get(self, pk=None):
+        pass
 
 class skugroup(BaseHandler):
 

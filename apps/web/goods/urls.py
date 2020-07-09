@@ -11,6 +11,7 @@ urlpattern = [
     url(join_url(api_url, '/goodscategory/(.*)'), goodscategory),
     url(join_url(api_url, '/goods'), goods),
     url(join_url(api_url, '/goods/(.*)'), goods),
+    url(join_url(api_url, '/goodsdetail/(.*)'), goodsdetail),
     url(join_url(api_url, '/skugroup'), skugroup),
     url(join_url(api_url, '/skugroup/(.*)'), skugroup),
     url(join_url(api_url, '/skuspecvalue'), skuspecvalue),

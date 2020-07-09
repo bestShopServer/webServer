@@ -161,7 +161,7 @@ class goods(BaseHandler):
 
     @Core_connector(**GoodsRules.post())
     async def post(self, *args, **kwargs):
-        pass
+        return {"data":self.pk}
 
     @Core_connector(**GoodsRules.put())
     async def put(self, *args, **kwargs):

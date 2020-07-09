@@ -24,6 +24,7 @@ class GoodsRules:
                 "goods" : {
                     "form_class": GoodsForm,
                     "model_class": Goods,
+                    "father": True,
                     "child_form_link": {
                         "goodslinkcity": "gd_allow_area",
                         "goodslinkcategory":"gd_link_type",

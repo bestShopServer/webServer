@@ -246,6 +246,8 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         await self.form_robot_hander(robot_table=robot_table)
         self.model_map(robot_table=robot_table)
         robot_table['instance'] = await self._save(robot_table=robot_table)
+        if robot_table.get("father") and self.pk_key:
+            self.connector_app.pk = getattr(robot_table['instance'],self.pk_key)
         await self.robot_recursion(robot=robot_table.get("child", None), last=robot_table)
 
     async def robot_recursion(self,robot,last=None):

@@ -208,6 +208,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
             instance_data.setdefault(sort_key, self.count)
 
         if self.connector_app.request.method == 'PUT':
+
             if instance_data.get(auto_increment_key, None):
                 res = model_class(**instance_data)
                 await self.connector_app.db.update(res)

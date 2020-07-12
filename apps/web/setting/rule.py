@@ -14,6 +14,7 @@ class FareRuleRules:
                 "farerule" : {
                     "form_class": FareRuleForm,
                     "model_class": FareRule,
+                    "father": True,
                     "child_form_link":{
                           "farelinkcity":"fare_rule_link_citys"
                     },
@@ -46,7 +47,13 @@ class FareRuleRules:
                     },
                     "child": {
                         "farelinkcity": {
-                            "model_class": FareLinkCity
+                            "model_class": FareLinkCity,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid",
+                                    "fare_rule_id": "fare_rule_id"
+                                }
+                            }
                         }
                     }
                 }

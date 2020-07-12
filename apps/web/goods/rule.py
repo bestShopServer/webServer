@@ -76,7 +76,9 @@ class GoodsRules:
                     "model_class": Goods,
                     "father":True,
                     "child_form_link": {
-                        "goodslinkcity": "gd_allow_area"
+                        "goodslinkcity": "gd_allow_area",
+                        "goodslinkcategory":"gd_link_type",
+                        "goodslinksku": "gd_sku_link"
                     },
                     "child": {
                         "goodslinkcity": {

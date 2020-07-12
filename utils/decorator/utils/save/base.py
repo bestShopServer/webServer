@@ -283,6 +283,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                         )
                 )
 
+        logger.info(self.add_link_by_post_or_put)
         if self.add_link_by_post_or_put:
             for key,value in self.add_link_by_post_or_put.items():
                 instance = value['instance']

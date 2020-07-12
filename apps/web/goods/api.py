@@ -117,6 +117,8 @@ class goodsdetail(BaseHandler):
 
         obj.gd_link_type = await self.db.execute(query)
 
+
+
         query = GoodsLinkCity.select().where(GoodsLinkCity.gdid == obj.gdid)
 
         obj.gd_allow_area = await self.db.execute(query)

@@ -143,17 +143,17 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
                 instance = model_class_tmp['instance']
 
-                if not isinstance(getattr(instance, last_ids_key), list):
-                    setattr(instance, last_ids_key,
-                            json.loads(
-                                getattr(instance, last_ids_key)
-                            ).append(getattr(res, auto_increment_key))
-                            )
-                else:
-                    setattr(instance, last_ids_key,
-                            [getattr(res, auto_increment_key)]
-                            )
-
+                # if not isinstance(getattr(instance, last_ids_key), list):
+                #     setattr(instance, last_ids_key,
+                #             json.loads(
+                #                 getattr(instance, last_ids_key)
+                #             ).append(getattr(res, auto_increment_key))
+                #             )
+                # else:
+                #     setattr(instance, last_ids_key,
+                #             [getattr(res, auto_increment_key)]
+                #             )
+                logger.info(robot_table)
                 if not self.add_link_by_post_or_put:
                     self.add_link_by_post_or_put = {
                         self.get_model_table_name(model_class_tmp['model_class']): {

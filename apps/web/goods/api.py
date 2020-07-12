@@ -120,7 +120,7 @@ class goodsdetail(BaseHandler):
         obj.gd_link_type = await self.db.execute(query)
 
         try:
-            obj.gd_fare_rule = await self.db.get(FareRule, fare_rule_id=Goods.gd_fare_mould_id,userid=Goods.userid)
+            obj.gd_fare_rule = await self.db.get(FareRule, fare_rule_id=obj.gd_fare_mould_id,userid=obj.userid)
         except FareRule.DoesNotExist:
             obj.gd_fare_rule = None
 

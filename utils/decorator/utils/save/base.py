@@ -44,6 +44,9 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
         new_data = {}
 
+        if not form_data:
+            return None
+
         if data_pool:
 
             if data_pool.get("self",None):
@@ -71,7 +74,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                 continue
 
             if not new_data.get(key, None):
-                if form_data.get(key, None):
+                if form_data and form_data.get(key, None):
                     new_data[key] = form_data.get(key) if not isinstance(form_data.get(key),list) else json.dumps(form_data.get(key))
 
         robot_table_value['instance_data'] = new_data
@@ -88,7 +91,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                 elif isinstance(form_data[value],dict):
                     robot_table_value['child'][key]['form_data'] = item
                 else:
-                    raise PubErrorCustom("robot格式有误!")
+                    robot_table_value['child'][key]['form_data'] = None
 
     def delete_by_put_handler(self,**kwargs):
 
@@ -195,6 +198,9 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         model_class = robot_table["model_class"]
         auto_increment_key = robot_table['auto_increment_key']
         sort_key  = robot_table.get("sort_key",None)
+
+        if not instance_data:
+            return None
 
         self.count += 1
 

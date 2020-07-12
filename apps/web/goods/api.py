@@ -130,9 +130,9 @@ class goodsdetail(BaseHandler):
 
         query = GoodsLinkSku.select().where(GoodsLinkSku.id << json.loads(obj.gd_sku_links)).order_by(GoodsLinkSku.sort)
 
-        obj.gd_sku_links = await self.db.execute(query)
+        obj.gd_sku_link = await self.db.execute(query)
 
-        for item in obj.gd_sku_links:
+        for item in obj.gd_sku_link:
 
             skus = []
 

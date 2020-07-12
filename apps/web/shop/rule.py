@@ -2,7 +2,7 @@
 
 from models.shop import ShopPage
 from apps.web.shop.forms import ShopPageForm
-from apps.web.shop.serializers import ShopPageSerializer
+from apps.web.shop.serializers import ShopPageSerializer,ShopPageDetailSerializer
 
 class ShopPageRules:
 
@@ -53,12 +53,19 @@ class ShopPageRules:
                     "model_class": ShopPage,
                     "page":True,
                     "serializers":ShopPageSerializer,
+                    "detail_serializers":ShopPageDetailSerializer,
                     "query_params":[
                         {
                             "key":"userid",
                             "value":"user.userid",
                             "data_src":"data_pool",
                             "pool":"self"
+                        },
+                        {
+                            "key": "type",
+                            "value": "user.userid",
+                            "data_src": "data_pool",
+                            "pool": "self"
                         }
                     ]
                 }

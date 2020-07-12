@@ -68,6 +68,9 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
 
             if self.pk:
                 query = query.where(getattr(model_class,pk_key) == self.pk)
+            else:
+                if self.connector_app.data.get("detail"):
+                    raise PubErrorCustom("查询详情请输入id值!")
 
             for item in value['query_params']:
                 query = await self.filter(model_class,query,item)
@@ -98,7 +101,10 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                                 )
 
             print(resposne)
-            data = value['serializers'](resposne, many=True).data
+            if self.connector_app.data.get("detail"):
+                data = value['detail_serializers'](resposne, many=True).data
+            else:
+                data = value['serializers'](resposne, many=True).data
 
             if self.pk:
                 if data and len(data):

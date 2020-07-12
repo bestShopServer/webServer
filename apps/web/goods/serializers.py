@@ -130,7 +130,7 @@ class GoodsDetailSerializer(serializers.Serializer):
     gd_item_no = serializers.CharField()
     gd_weight = serializers.IntegerField()
 
-    gd_sku_links = serializers.SerializerMethodField()
+    gd_sku_link = serializers.SerializerMethodField()
 
     gd_sell_actual_number = serializers.IntegerField()
 
@@ -168,8 +168,8 @@ class GoodsDetailSerializer(serializers.Serializer):
     def get_createtime(self,obj):
         return UtilTime().timestamp_to_string(obj.createtime)
 
-    def get_gd_sku_links(self,obj):
-        return GoodsLinkSkuSerializer(obj.gd_sku_links,many=True).data
+    def get_gd_sku_link(self,obj):
+        return GoodsLinkSkuSerializer(obj.gd_sku_link,many=True).data
 
     def get_gd_link_type(self,obj):
         return GoodsLinkCateGorySerializer(obj.gd_link_type,many=True).data

@@ -1,7 +1,7 @@
 
 import json,copy
 from utils.exceptions import PubErrorCustom
-
+from loguru import logger
 from utils.decorator.utils.base import ConnectorFuncsBase
 
 class ConnectorFuncsSaveBase(ConnectorFuncsBase):
@@ -129,9 +129,11 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         last_ids_key = robot_table.get("last_ids_key", None)
 
         if last_ids_key:
+
             last_ids_level = int(robot_table.get("last_ids_level", 1))
 
             model_class_tmp = None
+            logger.info(robot_table,last_ids_level)
             for i in range(last_ids_level):
                 model_class_tmp = getattr(robot_table, 'last')
 

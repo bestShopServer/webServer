@@ -139,6 +139,7 @@ class GoodsDetailSerializer(serializers.Serializer):
     """
     gd_sell_number = serializers.IntegerField()
     gd_fare_mould_id = serializers.IntegerField()
+    gd_fare_mould_name = serializers.SerializerMethodField()
     gd_limit_number_by_goods = serializers.IntegerField()
     gd_limit_number_by_order = serializers.IntegerField()
 
@@ -155,6 +156,9 @@ class GoodsDetailSerializer(serializers.Serializer):
 
     gd_link_type = serializers.SerializerMethodField()
     gd_allow_area = serializers.SerializerMethodField()
+
+    def get_gd_fare_mould_name(self,obj):
+        return obj.gd_fare_rule.fare_rule_name if obj.gd_fare_rule else ""
 
     def get_gd_banners(self,obj):
         return json.loads(obj.gd_banners)

@@ -14,6 +14,8 @@ from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
         SkuGroup,SkuSpecValue
 
+from models.setting import FareRule
+
 from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,SkuGroupRules,SkuSpecValueRules,GoodsRules
 
 class goodscategorystyle(BaseHandler):
@@ -117,7 +119,10 @@ class goodsdetail(BaseHandler):
 
         obj.gd_link_type = await self.db.execute(query)
 
-
+        try:
+            obj.gd_fare_rule = await self.db.get(FareRule, fare_rule_id=Goods.gd_fare_mould_id,userid=Goods.userid)
+        except FareRule.DoesNotExist:
+            obj.gd_fare_rule = None
 
         query = GoodsLinkCity.select().where(GoodsLinkCity.gdid == obj.gdid)
 

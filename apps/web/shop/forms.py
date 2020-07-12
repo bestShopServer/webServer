@@ -10,7 +10,7 @@ class ShopPageForm(Form):
     id = IntegerField()
     userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
     title = StringField("标题", validators=[DataRequired(message="请输入标题"), Length(min=2,max=60, message="标题长度为2-60")])
-    type = StringField()
+    type = StringField(default='9')
 
     time_publish_flag = SelectField(
         label='是否定时发布',

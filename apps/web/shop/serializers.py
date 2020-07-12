@@ -21,12 +21,9 @@ class ShopPageDetailSerializer(serializers.Serializer):
     title = serializers.CharField()
     time_publish_flag = serializers.CharField()
     type = serializers.CharField()
-    time_publish = serializers.SerializerMethodField()
+    time_publish = serializers.IntegerField()
     html_data = serializers.SerializerMethodField()
 
     def get_html_data(self,obj):
         return json.loads(obj.html_data)
-
-    def get_time_publish(self,obj):
-        return UtilTime().timestamp_to_string(obj.time_publish) if obj.time_publish else ""
 

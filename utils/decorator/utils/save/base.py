@@ -157,19 +157,31 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                     self.add_link_by_post_or_put = {
                         self.get_model_table_name(model_class_tmp['model_class']): {
                             "instance": instance,
-                            "ids_key": [last_ids_key]
+                            "ids_key": [
+                                {
+                                    last_ids_key:[]
+                                }
+                            ]
                         }
                     }
                 elif not self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp['model_class'])):
                     self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp['model_class'])] = {
                         "instance": instance,
-                        "ids_key": [last_ids_key]
+                        "ids_key": [
+                                {
+                                    last_ids_key:[]
+                                }
+                            ]
                     }
                 elif last_ids_key not in self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp['model_class']))[
                     'ids_key']:
                     self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp['model_class'])]['instance'] = instance
                     self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp['model_class'])]['ids_key'].append(
-                        last_ids_key)
+                                {last_ids_key:[]})
+
+                self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp['model_class']))[
+                    'ids_key'][last_ids_key].append(getattr(robot_table['instance'],auto_increment_key))
+
 
     def filter(self,query_param):
 
@@ -287,8 +299,8 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         if self.add_link_by_post_or_put:
             for key,value in self.add_link_by_post_or_put.items():
                 instance = value['instance']
-                for item in value['ids_key']:
-                    setattr(instance,item,json.dumps(getattr(instance,item)))
+                for idKey,idValue in value['ids_key'].items():
+                    setattr(instance,idKey,json.dumps(idValue))
                 await self.connector_app.db.update(instance)
 
     async def save(self):

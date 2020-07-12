@@ -72,6 +72,8 @@ class GoodsForm(Form):
     gd_limit_number_by_goods = IntegerField("限购数量(商品)",default=-1)
     gd_limit_number_by_order = IntegerField("限购数量(订单)",default=-1)
 
+    attribute = StringField()
+
     gd_include_fare1 = IntegerField("单品满件包邮(件)",default=0)
     gd_include_fare2 = DecimalField("单品满额包邮(元)",default=0.0)
     gd_allow_area_flag = StringField("是否允许区域购买", default='1')

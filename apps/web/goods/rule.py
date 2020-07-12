@@ -51,7 +51,7 @@ class GoodsRules:
                         },
                         "goodslinksku": {
                             "model_class": GoodsLinkSku,
-                            "last_ids_key":"gd_sku_links",
+                            "last_ids_key":"gd_sku_link",
                             "last_ids_level":1,
                             "sort_key":"sort",
                             "data_pool": {

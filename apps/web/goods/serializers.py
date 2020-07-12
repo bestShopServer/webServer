@@ -130,7 +130,7 @@ class GoodsDetailSerializer(serializers.Serializer):
     gd_item_no = serializers.CharField()
     gd_weight = serializers.IntegerField()
 
-    gd_sku_links = serializers.SerializerMethodField()
+    gd_sku_link = serializers.SerializerMethodField()
 
     gd_sell_actual_number = serializers.IntegerField()
 

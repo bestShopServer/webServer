@@ -75,7 +75,9 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
             if not new_data.get(key, None):
                 if form_data and form_data.get(key, None):
-                    new_data[key] = form_data.get(key) if not isinstance(form_data.get(key),list) else json.dumps(form_data.get(key))
+                    new_data[key] = form_data.get(key) \
+                        if not (isinstance(form_data.get(key),list) or isinstance(form_data.get(key),dict))\
+                            else json.dumps(form_data.get(key))
 
         robot_table_value['instance_data'] = new_data
 
@@ -133,8 +135,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
             last_ids_level = int(robot_table.get("last_ids_level", 1))
 
             model_class_tmp = None
-            logger.info(robot_table)
-            logger.info(last_ids_level)
+
             for i in range(last_ids_level):
                 model_class_tmp = robot_table.get("last",None)
 
@@ -174,7 +175,6 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                     self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp['model_class'])]['instance'] = instance
                     self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp['model_class'])]['ids_key'][last_ids_key]=[]
 
-                logger.info(self.add_link_by_post_or_put)
                 self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp['model_class']))[
                     'ids_key'][last_ids_key].append(getattr(res,auto_increment_key))
 

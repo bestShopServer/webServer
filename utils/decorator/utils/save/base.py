@@ -129,7 +129,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         last_ids_key = robot_table.get("last_ids_key", None)
 
         if last_ids_key:
-            last_ids_level = int(robot_table.get("last_ids_level", 1)) - 1
+            last_ids_level = int(robot_table.get("last_ids_level", 1))
 
             model_class_tmp = None
             for i in range(last_ids_level):

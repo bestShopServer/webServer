@@ -142,7 +142,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
                 instance = model_class_tmp['instance']
 
-                if not isinstance(getattr(instance, last_ids_key), "list"):
+                if not isinstance(getattr(instance, last_ids_key), list):
                     setattr(instance, last_ids_key,
                             json.loads(
                                 getattr(instance, last_ids_key)

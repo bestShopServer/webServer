@@ -1,34 +1,20 @@
 
 
-from models.setting import FareRule,FareLinkCity
-from apps.web.setting.forms import FareRuleForm
-from apps.web.setting.serializers import FareRuleSerializer
+from models.shop import ShopPage
+from apps.web.shop.forms import ShopPageForm
+from apps.web.shop.serializers import ShopPageSerializer
 
-class FareRuleRules:
+class ShopPageRules:
 
     @staticmethod
     def post():
         return dict(
             robot={
-                "pk_key": "fare_rule_id",
-                "farerule" : {
-                    "form_class": FareRuleForm,
-                    "model_class": FareRule,
-                    "father": True,
-                    "child_form_link":{
-                          "farelinkcity":"fare_rule_link_citys"
-                    },
-                    "child": {
-                        "farelinkcity":{
-                            "model_class": FareLinkCity,
-                            "data_pool": {
-                                "instance": {
-                                    "userid": "userid",
-                                    "fare_rule_id": "fare_rule_id"
-                                }
-                            }
-                        }
-                    }
+                "pk_key": "id",
+                "shoppage" : {
+                    "form_class": ShopPageForm,
+                    "model_class": ShopPage,
+                    "father": True
                 }
             }
         )
@@ -37,25 +23,11 @@ class FareRuleRules:
     def put():
         return dict(
             robot={
-                "pk_key":"fare_rule_id",
-                "farerule": {
-                    "form_class": FareRuleForm,
-                    "model_class": FareRule,
-                    "father":True,
-                    "child_form_link": {
-                        "farelinkcity": "fare_rule_link_citys"
-                    },
-                    "child": {
-                        "farelinkcity": {
-                            "model_class": FareLinkCity,
-                            "data_pool": {
-                                "instance": {
-                                    "userid": "userid",
-                                    "fare_rule_id": "fare_rule_id"
-                                }
-                            }
-                        }
-                    }
+                "pk_key": "id",
+                "shoppage": {
+                    "form_class": ShopPageForm,
+                    "model_class": ShopPage,
+                    "father": True
                 }
             }
         )
@@ -64,14 +36,9 @@ class FareRuleRules:
     def delete():
         return dict(
             robot={
-                "pk_key": "fare_rule_id",
-                "farerule": {
-                    "model_class": FareRule,
-                    "child": {
-                        "farelinkcity": {
-                            "model_class": FareLinkCity,
-                        }
-                    }
+                "pk_key": "id",
+                "shoppage": {
+                    "model_class": ShopPage
                 }
             }
         )
@@ -81,11 +48,11 @@ class FareRuleRules:
         return dict(
             isTransaction=False,
             robot={
-                "pk_key": "fare_rule_id",
-                "farerule": {
-                    "model_class": FareRule,
+                "pk_key": "id",
+                "shoppage": {
+                    "model_class": ShopPage,
                     "page":True,
-                    "serializers":FareRuleSerializer,
+                    "serializers":ShopPageSerializer,
                     "query_params":[
                         {
                             "key":"userid",
@@ -93,15 +60,7 @@ class FareRuleRules:
                             "data_src":"data_pool",
                             "pool":"self"
                         }
-                    ],
-                    "child_form_link": {
-                        "farelinkcity": "fare_rule_link_citys"
-                    },
-                    "child": {
-                        "farelinkcity": {
-                            "model_class": FareLinkCity,
-                        }
-                    }
+                    ]
                 }
             }
         )

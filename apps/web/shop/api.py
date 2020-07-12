@@ -7,6 +7,8 @@ from utils.exceptions import PubErrorCustom
 
 from models.user import User
 
+from apps.web.shop.rule import ShopPageRules
+
 class baseinfo(BaseHandler):
     """
     店铺基础信息
@@ -50,3 +52,24 @@ class baseinfo(BaseHandler):
             "pay_mchid": shopinfo['wechat']['pay_mchid'],
             "pay_key": shopinfo['wechat']['pay_key']
         }}
+
+class shoppage(BaseHandler):
+    """
+    微页面
+    """
+
+    @Core_connector(**ShopPageRules.post())
+    async def post(self, *args, **kwargs):
+        pass
+
+    @Core_connector(**ShopPageRules.put())
+    async def put(self, *args, **kwargs):
+        pass
+
+    @Core_connector(**ShopPageRules.delete())
+    async def delete(self, *args, **kwargs):
+        pass
+
+    @Core_connector(**ShopPageRules.get())
+    async def get(self, *args, **kwargs):
+        pass

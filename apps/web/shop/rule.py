@@ -63,9 +63,13 @@ class ShopPageRules:
                         },
                         {
                             "key": "type",
-                            "value": "user.userid",
+                            "value": "data.type",
                             "data_src": "data_pool",
-                            "pool": "self"
+                            "pool": "self",
+                            "default":['0','9'],
+                            "query":{
+                                "where": ShopPage.type.in_,
+                            }
                         }
                     ]
                 }

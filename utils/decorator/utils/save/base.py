@@ -176,7 +176,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
                 logger.info(self.add_link_by_post_or_put)
                 self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp['model_class']))[
-                    'ids_key'][last_ids_key].append(getattr(robot_table['instance'],auto_increment_key))
+                    'ids_key'][last_ids_key].append(getattr(res,auto_increment_key))
 
 
     def filter(self,query_param):

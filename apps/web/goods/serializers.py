@@ -157,6 +157,8 @@ class GoodsDetailSerializer(serializers.Serializer):
     gd_link_type = serializers.SerializerMethodField()
     gd_allow_area = serializers.SerializerMethodField()
 
+    attribute = serializers.CharField()
+
     def get_gd_fare_mould_name(self,obj):
         return obj.gd_fare_rule.fare_rule_name if obj.gd_fare_rule else ""
 

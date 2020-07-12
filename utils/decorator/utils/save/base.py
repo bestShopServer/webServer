@@ -155,20 +155,20 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
                 if not self.add_link_by_post_or_put:
                     self.add_link_by_post_or_put = {
-                        self.get_model_table_name(model_class_tmp): {
+                        self.get_model_table_name(model_class_tmp['model_class']): {
                             "instance": instance,
                             "ids_key": [last_ids_key]
                         }
                     }
-                elif not self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp)):
-                    self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp)] = {
+                elif not self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp['model_class'])):
+                    self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp['model_class'])] = {
                         "instance": instance,
                         "ids_key": [last_ids_key]
                     }
-                elif last_ids_key not in self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp))[
+                elif last_ids_key not in self.add_link_by_post_or_put.get(self.get_model_table_name(model_class_tmp['model_class']))[
                     'ids_key']:
-                    self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp)]['instance'] = instance
-                    self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp)]['ids_key'].append(
+                    self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp['model_class'])]['instance'] = instance
+                    self.add_link_by_post_or_put[self.get_model_table_name(model_class_tmp['model_class'])]['ids_key'].append(
                         last_ids_key)
 
     def filter(self,query_param):

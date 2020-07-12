@@ -12,8 +12,9 @@ async def request_before_func_run(**kwargs):
 
     connector_app = kwargs.get("connector_app")
 
-    logger.info("\n请求IP：{}\n请求方法{}\n".format(
+    logger.info("\n请求IP：{}\n请求方法{}=>{}\n".format(
         connector_app.request.remote_ip,
+        connector_app.request.method,
         connector_app.request.uri,
     ))
 

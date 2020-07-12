@@ -136,7 +136,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
             logger.info(robot_table)
             logger.info(last_ids_level)
             for i in range(last_ids_level):
-                model_class_tmp = getattr(robot_table, 'last')
+                model_class_tmp = robot_table.get("last",None)
 
             if model_class_tmp:
 

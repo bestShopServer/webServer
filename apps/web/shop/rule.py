@@ -123,8 +123,15 @@ class ShopConfigRules:
                 "pk_key": "userid",
                 "shopconfig": {
                     "model_class": ShopConfig,
-                    "page":True,
-                    "detail_serializers":ShopConfigSerializer
+                    "detail_serializers":ShopConfigSerializer,
+                    "query_params": [
+                        {
+                            "key": "userid",
+                            "value": "user.userid",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        }
+                    ]
                 }
             }
         )

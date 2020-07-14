@@ -65,9 +65,6 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
 
             pk_key = value.get("pk_key") if value.get("pk_key") else self.pk_key
 
-            if value.get("serializers",None):
-                self.connector_app.data["detail"] = True
-
             if self.pk:
                 query = query.where(getattr(model_class,pk_key) == self.pk)
             else:
@@ -102,13 +99,15 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                                     )
                                 )
 
-            print(resposne)
+            if value.get("serializers",None):
+                self.connector_app.data["detail"] = True
+
             if self.connector_app.data.get("detail"):
                 data = value['detail_serializers'](resposne, many=True).data
             else:
                 data = value['serializers'](resposne, many=True).data
 
-            if self.pk:
+            if self.pk or self.connector_app.data.get("detail"):
                 if data and len(data):
                     data = data[0]
                 else:

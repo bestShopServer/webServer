@@ -99,7 +99,7 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                                     )
                                 )
 
-            if value.get("serializers",None):
+            if not value.get("serializers",None):
                 self.connector_app.data["detail"] = True
 
             if self.connector_app.data.get("detail"):

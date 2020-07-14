@@ -32,7 +32,7 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                 elif not value and query_param.get("default", None) != None:
                     value = query_param.get("default", None)
 
-        if value:
+        if value!=None:
             if not query_param.get("query"):
                 query = query.where(getattr(model_class, query_param['key']) == value)
             else:

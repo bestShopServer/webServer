@@ -7,7 +7,7 @@ from utils.exceptions import PubErrorCustom
 
 from models.user import User
 
-from apps.web.shop.rule import ShopPageRules
+from apps.web.shop.rule import ShopPageRules,ShopConfigRules
 
 class baseinfo(BaseHandler):
     """
@@ -71,5 +71,27 @@ class shoppage(BaseHandler):
         pass
 
     @Core_connector(**ShopPageRules.get())
+    async def get(self, *args, **kwargs):
+        pass
+
+
+class shopconfig(BaseHandler):
+    """
+    店铺基础配置
+    """
+
+    @Core_connector(**ShopConfigRules.post())
+    async def post(self, *args, **kwargs):
+        pass
+
+    @Core_connector(**ShopConfigRules.put())
+    async def put(self, *args, **kwargs):
+        pass
+
+    @Core_connector(**ShopConfigRules.delete())
+    async def delete(self, *args, **kwargs):
+        pass
+
+    @Core_connector(**ShopConfigRules.get())
     async def get(self, *args, **kwargs):
         pass

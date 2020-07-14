@@ -65,6 +65,9 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
 
             pk_key = value.get("pk_key") if value.get("pk_key") else self.pk_key
 
+            if value.get("serializers",None):
+                self.connector_app.data["detail"] = True
+
             if self.pk:
                 query = query.where(getattr(model_class,pk_key) == self.pk)
             else:

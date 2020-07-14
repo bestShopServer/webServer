@@ -17,3 +17,16 @@ class ShopPage(BaseModel):
 
     class Meta:
         db_table = 'shoppage'
+
+class ShopConfig(BaseModel):
+
+    """
+    店铺基础信息配置
+    """
+
+    id=BigIntegerField(primary_key=True)
+    userid = BigIntegerField(verbose_name="用户ID")
+    navigation_data = TextField(verbose_name="导航栏设置数据",default="[]")
+
+    class Meta:
+        db_table = 'shopconfig'

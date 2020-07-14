@@ -1,8 +1,8 @@
 
 
-from models.shop import ShopPage
-from apps.web.shop.forms import ShopPageForm
-from apps.web.shop.serializers import ShopPageSerializer,ShopPageDetailSerializer
+from models.shop import ShopPage,ShopConfig
+from apps.web.shop.forms import ShopPageForm,ShopConfigForm
+from apps.web.shop.serializers import ShopPageSerializer,ShopPageDetailSerializer,ShopConfigSerializer
 
 class ShopPageRules:
 
@@ -72,6 +72,59 @@ class ShopPageRules:
                             }
                         }
                     ]
+                }
+            }
+        )
+
+class ShopConfigRules:
+
+    @staticmethod
+    def post():
+        return dict(
+            robot={
+                "pk_key": "id",
+                "shopconfig" : {
+                    "form_class": ShopConfigForm,
+                    "model_class": ShopConfig,
+                    "father": True
+                }
+            }
+        )
+
+    @staticmethod
+    def put():
+        return dict(
+            robot={
+                "pk_key": "userid",
+                "shopconfig": {
+                    "form_class": ShopConfigForm,
+                    "model_class": ShopConfig,
+                    "father": True
+                }
+            }
+        )
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "userid",
+                "shopconfig": {
+                    "model_class": ShopConfig
+                }
+            }
+        )
+
+    @staticmethod
+    def get():
+        return dict(
+            isTransaction=False,
+            robot={
+                "pk_key": "userid",
+                "shopconfig": {
+                    "model_class": ShopConfig,
+                    "page":True,
+                    "detail_serializers":ShopConfigSerializer
                 }
             }
         )

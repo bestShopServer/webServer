@@ -22,3 +22,10 @@ class ShopPageForm(Form):
 
     time_publish = IntegerField()
     html_data = StringField(default="{}")
+
+
+class ShopConfigForm(Form):
+
+    id = IntegerField()
+    userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
+    navigation_data = StringField(default="[]")

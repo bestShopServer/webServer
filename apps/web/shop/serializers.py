@@ -4,6 +4,13 @@ import json
 from rest_framework import serializers
 from utils.time_st import UtilTime
 
+class ShopConfigSerializer(serializers.Serializer):
+    id =  serializers.IntegerField()
+    userid =  serializers.IntegerField()
+    navigation_data = serializers.SerializerMethodField()
+
+    def get_navigation_data(self,obj):
+        return json.loads(obj.navigation_data)
 
 class ShopPageSerializer(serializers.Serializer):
     id =  serializers.IntegerField()

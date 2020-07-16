@@ -1,5 +1,6 @@
 import json
 
+from loguru import logger
 from apps.base import BaseHandler
 
 from utils.decorator.connector import Core_connector
@@ -84,6 +85,8 @@ class shoppagetype(BaseHandler):
         type = self.data.get("type",None)
         if not type:
             raise PubErrorCustom("类型不能为空!!")
+
+        logger.info("pk=>{}".format(pk))
 
         if type == '0':
             for item in await self.db.execute(\

@@ -20,7 +20,7 @@ class ShopPageForm(Form):
         )
     )
 
-    time_publish = StringField()
+    time_publish = IntegerField()
     html_data = StringField()
 
 class ShopPageUpdateForm(Form):
@@ -30,7 +30,7 @@ class ShopPageUpdateForm(Form):
     title = StringField()
     type = StringField()
     time_publish_flag = StringField()
-    time_publish = StringField()
+    time_publish = IntegerField(validators=[DataRequired(message="2222")])
     html_data = StringField()
 
 class ShopConfigForm(Form):

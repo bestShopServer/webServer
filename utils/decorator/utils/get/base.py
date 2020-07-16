@@ -76,11 +76,7 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                 query = await self.filter(model_class,query,item)
 
             if value.get("sort",None):
-                if isinstance(value.get("sort"),list):
-                    for item in value.get("sort"):
-                        query = query.order_by(item)
-                else:
-                    query = query.order_by(value.get("sort",None))
+                query = query.order_by(value.get("sort",None))
             else:
                 query = query.order_by(model_class.createtime.desc())
 

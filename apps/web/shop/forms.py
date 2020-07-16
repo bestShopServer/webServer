@@ -30,7 +30,7 @@ class ShopPageUpdateForm(Form):
     title = StringField()
     type = StringField()
     time_publish_flag = StringField()
-    time_publish = IntegerField()
+    time_publish = StringField()
     html_data = StringField()
 
 class ShopConfigForm(Form):

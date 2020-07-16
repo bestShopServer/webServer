@@ -1,7 +1,7 @@
 
 
 from models.shop import ShopPage,ShopConfig
-from apps.web.shop.forms import ShopPageForm,ShopConfigForm,ShopPageUpdateForm
+from apps.web.shop.forms import ShopPageForm,ShopConfigForm
 from apps.web.shop.serializers import ShopPageSerializer,ShopPageDetailSerializer,ShopConfigSerializer
 
 class ShopPageRules:
@@ -25,7 +25,7 @@ class ShopPageRules:
             robot={
                 "pk_key": "id",
                 "shoppage": {
-                    "form_class": ShopPageUpdateForm,
+                    "form_class": ShopPageForm,
                     "model_class": ShopPage,
                     "father": True
                 }

@@ -23,16 +23,6 @@ class ShopPageForm(Form):
     time_publish = IntegerField()
     html_data = StringField()
 
-class ShopPageUpdateForm(Form):
-
-    id = IntegerField()
-    userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
-    title = StringField()
-    type = StringField()
-    time_publish_flag = StringField()
-    time_publish = IntegerField()
-    html_data = StringField()
-
 class ShopConfigForm(Form):
 
     id = IntegerField()

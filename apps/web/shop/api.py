@@ -85,14 +85,15 @@ class shoppagetype(BaseHandler):
         if not type:
             raise PubErrorCustom("类型不能为空!!")
 
-        for item in await self.db.execute(\
-                ShopPage.select().for_update().\
-                        where(ShopPage.userid==self.user['userid'],ShopPage.type << ['0','9'])):
-            if pk == item.id:
-                item.type = type
-            else:
-                item.type = '9'
-            await self.db.update(item)
+        if type == '0':
+            for item in await self.db.execute(\
+                    ShopPage.select().for_update().\
+                            where(ShopPage.userid==self.user['userid'],ShopPage.type << ['0','9'])):
+                if pk == item.id:
+                    item.type = type
+                else:
+                    item.type = '9'
+                await self.db.update(item)
 
 
 class shopconfig(BaseHandler):

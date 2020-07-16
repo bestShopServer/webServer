@@ -8,6 +8,7 @@ urlpattern = [
     url(join_url(api_url, '/baseinfo'), baseinfo),
     url(join_url(api_url, '/shoppage'), shoppage),
     url(join_url(api_url, '/shoppage/(.*)'), shoppage),
+    url(join_url(api_url, '/shoppagetype/(.*)'), shoppagetype),
     url(join_url(api_url, '/shopconfig'), shopconfig),
     url(join_url(api_url, '/shopconfig/(.*)'), shopconfig)
 ]

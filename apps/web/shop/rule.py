@@ -1,8 +1,8 @@
 
 
 from models.shop import ShopPage,ShopConfig
-from apps.web.shop.forms import ShopPageForm,ShopConfigForm
-from apps.web.shop.serializers import ShopPageSerializer,ShopPageDetailSerializer,ShopConfigSerializer,ShopPageUpdateForm
+from apps.web.shop.forms import ShopPageForm,ShopConfigForm,ShopPageUpdateForm
+from apps.web.shop.serializers import ShopPageSerializer,ShopPageDetailSerializer,ShopConfigSerializer
 
 class ShopPageRules:
 

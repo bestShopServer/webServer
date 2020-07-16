@@ -65,6 +65,7 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
 
             pk_key = value.get("pk_key") if value.get("pk_key") else self.pk_key
 
+            logger.info("pk=>{}".format(self.pk))
             if self.pk:
                 query = query.where(getattr(model_class,pk_key) == self.pk)
             else:

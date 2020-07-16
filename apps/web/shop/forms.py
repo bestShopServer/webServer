@@ -27,4 +27,4 @@ class ShopConfigForm(Form):
 
     id = IntegerField()
     userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
-    navigation_data = StringField(default="[]")
+    navigation_data = StringField()

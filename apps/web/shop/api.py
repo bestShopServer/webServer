@@ -9,6 +9,8 @@ from models.user import User
 
 from apps.web.shop.rule import ShopPageRules,ShopConfigRules
 
+from models.shop import ShopPage
+
 class baseinfo(BaseHandler):
     """
     店铺基础信息
@@ -58,11 +60,25 @@ class shoppage(BaseHandler):
     微页面
     """
 
+    async def upd_before_handler(self,**kwargs):
+
+        pk = kwargs.get("pk")
+
+        if self.data.get("type"):
+            for item in await self.db.execute(\
+                    ShopPage.select().for_update().\
+                            where(ShopPage.userid==self.user['userid']),ShopPage.type << ['0','9']):
+                if pk == item.id:
+                    item.type = self.data.get("type")
+                else:
+                    item.type = '9'
+                await self.db.update(item)
+
     @Core_connector(**ShopPageRules.post())
     async def post(self, *args, **kwargs):
         pass
 
-    @Core_connector(**ShopPageRules.put())
+    @Core_connector(**{**ShopPageRules.put(),**{"upd_before_handler":upd_before_handler}})
     async def put(self, *args, **kwargs):
         pass
 

@@ -54,7 +54,7 @@ class ShopPageRules:
                     "page":True,
                     "serializers":ShopPageSerializer,
                     "detail_serializers":ShopPageDetailSerializer,
-                    "sort": [ShopPage.createtime.desc(),ShopPage.type.desc()],
+                    "sort": [ShopPage.type,ShopPage.createtime.desc()],
                     "query_params":[
                         {
                             "key":"userid",

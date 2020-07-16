@@ -89,6 +89,8 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                 count = len(await self.connector_app.db.execute(query))
                 query = query.paginate(self.connector_app.data['page'], self.connector_app.data['size'])
 
+            logger.info(query)
+
             resposne = await self.connector_app.db.execute(query)
 
             if value.get("child_form_link"):

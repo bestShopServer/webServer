@@ -236,7 +236,6 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
     async def form_robot_hander(self,robot_table):
 
-        logger.info(robot_table)
         form_class = robot_table.get("form_class",None)
 
         if form_class:

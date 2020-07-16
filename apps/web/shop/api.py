@@ -67,7 +67,7 @@ class shoppage(BaseHandler):
         if self.data.get("type"):
             for item in await self.db.execute(\
                     ShopPage.select().for_update().\
-                            where(ShopPage.userid==self.user['userid']),ShopPage.type << ['0','9']):
+                            where(ShopPage.userid==self.user['userid'],ShopPage.type << ['0','9'])):
                 if pk == item.id:
                     item.type = self.data.get("type")
                 else:

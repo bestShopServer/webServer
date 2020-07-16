@@ -77,8 +77,9 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
 
             if value.get("sort",None):
                 if isinstance(value.get("sort"),list):
-                    for item in value.get("sort"):
-                        query = query.order_by(item)
+                    # for item in value.get("sort"):
+                    #     query = query.order_by(item)
+                    query = query.order_by(*value.get("sort", None))
                 else:
                     query = query.order_by(value.get("sort",None))
             else:

@@ -63,11 +63,11 @@ class shoppage(BaseHandler):
 
     @Core_connector(**ShopPageRules.post())
     async def post(self, *args, **kwargs):
-        pass
+        return {"data":self.pk}
 
     @Core_connector(**ShopPageRules.put())
     async def put(self, *args, **kwargs):
-        pass
+        return {"data":self.pk}
 
     @Core_connector(**ShopPageRules.delete())
     async def delete(self, *args, **kwargs):

@@ -16,7 +16,8 @@ from models.goods import \
 
 from models.setting import FareRule
 
-from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,SkuGroupRules,SkuSpecValueRules,GoodsRules
+from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,\
+        SkuGroupRules,SkuSpecValueRules,GoodsRules,GoodsbyidsRules
 
 class goodscategorystyle(BaseHandler):
 
@@ -179,6 +180,11 @@ class goods(BaseHandler):
         pass
 
     @Core_connector(**GoodsRules.get())
+    async def get(self, pk=None):
+        pass
+
+class goodsbyids(BaseHandler):
+    @Core_connector(**GoodsbyidsRules.get())
     async def get(self, pk=None):
         pass
 

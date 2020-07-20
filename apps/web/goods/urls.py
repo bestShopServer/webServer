@@ -9,6 +9,7 @@ urlpattern = [
     url(join_url(api_url, '/goodscategorystyle/(.*)'), goodscategorystyle),
     url(join_url(api_url, '/goodscategory'), goodscategory),
     url(join_url(api_url, '/goodscategory/(.*)'), goodscategory),
+    url(join_url(api_url, '/goodsbyids'), goodsbyids),
     url(join_url(api_url, '/goods'), goods),
     url(join_url(api_url, '/goods/(.*)'), goods),
     url(join_url(api_url, '/goodsdetail/(.*)'), goodsdetail),

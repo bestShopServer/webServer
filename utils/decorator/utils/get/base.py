@@ -125,3 +125,7 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                 "data": data,
                 "count": count
             }
+
+
+    async def getV2(self):
+        pass

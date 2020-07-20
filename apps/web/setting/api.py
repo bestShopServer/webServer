@@ -6,7 +6,10 @@ from utils.exceptions import PubErrorCustom
 from apps.base import BaseHandler
 from apps.web.setting.rule import FareRuleRules
 from models.setting import FareRule
+from router import route
 
+
+@route(None,id=True)
 class farerule(BaseHandler):
     """
     运费规则配置
@@ -28,6 +31,7 @@ class farerule(BaseHandler):
     async def get(self, *args, **kwargs):
         pass
 
+@route(None,id=True)
 class farerule_default_setting(BaseHandler):
     """
     运费默认规则设置

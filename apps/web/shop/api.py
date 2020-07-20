@@ -12,6 +12,10 @@ from apps.web.shop.rule import ShopPageRules,ShopConfigRules
 
 from models.shop import ShopPage
 
+from router import route
+
+
+@route(None,id=True)
 class baseinfo(BaseHandler):
     """
     店铺基础信息
@@ -56,6 +60,7 @@ class baseinfo(BaseHandler):
             "pay_key": shopinfo['wechat']['pay_key']
         }}
 
+@route(None,id=True)
 class shoppage(BaseHandler):
     """
     微页面
@@ -77,6 +82,7 @@ class shoppage(BaseHandler):
     async def get(self, *args, **kwargs):
         pass
 
+@route(None,id=True)
 class shoppagetype(BaseHandler):
 
     @Core_connector()
@@ -98,7 +104,7 @@ class shoppagetype(BaseHandler):
                     item.type = '9'
                 await self.db.update(item)
 
-
+@route(None,id=True)
 class shopconfig(BaseHandler):
     """
     店铺基础配置

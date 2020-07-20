@@ -1,13 +1,10 @@
 import asyncio
-import tornado.web
-import tornado.ioloop
 
 from tornado.options import options
 
 from utils.database import RedisPool,MysqlPool
 from loguru import logger
-from router import urlpattern
-from config import common
+from utils.app import Application
 
 
 class Server(object):
@@ -28,7 +25,7 @@ class Server(object):
         # logger.remove(logserver)
 
         #初始化web application
-        apps = tornado.web.Application(handlers=urlpattern,default_host=None,transforms=None,**common)
+        apps =  Application()
 
         #初始化redis
         apps.redis = RedisPool(loop=loop).get_conn()

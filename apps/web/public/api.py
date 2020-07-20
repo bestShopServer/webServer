@@ -11,7 +11,9 @@ from apps.base import BaseHandler
 from data.base import datacity
 
 from apps.web.public.rule import AttachMentGroupRules,AttachMentRules
+from router import route
 
+@route()
 class file(BaseHandler):
     """
     文件上传
@@ -32,6 +34,7 @@ class file(BaseHandler):
         else:
             raise PubErrorCustom("文件上传失败!")
 
+@route(None,id=True)
 class attachmentgroup(BaseHandler):
 
     """
@@ -67,6 +70,7 @@ class attachmentgroup(BaseHandler):
     async def get(self, pk=None,**kwargs):
         pass
 
+@route(None,id=True)
 class attachmentgroupbatch(BaseHandler):
 
     @Core_connector()
@@ -88,6 +92,7 @@ class attachmentgroupbatch(BaseHandler):
             item.grouid = grouid
             await self.db.update(item)
 
+@route(None,id=True)
 class attachment(BaseHandler):
 
     """
@@ -110,6 +115,7 @@ class attachment(BaseHandler):
     async def get(self, pk=None):
         pass
 
+@route(None,id=True)
 class citycode(BaseHandler):
     @Core_connector(isTransaction=False,is_query_standard=False)
     async def get(self, pk=None):

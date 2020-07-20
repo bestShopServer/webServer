@@ -7,6 +7,10 @@ from playhouse.shortcuts import model_to_dict
 from utils.exceptions import PubErrorCustom
 from utils.hash import get_token
 
+from router import route
+
+
+@route('/test')
 class TestHandler(BaseHandler):
 
     @Core_connector()
@@ -25,7 +29,7 @@ class TestHandler(BaseHandler):
             "bal":10.312
         }}
 
-
+@route()
 class login(BaseHandler):
 
     """
@@ -61,6 +65,7 @@ class login(BaseHandler):
 
         return {"data":token}
 
+@route()
 class logout(BaseHandler):
     """
     登出

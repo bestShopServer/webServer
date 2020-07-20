@@ -1,8 +1,10 @@
 
 from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
+from router import route
 
 
+@route()
 class userinfo(BaseHandler):
 
     """

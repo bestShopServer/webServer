@@ -19,6 +19,9 @@ from models.setting import FareRule
 from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,\
         SkuGroupRules,SkuSpecValueRules,GoodsRules,GoodsbyidsRules
 
+from router import route
+
+@route(None,id=True)
 class goodscategorystyle(BaseHandler):
 
     """
@@ -51,6 +54,7 @@ class goodscategorystyle(BaseHandler):
     async def get(self, pk=None):
         pass
 
+@route(None,id=True)
 class goodscategory(BaseHandler):
     """
     商品分类设置
@@ -101,6 +105,7 @@ class goodscategory(BaseHandler):
     async def get(self, pk=None):
         pass
 
+@route(None,id=True)
 class goodsdetail(BaseHandler):
 
     @Core_connector(isTransaction=False)
@@ -161,6 +166,7 @@ class goodsdetail(BaseHandler):
 
         return {"data": GoodsDetailSerializer([obj], many=True).data[0]}
 
+@route(None,id=True)
 class goods(BaseHandler):
 
     """
@@ -183,11 +189,13 @@ class goods(BaseHandler):
     async def get(self, pk=None):
         pass
 
+@route(None,id=True)
 class goodsbyids(BaseHandler):
     @Core_connector(**GoodsbyidsRules.get())
     async def get(self, pk=None):
         pass
 
+@route(None,id=True)
 class skugroup(BaseHandler):
 
     """
@@ -221,6 +229,7 @@ class skugroup(BaseHandler):
     async def get(self, pk=None):
         pass
 
+@route(None,id=True)
 class skuspecvalue(BaseHandler):
 
     """

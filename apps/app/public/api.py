@@ -33,6 +33,7 @@ class baseinfo(BaseHandler):
         res = ShopConfigForAppSerializer(await self.db.execute(ShopConfig.select()),many=True).data
         data['menuData'] = res[0] if res and len(res) else {}
 
+        return {"data":data}
 
 
 

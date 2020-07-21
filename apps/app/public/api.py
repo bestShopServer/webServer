@@ -30,7 +30,7 @@ class baseinfo(BaseHandler):
         data['indexPage'] = res[0] if res and len(res) else {}
 
         #获取菜单数据
-        res = ShopConfigForAppSerializer(await self.db.execute(ShopConfig.select().where()),many=True).data
+        res = ShopConfigForAppSerializer(await self.db.execute(ShopConfig.select()),many=True).data
         data['menuData'] = res[0] if res and len(res) else {}
 
 

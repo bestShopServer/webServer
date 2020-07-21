@@ -11,29 +11,36 @@ from apps.app.public.serializers import ShopPageForAppSerializer,ShopConfigForAp
 from router import route
 
 @route()
-class baseinfo(BaseHandler):
+class index(BaseHandler):
 
     """
-    app获取基础信息
+    app获取首页信息
     """
 
     @Core_connector(isTicket=False)
     async def get(self):
 
-        data={
-            "indexPage":{},
-            "menuData":{}
-        }
-
         #获取首页模板数据
         res = ShopPageForAppSerializer(await self.db.execute(ShopPage.select().where(ShopPage.type == '0')),many=True).data
-        data['indexPage'] = res[0] if res and len(res) else {}
+        indexPage = res[0] if res and len(res) else {}
+
+        return {"data":indexPage}
+
+@route()
+class menu(BaseHandler):
+
+    """
+    app获取菜单信息
+    """
+
+    @Core_connector(isTicket=False)
+    async def get(self):
 
         #获取菜单数据
         res = ShopConfigForAppSerializer(await self.db.execute(ShopConfig.select()),many=True).data
-        data['menuData'] = res[0] if res and len(res) else {}
+        menuData = res[0] if res and len(res) else {}
 
-        return {"data":data}
+        return {"data":menuData}
 
 
 

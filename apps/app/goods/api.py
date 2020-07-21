@@ -20,7 +20,7 @@ class goodscategorystyle(BaseHandler):
     @Core_connector(isTicket=False)
     async def get(self):
 
-        res = GoodsCateGoryStyleForAppSerializer(await self.db.execute(GoodsCateGoryStyle.select().where()), many=True).data
+        res = GoodsCateGoryStyleForAppSerializer(await self.db.execute(GoodsCateGoryStyle.select()), many=True).data
         return {"data":res[0] if res and len(res) else {}}
 
 @route()

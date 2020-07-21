@@ -4,12 +4,13 @@ from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 
-
 from models.goods import GoodsCateGoryStyle,GoodsCateGory,Goods
 
 from apps.app.public.serializers import GoodsCateGoryStyleForAppSerializer,GoodsCateGoryForAppSerializer,\
                 GoodsByCateGoryForAppSerializer
+from router import route
 
+@route()
 class goodscategorystyle(BaseHandler):
 
     """
@@ -22,6 +23,7 @@ class goodscategorystyle(BaseHandler):
         res = GoodsCateGoryStyleForAppSerializer(await self.db.execute(GoodsCateGoryStyle.select().where()), many=True).data
         return {"data":res[0] if res and len(res) else {}}
 
+@route()
 class goodscategory(BaseHandler):
 
     """

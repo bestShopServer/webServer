@@ -8,8 +8,9 @@ from utils.exceptions import PubErrorCustom
 from models.shop import ShopPage,ShopConfig
 
 from apps.app.public.serializers import ShopPageForAppSerializer,ShopConfigForAppSerializer
+from router import route
 
-
+@route()
 class baseinfo(BaseHandler):
 
     """

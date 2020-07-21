@@ -96,7 +96,7 @@ class Core_connector:
         if 'header' not in res:
             res['header'] = None
 
-        logger.info("\n返回的数据: {}".format(res['data']))
+        logger.info("\n返回的数据: {}".format(json.dumps(res['data'],indent=4)))
         if self.isPasswd and res['data']:
             res['data'] = encrypt(json.dumps(res['data'])).decode('ascii')
 

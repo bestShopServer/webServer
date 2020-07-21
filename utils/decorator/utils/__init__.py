@@ -1,4 +1,5 @@
 
+import json
 from loguru import logger
 
 from utils.decorator.utils.ticket import ConnectorTicket
@@ -23,7 +24,7 @@ async def request_before_func_run(**kwargs):
     await ConnectorParams(**kwargs).run()
 
     logger.info("\n请求的数据: {}".format(
-        connector_app.data if hasattr(connector_app,'data') else None)
+        json.dumps(connector_app.data,indent=4) if hasattr(connector_app,'data') else None)
     )
 
 async def run_before_func_run(**kwargs):

@@ -37,7 +37,7 @@ class goodscategory(BaseHandler):
                     GoodsCateGoryForAppSerializer(
                         await self.db.execute(
                             GoodsCateGory.select().where(
-                                GoodsCateGory.level == self.data.get("level",1),
+                                GoodsCateGory.gdcglastid == self.data.get("gdcglastid",0),
                                 GoodsCateGory.status == '0'
                             )
                         ), many=True).data}

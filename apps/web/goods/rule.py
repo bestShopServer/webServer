@@ -12,6 +12,10 @@ from models.goods import \
     GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkSku,GoodsLinkCity,GoodsLinkCateGory,\
         SkuGroup,SkuSpecValue
 
+from models.shop import ShopPage
+
+from apps.web.shop.serializers import ShopPageDetailSerializer,ShopPageSerializer
+
 from utils.time_st import UtilTime
 
 class GoodsRules:
@@ -475,6 +479,45 @@ class SkuSpecValueRules:
                 "pk_key": "spec_id",
                 "skuspecvalue": {
                     "model_class": SkuSpecValue
+                }
+            }
+        )
+
+class GoodsLinkShopPageRules:
+
+    @staticmethod
+    def get():
+        return dict(
+            isTransaction=False,
+            robot={
+                "pk_key": "id",
+                "shoppage": {
+                    "model_class": ShopPage,
+                    "page":True,
+                    "serializers":ShopPageSerializer,
+                    "detail_serializers":ShopPageDetailSerializer,
+                    "sort": [ShopPage.type,ShopPage.createtime.desc()],
+                    "query_params":[
+                        {
+                            "key":"userid",
+                            "value":"user.userid",
+                            "data_src":"data_pool",
+                            "pool":"self"
+                        },
+                        {
+                            "key": "gdid",
+                            "value": "data.gdid",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        },
+                        {
+                            "key": "type",
+                            "value": "data.type",
+                            "data_src": "data_pool",
+                            "pool": "self",
+                            "default":'1'
+                        }
+                    ]
                 }
             }
         )

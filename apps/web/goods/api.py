@@ -17,7 +17,9 @@ from models.goods import \
 from models.setting import FareRule
 
 from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,\
-        SkuGroupRules,SkuSpecValueRules,GoodsRules,GoodsbyidsRules
+        SkuGroupRules,SkuSpecValueRules,GoodsRules,GoodsbyidsRules,GoodsLinkShopPageRules
+
+from apps.web.shop.rule import ShopPageRules
 
 from router import route
 
@@ -189,9 +191,39 @@ class goods(BaseHandler):
     async def get(self, pk=None):
         pass
 
-@route(None,id=True)
+@route(None)
 class goodsbyids(BaseHandler):
     @Core_connector(**GoodsbyidsRules.get())
+    async def get(self, pk=None):
+        pass
+
+@route(None,id=True)
+class goodslinkshoppage(BaseHandler):
+
+    """
+    商品详情微页面设置
+    """
+
+    async def add_after_handler(self,**kwargs):
+
+        gdid = self.data.get("gdid")
+        try:
+            goodsObj = await self.db.get(Goods,gdid=gdid)
+        except Goods.DoesNotExist:
+            raise PubErrorCustom("商品不存在!")
+
+        goodsObj.gd_link_shoppage = self.pk
+        await self.db.update(goodsObj)
+
+    @Core_connector(**{**ShopPageRules.post(),**{"add_after_handler":add_after_handler}})
+    async def post(self, *args, **kwargs):
+        pass
+
+    @Core_connector(**ShopPageRules.put())
+    async def put(self, *args, **kwargs):
+        pass
+
+    @Core_connector(**GoodsLinkShopPageRules.get())
     async def get(self, pk=None):
         pass
 

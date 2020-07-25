@@ -99,6 +99,8 @@ class Goods(BaseModel):
     gd_share_image = CharField(max_length=255,verbose_name="分享图片",default="")
 
     attribute = TextField(default="")
+
+    gd_link_shoppage = BigIntegerField(default=0)
     # gdotherinfo = CharField(max_length=512,default="{}",verbose_name="""
     #                     "uptime" -> 上架时间
     #                     "willsell" -> 预售

@@ -37,10 +37,41 @@ class goodscategory(BaseHandler):
                     GoodsCateGoryForAppSerializer(
                         await self.db.execute(
                             GoodsCateGory.select().where(
-                                GoodsCateGory.gdcglastid == self.data.get("gdcglastid",0),
+                                GoodsCateGory.gdcglastid == 0,
                                 GoodsCateGory.status == '0'
                             )
                         ), many=True).data}
+
+
+@route()
+class goodscategorybygdcglastid(BaseHandler):
+
+    @Core_connector(isTicket=False)
+    async def get(self):
+
+        if not self.data.get("gdcglastid",None):
+            raise PubErrorCustom("上级ID不能为空!")
+
+        async def recursion(gdcglastid):
+
+            res = await self.db.execute(
+                GoodsCateGory.select().where(
+                    GoodsCateGory.gdcglastid == gdcglastid,
+                    GoodsCateGory.status == '0'
+                ).order_by(GoodsCateGory.sort)
+            )
+
+            child = GoodsCateGoryForAppSerializer(res, many=True).data
+
+            if not len(child):
+                return
+
+            for item in child:
+                item['child'] = await recursion(item['gdcgid'])
+
+            return child
+
+        return {"data":await recursion(gdcglastid=self.data['gdcglastid'])}
 
 # class goodsbycategory(BaseHandler):
 #

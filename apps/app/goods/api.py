@@ -10,6 +10,8 @@ from apps.app.public.serializers import GoodsCateGoryStyleForAppSerializer,Goods
                 GoodsByCateGoryForAppSerializer
 from router import route
 
+from apps.app.goods.rule import GoodsbyidsRules
+
 @route()
 class goodscategorystyle(BaseHandler):
 
@@ -72,6 +74,12 @@ class goodscategorybygdcglastid(BaseHandler):
             return child
 
         return {"data":await recursion(gdcglastid=self.data['gdcglastid'])}
+
+@route(None)
+class goodsbyids(BaseHandler):
+    @Core_connector(**GoodsbyidsRules.get())
+    async def get(self, pk=None):
+        pass
 
 # class goodsbycategory(BaseHandler):
 #

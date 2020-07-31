@@ -75,15 +75,15 @@ class goodscategorybygdcglastid(BaseHandler):
 
         return {"data":await recursion(gdcglastid=self.data['gdcglastid'])}
 
-@route(None)
+@route()
 class goodsbyids(BaseHandler):
-    @Core_connector(**GoodsbyidsRules.get())
+    @Core_connector(**{**GoodsbyidsRules.get(),**{"isTicket":False}})
     async def get(self, pk=None):
         pass
 
-@route(None)
+@route()
 class goodsbycategory(BaseHandler):
-    @Core_connector(**GoodsbyCateGoryRules.get())
+    @Core_connector(**{**GoodsbyCateGoryRules.get(),**{"isTicket":False}})
     async def get(self, pk=None):
         pass
 

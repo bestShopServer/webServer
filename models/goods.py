@@ -83,6 +83,8 @@ class Goods(BaseModel):
     购买设置
     """
     gd_sell_number = IntegerField(verbose_name="已出售量",default=0)
+
+    gd_sell_tot_number = IntegerField(verbose_name="总销售量",default=0)
     gd_fare_mould_id = BigIntegerField(verbose_name="运费模板ID",default=0)
     gd_limit_number_by_goods = IntegerField(verbose_name="限购数量(商品)",default=-1)
     gd_limit_number_by_order = IntegerField(verbose_name="限购数量(订单)",default=-1)

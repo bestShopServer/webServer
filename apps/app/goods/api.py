@@ -11,6 +11,7 @@ from apps.app.public.serializers import GoodsCateGoryStyleForAppSerializer,Goods
 from router import route
 
 from apps.app.goods.rule import GoodsbyidsRules,GoodsbyCateGoryRules
+from apps.web.goods.serializers import GoodsSerializer
 
 @route()
 class goodscategorystyle(BaseHandler):
@@ -86,6 +87,38 @@ class goodsbycategory(BaseHandler):
     @Core_connector(**{**GoodsbyCateGoryRules.get(),**{"isTicket":False}})
     async def get(self, pk=None):
         pass
+
+@route()
+class goodslist(BaseHandler):
+    @Core_connector(isTicket=False)
+    async def get(self, pk=None):
+
+        gd_name = self.data.get("gdname",None)
+
+        sort_key = self.data.get("sort_key",None)
+        sort = self.data.get("sort",False)
+
+        query = Goods.select()
+
+        if gd_name:
+            query = query.where(Goods.gd_name % '%{}%'.format(gd_name))
+
+        if sort_key:
+            if sort:
+                query = query.order_by(getattr(Goods,sort_key))
+            else:
+                query = query.order_by(getattr(Goods, sort_key).desc())
+
+        count = len(await self.db.execute(query))
+        query = query.paginate(self.data['page'], self.data['size'])
+
+        resposne = await self.connector_app.db.execute(query)
+
+        return {
+            "data": GoodsSerializer(resposne,many=True).data,
+            "count": count
+        }
+
 
 
 # class goodsbycategory(BaseHandler):

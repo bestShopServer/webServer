@@ -4,7 +4,7 @@ from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 
-from models.goods import GoodsCateGoryStyle,GoodsCateGory,Goods
+from models.goods import GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkCateGory
 
 from apps.app.public.serializers import GoodsCateGoryStyleForAppSerializer,GoodsCateGoryForAppSerializer,\
                 GoodsByCateGoryForAppSerializer
@@ -96,6 +96,7 @@ class goodslist(BaseHandler):
     async def get(self, pk=None):
 
         gd_name = self.data.get("gd_name",None)
+        gdcgid = self.data.get("gdcgid",None)
 
         sort_key = self.data.get("sort_key",None)
         sort = self.data.get("sort",False)
@@ -104,6 +105,18 @@ class goodslist(BaseHandler):
 
         if gd_name:
             query = query.where(Goods.gd_name % '%{}%'.format(gd_name))
+
+        if gdcgid:
+            query = query.where(Goods.gdid.in_(
+
+                [ \
+                    item.gdid \
+                    for item in \
+                    await GoodsLinkCateGory.select().where(
+                        GoodsLinkCateGory.gdcgid == gdcgid
+                    )
+                ]
+            ))
 
         if sort_key:
             if sort:

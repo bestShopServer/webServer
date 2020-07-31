@@ -112,9 +112,9 @@ class goodslist(BaseHandler):
                 [ \
                     item.gdid \
                     for item in \
-                    await GoodsLinkCateGory.select().where(
+                    await self.db.execute(GoodsLinkCateGory.select().where(
                         GoodsLinkCateGory.gdcgid == gdcgid
-                    )
+                    ))
                 ]
             ))
 

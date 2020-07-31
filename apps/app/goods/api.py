@@ -95,7 +95,7 @@ class goodslist(BaseHandler):
     @Core_connector(isTicket=False)
     async def get(self, pk=None):
 
-        gd_name = self.data.get("gdname",None)
+        gd_name = self.data.get("gd_name",None)
 
         sort_key = self.data.get("sort_key",None)
         sort = self.data.get("sort",False)

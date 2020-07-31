@@ -40,10 +40,15 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                     query = query.where(
                         query_param['query']['last_where'](
                             [
-                                item.gdid \
+                                getattr(item,query_param['key']) \
                                 for item in await self.db.execute(
                                     query_param['query']['link_model_class'].select().where(
-                                        query_param['query']['where'](value)
+                                        query_param['query']['where'](value) \
+                                            if query_param['query'].get("where") else \
+                                                getattr(
+                                                    query_param['query']['link_model_class'],
+                                                    query_param['query']['key']
+                                                ) == value
                                     )
                                 )
                             ]

@@ -189,13 +189,14 @@ class GoodsRules:
                             }
                         },
                         {
+                            "key": "gdid",
                             "value": "data.gdcgids",
                             "data_src": "data_pool",
                             "pool": "self",
                             "query":{
                                 "link_model_class":GoodsCateGory,
                                 "where":GoodsCateGory.gdcgid.in_,
-                                "last_where":Goods.gdid.in_,
+                                "last_where":Goods.gdid.in_
                             }
                         }
                     ]

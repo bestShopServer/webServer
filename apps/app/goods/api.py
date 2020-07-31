@@ -10,7 +10,7 @@ from apps.app.public.serializers import GoodsCateGoryStyleForAppSerializer,Goods
                 GoodsByCateGoryForAppSerializer
 from router import route
 
-from apps.app.goods.rule import GoodsbyidsRules
+from apps.app.goods.rule import GoodsbyidsRules,GoodsbyCateGoryRules
 
 @route()
 class goodscategorystyle(BaseHandler):
@@ -80,6 +80,13 @@ class goodsbyids(BaseHandler):
     @Core_connector(**GoodsbyidsRules.get())
     async def get(self, pk=None):
         pass
+
+@route(None)
+class goodsbycategory(BaseHandler):
+    @Core_connector(**GoodsbyCateGoryRules.get())
+    async def get(self, pk=None):
+        pass
+
 
 # class goodsbycategory(BaseHandler):
 #

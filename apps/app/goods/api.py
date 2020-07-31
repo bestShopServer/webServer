@@ -112,7 +112,7 @@ class goodslist(BaseHandler):
         count = len(await self.db.execute(query))
         query = query.paginate(self.data['page'], self.data['size'])
 
-        resposne = await self.connector_app.db.execute(query)
+        resposne = await self.db.execute(query)
 
         return {
             "data": GoodsSerializer(resposne,many=True).data,

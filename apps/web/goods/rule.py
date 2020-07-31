@@ -194,8 +194,8 @@ class GoodsRules:
                             "data_src": "data_pool",
                             "pool": "self",
                             "query":{
-                                "link_model_class":GoodsCateGory,
-                                "where":GoodsCateGory.gdcgid.in_,
+                                "link_model_class":GoodsLinkCateGory,
+                                "where":GoodsLinkCateGory.gdcgid.in_,
                                 "last_where":Goods.gdid.in_
                             }
                         }

@@ -1,5 +1,5 @@
 
-from models.goods import Goods,GoodsCateGory
+from models.goods import Goods,GoodsLinkCateGory
 from apps.web.goods.serializers import GoodsSerializer
 from peewee import JOIN
 
@@ -49,7 +49,7 @@ class GoodsbyCateGoryRules:
                             "data_src": "data_pool",
                             "pool": "self",
                             "query":{
-                                "link_model_class":GoodsCateGory,
+                                "link_model_class":GoodsLinkCateGory,
                                 "key":"gdcgid",
                                 "last_where":Goods.gdid.in_,
                             }

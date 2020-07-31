@@ -13,6 +13,8 @@ from router import route
 from apps.app.goods.rule import GoodsbyidsRules,GoodsbyCateGoryRules
 from apps.web.goods.serializers import GoodsSerializer
 
+from loguru import logger
+
 @route()
 class goodscategorystyle(BaseHandler):
 
@@ -109,14 +111,16 @@ class goodslist(BaseHandler):
             else:
                 query = query.order_by(getattr(Goods, sort_key).desc())
 
-        count = len(await self.db.execute(query))
+        # count = len(await self.db.execute(query))
         query = query.paginate(self.data['page'], self.data['size'])
+
+        logger.info(query)
 
         resposne = await self.db.execute(query)
 
         return {
             "data": GoodsSerializer(resposne,many=True).data,
-            "count": count
+            # "count": count
         }
 
 

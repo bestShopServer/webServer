@@ -68,6 +68,7 @@ class GoodsDetailForAppSerializer(serializers.Serializer):
     gd_stock_tot = serializers.IntegerField()
     gd_stock_show = serializers.CharField()
     gd_specs_name_default_flag = serializers.CharField()
+    gd_sell_tot_number = serializers.IntegerField()
 
     gd_sku_link = serializers.SerializerMethodField()
     attribute = serializers.SerializerMethodField()

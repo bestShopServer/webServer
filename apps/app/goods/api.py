@@ -1,10 +1,12 @@
 
+import json
 from apps.base import BaseHandler
 
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 
-from models.goods import GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkCateGory
+from models.goods import GoodsCateGoryStyle,GoodsCateGory,Goods,GoodsLinkCateGory,SkuGroup,SkuSpecValue,GoodsLinkSku
+from models.shop import ShopPage
 
 from apps.app.public.serializers import GoodsCateGoryStyleForAppSerializer,GoodsCateGoryForAppSerializer,\
                 GoodsByCateGoryForAppSerializer
@@ -12,6 +14,8 @@ from router import route
 
 from apps.app.goods.rule import GoodsbyidsRules,GoodsbyCateGoryRules
 from apps.web.goods.serializers import GoodsSerializer
+
+from apps.app.goods.serializers import GoodsDetailForAppSerializer
 
 from loguru import logger
 
@@ -136,7 +140,59 @@ class goodslist(BaseHandler):
             # "count": count
         }
 
+@route(None,id=True)
+class goodsdetail(BaseHandler):
+    @Core_connector(isTicket=False)
+    async def get(self, pk=None):
 
+        if not pk:
+            raise PubErrorCustom("商品ID为空!")
+
+        try:
+            obj = await self.db.get(Goods, gdid=pk)
+        except Goods.DoesNotExist:
+            raise PubErrorCustom("此商品不存在!")
+
+        obj.shoppage = None
+        if obj.gd_link_shoppage >0:
+            try:
+                obj.shoppage = await self.db.get(ShopPage,id=obj.gd_link_shoppage)
+            except ShopPage.DoesNotExist:
+                pass
+
+        if obj.gd_specs_name_default_flag!='0':
+
+            query = GoodsLinkSku.select().where(GoodsLinkSku.id << json.loads(obj.gd_sku_links)).order_by(GoodsLinkSku.sort)
+
+            obj.gd_sku_link = await self.db.execute(query)
+
+            for item in obj.gd_sku_link:
+
+                skus = []
+
+                for skuItem in json.loads(item.skus):
+
+                    try:
+                        skuGroupObj = await self.db.get(SkuGroup, group_id=skuItem['group_id'])
+                    except SkuGroup.DoesNotExist:
+                        skuGroupObj = None
+
+                    try:
+                        skuSpecValueObj = await self.db.get(SkuSpecValue, spec_id=skuItem['spec_id'])
+                    except SkuGroup.DoesNotExist:
+                        skuSpecValueObj = None
+
+                    if skuGroupObj and skuSpecValueObj and skuSpecValueObj.group_id == skuGroupObj.group_id:
+                        skus.append(dict(
+                            group_id=skuSpecValueObj.group_id,
+                            spec_id=skuSpecValueObj.spec_id,
+                            group_name=skuGroupObj.group_name,
+                            spec_value=skuSpecValueObj.spec_value
+                        ))
+
+                item.skus = skus
+
+        return {"data":GoodsDetailForAppSerializer(obj,many=False).data}
 
 # class goodsbycategory(BaseHandler):
 #

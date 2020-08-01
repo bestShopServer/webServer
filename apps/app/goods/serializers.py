@@ -1,5 +1,6 @@
 
 import json
+from decimal import Decimal
 from rest_framework import serializers
 from utils.time_st import UtilTime
 
@@ -106,7 +107,7 @@ class GoodsDetailForAppSerializer(serializers.Serializer):
                         }
                     ],
                     "image":json.loads(obj.gd_banners)[0][1],
-                    "price":round(obj.gd_show_price,2),
+                    "price":obj.gd_show_price.quantize(Decimal('0.00')),
                     "stock":obj.gd_stock_tot
                 }
             ]

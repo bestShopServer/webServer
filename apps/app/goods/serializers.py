@@ -56,6 +56,7 @@ class GoodsLinkSkuSerializer(serializers.Serializer):
     def get_skus(self,obj):
         return obj.skus
 
+
 class GoodsDetailForAppSerializer(serializers.Serializer):
 
     gdid = serializers.IntegerField()
@@ -107,7 +108,7 @@ class GoodsDetailForAppSerializer(serializers.Serializer):
                         }
                     ],
                     "image":json.loads(obj.gd_banners)[0][1],
-                    "price":obj.gd_show_price.quantize(Decimal('0.00')),
+                    "price":float(obj.gd_show_price.quantize(Decimal('0.00'))),
                     "stock":obj.gd_stock_tot
                 }
             ]

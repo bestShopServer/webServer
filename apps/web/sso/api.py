@@ -55,13 +55,7 @@ class login(BaseHandler):
         token = get_token()
 
         c = self.redisC(key=token)
-        await c.set_dict(value={
-            "userid":user.userid,
-            "rolecode":user.rolecode,
-            "uuid": user.uuid,
-            "name":user.name,
-            "pic": user.pic
-        })
+        await c.set_dict(user.userid)
 
         return {"data":token}
 

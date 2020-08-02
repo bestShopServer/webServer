@@ -15,11 +15,13 @@ from models.goods import \
         SkuGroup,SkuSpecValue
 
 from models.setting import FareRule
+from models.shop import ShopPage
 
 from apps.web.goods.rule import GoodsCateGoryStyleRules,GoodsCateGoryRules,\
         SkuGroupRules,SkuSpecValueRules,GoodsRules,GoodsbyidsRules,GoodsLinkShopPageRules
 
 from apps.web.shop.rule import ShopPageRules
+from apps.web.shop.serializers import ShopPageDetailSerializer
 
 from router import route
 
@@ -223,9 +225,23 @@ class goodslinkshoppage(BaseHandler):
     async def put(self, *args, **kwargs):
         return {"data":self.pk}
 
-    @Core_connector(**GoodsLinkShopPageRules.get())
+    @Core_connector(isTransaction=False)
     async def get(self, pk=None):
-        pass
+
+        gdid = self.data.get("gdid")
+        try:
+            obj = await self.db.get(Goods,gdid=gdid)
+        except Goods.DoesNotExist:
+            raise PubErrorCustom("商品不存在!")
+
+        if obj.gd_link_shoppage>0:
+            try:
+                return {"data":ShopPageDetailSerializer(await self.db.get(ShopPage, id=obj.gd_link_shoppage),many=False).data}
+            except Goods.DoesNotExist:
+                raise PubErrorCustom("详情不存在!")
+        else:
+            pass
+
 
 @route(None,id=True)
 class skugroup(BaseHandler):

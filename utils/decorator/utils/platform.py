@@ -21,6 +21,12 @@ class ConnectorPlatForm(ConnectorFuncsBase):
             Platform = self.connector_app.request.headers.get_list("Platform")
             Appid = self.connector_app.request.headers.get_list("Appid")
 
+            if not Platform:
+                raise PubErrorCustom("平台编码不能为空!")
+
+            if not Appid:
+                raise PubErrorCustom("APPID不能为空!")
+
             logger.info("\n请求平台：{}\nAppid：{}\n".format(
                 Platform,
                 Appid,

@@ -27,7 +27,7 @@ class ConnectorPlatForm(ConnectorFuncsBase):
             ))
 
             try:
-                self.connector_app.shopsetting = await self.connector_app.get(ShopSetting, platform=Platform,appid=Appid)
+                self.connector_app.shopsetting = await self.connector_app.db.get(ShopSetting, platform=Platform,appid=Appid)
             except ShopSetting.DoesNotExist:
                 raise PubErrorCustom("无效的商户!")
 

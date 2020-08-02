@@ -65,13 +65,13 @@ class goodscategory(BaseHandler):
     async def add_before_handler(self,**kwargs):
 
         try:
-            gcgsObj = await self.db.get(GoodsCateGoryStyle,userid=self.user['userid'])
+            gcgsObj = await self.db.get(GoodsCateGoryStyle,userid=self.user.userid)
         except GoodsCateGoryStyle.DoesNotExist:
             raise PubErrorCustom("请先设置分类样式!")
 
         if self.data.get("gdcglastid",None):
             try:
-                lastcategory = await self.db.get(GoodsCateGory, gdcgid=self.data.get("gdcglastid",None), userid=self.user['userid'])
+                lastcategory = await self.db.get(GoodsCateGory, gdcgid=self.data.get("gdcglastid",None), userid=self.user.userid)
                 self.data['level'] = lastcategory.level+1
             except GoodsCateGory.DoesNotExist:
                 raise PubErrorCustom("上级分类有误!")
@@ -273,7 +273,7 @@ class skuspecvalue(BaseHandler):
         新增/修改前置处理
         """
         try:
-            await self.db.get(SkuGroup,group_id=self.data['group_id'],userid=self.user['userid'])
+            await self.db.get(SkuGroup,group_id=self.data['group_id'],userid=self.user.userid)
         except SkuGroup.DoesNotExist:
             raise PubErrorCustom("分组不存在!")
 

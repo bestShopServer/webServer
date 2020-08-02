@@ -27,6 +27,16 @@ class ShopConfig(BaseModel):
     id=BigIntegerField(primary_key=True)
     userid = BigIntegerField(verbose_name="用户ID")
     navigation_data = TextField(verbose_name="导航栏设置数据",default="[]")
+    setting_data = TextField(verbose_name="配置基础数据", default="{}")
+
+    """
+    {
+        "MP-WEIXIN":{
+            "appid":"APPID",
+            "secret":"secret"
+        }
+    }
+    """
 
     class Meta:
         db_table = 'shopconfig'

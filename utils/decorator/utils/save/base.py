@@ -221,8 +221,23 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
         if self.connector_app.request.method == 'PUT':
 
             if instance_data.get(auto_increment_key, None):
-                res = model_class(**instance_data)
+                # res = model_class(**instance_data)
+                # await self.connector_app.db.update(res)
+
+                try:
+                    res = await self.connector_app.db.get(model_class,
+                                                    **{
+                                                        auto_increment_key : instance_data.get(auto_increment_key, None)
+                                                    }
+                                                    )
+                except model_class.DoesNotExist:
+                    raise PubErrorCustom("不存在!")
+
+                for key in [k for k in model_class._meta.fields]:
+                    if instance_data.get(key,None):
+                        setattr(res,key,instance_data[key])
                 await self.connector_app.db.update(res)
+
             else:
                 await self.check_unique(robot_table=robot_table)
                 res = await self.connector_app.db.create(model_class, **instance_data)
@@ -243,7 +258,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
             form_data = robot_table['form_data'] if robot_table.get("form_data",None) else self.connector_app.data
 
             if hasattr(self.connector_app, "user") and form_data:
-                form_data['userid'] = self.connector_app.user['userid']
+                form_data['userid'] = self.connector_app.user.userid
 
             if robot_table.get("father",None) and self.connector_app.request.method == 'PUT':
                 form_data[self.get_model_auto_increment_key(robot_table['model_class'])] = self.pk

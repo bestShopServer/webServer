@@ -25,7 +25,7 @@ class baseinfo(BaseHandler):
     async def post(self):
 
         try:
-            obj = await self.db.get(User,userid=self.user['userid'])
+            obj = await self.db.get(User,userid=self.user.userid)
         except User.DoesNotExist:
             raise PubErrorCustom("拒绝访问!")
 
@@ -46,7 +46,7 @@ class baseinfo(BaseHandler):
     async def get(self):
 
         try:
-            obj = await self.db.get(User,userid=self.user['userid'])
+            obj = await self.db.get(User,userid=self.user.userid)
         except User.DoesNotExist:
             raise PubErrorCustom("拒绝访问!")
 
@@ -97,7 +97,7 @@ class shoppagetype(BaseHandler):
         if type == '0':
             for item in await self.db.execute(\
                     ShopPage.select().for_update().\
-                            where(ShopPage.userid==self.user['userid'],ShopPage.type << ['0','9'])):
+                            where(ShopPage.userid==self.user.userid,ShopPage.type << ['0','9'])):
                 if int(pk) == item.id:
                     item.type = type
                 else:

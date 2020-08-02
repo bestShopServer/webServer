@@ -4,6 +4,7 @@ from loguru import logger
 
 from utils.decorator.utils.ticket import ConnectorTicket
 from utils.decorator.utils.params import ConnectorParams
+from utils.decorator.utils.platform import ConnectorPlatForm
 
 from utils.decorator.utils.save.base import ConnectorFuncsSaveBase
 from utils.decorator.utils.delete.base import ConnectorFuncsDeleteBase
@@ -20,7 +21,7 @@ async def request_before_func_run(**kwargs):
     ))
 
     await ConnectorTicket(**kwargs).run()
-
+    await ConnectorPlatForm(**kwargs).run()
     await ConnectorParams(**kwargs).run()
 
     logger.info("\n请求的数据: {}".format(

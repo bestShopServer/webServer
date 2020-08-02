@@ -217,11 +217,11 @@ class goodslinkshoppage(BaseHandler):
 
     @Core_connector(**{**ShopPageRules.post(),**{"add_after_handler":add_after_handler}})
     async def post(self, *args, **kwargs):
-        pass
+        return {"data":self.pk}
 
     @Core_connector(**ShopPageRules.put())
     async def put(self, *args, **kwargs):
-        pass
+        return {"data":self.pk}
 
     @Core_connector(**GoodsLinkShopPageRules.get())
     async def get(self, pk=None):

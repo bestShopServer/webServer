@@ -128,7 +128,7 @@ class goodslist(BaseHandler):
             else:
                 query = query.order_by(getattr(Goods, sort_key).desc())
 
-        # count = len(await self.db.execute(query))
+        count = len(await self.db.execute(query))
         query = query.paginate(self.data['page'], self.data['size'])
 
         logger.info(query)
@@ -137,7 +137,7 @@ class goodslist(BaseHandler):
 
         return {
             "data": GoodsSerializer(resposne,many=True).data,
-            # "count": count
+            "count": count
         }
 
 @route(None,id=True)

@@ -54,8 +54,7 @@ class login(BaseHandler):
 
         token = get_token()
 
-        c = self.redisC(key=token)
-        await c.set_dict(user.userid)
+        await self.redis.set(token, user.userid)
 
         return {"data":token}
 
@@ -68,7 +67,4 @@ class logout(BaseHandler):
     @Core_connector()
     async def post(self, *args, **kwargs):
 
-        c = self.redisC(key=self.token)
-        await c.del_dict()
-
-        return None
+        await self.redis.delete(self.token)

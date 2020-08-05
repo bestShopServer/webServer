@@ -142,6 +142,7 @@ class goodslist(BaseHandler):
 
 @route(None,id=True)
 class goodsdetail(BaseHandler):
+
     @Core_connector(isTicket=False)
     async def get(self, pk=None):
 

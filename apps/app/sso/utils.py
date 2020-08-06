@@ -11,6 +11,7 @@ from models.user import User
 from utils.hash import get_token
 
 from cryptokit import AESCrypto
+from loguru import logger
 
 from apps.app.sso.serializers import UserForAppSerializer
 
@@ -53,9 +54,9 @@ class wexinLogin(loginBase):
                 secret=self.secret,
                 grant_type="authorization_code",
             )))
-
+        logger.info(url)
         res = await http_client.fetch(HTTPRequest(url=url,method='GET'))
-
+        logger.info(res.body)
         response = json.loads(res.body.decode('utf8'))
         if not response.get("openid",None):
             raise PubErrorCustom("获取用户错误,腾讯接口有误!")

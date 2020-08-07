@@ -40,8 +40,8 @@ class loginBase(object):
     def __init__(self,**kwargs):
 
         self.app = kwargs.get("app")
-        self.appid = kwargs.get("appid","wxf09e1a6a0ee3dd1b")
-        self.secret = kwargs.get("secret","a7b66d8f92dfb21f95a6e93face4a3ca0")
+        self.appid = kwargs.get("appid","wx2c4649a77ef8edcd")
+        self.secret = kwargs.get("secret","6426ff42186d3a23deccccc890721658")
 
 class wexinLogin(loginBase):
 

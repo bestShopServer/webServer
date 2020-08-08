@@ -77,8 +77,9 @@ class ConnectorFuncsGetBase(ConnectorFuncsBase):
                 if self.connector_app.data.get("detail"):
                     raise PubErrorCustom("查询详情请输入id值!")
 
-            for item in value['query_params']:
-                query = await self.filter(model_class,query,item)
+            if "query_params" in value:
+                for item in value['query_params']:
+                    query = await self.filter(model_class,query,item)
 
             if value.get("sort",None):
                 if isinstance(value.get("sort"),list):

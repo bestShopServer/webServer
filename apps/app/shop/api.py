@@ -18,6 +18,6 @@ class shoppage(BaseHandler):
 
         self.data['detail'] = True
 
-    @Core_connector(**{**ShopPageRules.get(),**{"get_before_handler":get_before_handler}})
+    @Core_connector(**{**ShopPageRules.get(),**{"get_before_handler":get_before_handler,"isTicket":False}})
     async def get(self, *args, **kwargs):
         pass

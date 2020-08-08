@@ -61,6 +61,9 @@ class Core_connector:
         #删除前置处理
         self.del_before_handler = kwargs.get("del_before_handler", None)
 
+        #查询前置处理
+        self.get_before_hander = kwargs.get("get_before_handler",None)
+
         #是否支持批量删除
         self.is_del_batch = kwargs.get("is_del_batch", True)
 

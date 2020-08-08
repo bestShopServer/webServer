@@ -14,6 +14,10 @@ class shoppage(BaseHandler):
     微页面
     """
 
-    @Core_connector(**ShopPageRules.get())
+    async def get_before_handler(self,**kwargs):
+
+        self.data['detail'] = True
+
+    @Core_connector(**{**ShopPageRules.get(),**{"get_before_handler":get_before_handler}})
     async def get(self, *args, **kwargs):
         pass

@@ -86,7 +86,7 @@ class wexinLogin(loginBase):
         res = self.decrypt()
         logger.info(res)
         try:
-            user = await self.app.db.get(User,uuid=res.get('openid'))
+            user = await self.app.db.get(User,uuid=res.get('openId') if 'unionId' not in res else res['unionId'])
         except User.DoesNotExist:
 
             user = await self.app.db.create(User,**{

@@ -107,3 +107,31 @@ class OrderList(BaseModel):
 
     class Meta:
         db_table = 'orderlist'
+
+
+class Address(BaseModel):
+
+    """
+    收货地址
+    """
+
+    id = BigAutoField(primary_key=True,verbose_name="ID")
+    userid = BigIntegerField(verbose_name="用户代码",null=True)
+
+    name = CharField(max_length=60,verbose_name="收获人",default='')
+    mobile = CharField(max_length=60,verbose_name="收货手机号",default='')
+
+    province_code = CharField(max_length=20, verbose_name="省code", default="")
+    province_name = CharField(max_length=20, verbose_name="省名称", default="")
+
+    city_code = CharField(max_length=20, verbose_name="市code", default="")
+    city_name = CharField(max_length=20, verbose_name="市名称", default="")
+
+    county_code = CharField(max_length=20, verbose_name="市code", default="")
+    county_name = CharField(max_length=20, verbose_name="市名称", default="")
+
+    address_detail = CharField(max_length=1024,verbose_name="详细地址",default="")
+    address_default = CharField(max_length=1,verbose_name="默认,0-是,1-否",default='0')
+
+    class Meta:
+        db_table = 'address'

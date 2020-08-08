@@ -84,7 +84,7 @@ class wexinLogin(loginBase):
     async def wx_login(self):
 
         res = self.decrypt()
-
+        logger.info(res)
         try:
             user = await self.app.db.get(User,uuid=res.get('openid'))
         except User.DoesNotExist:

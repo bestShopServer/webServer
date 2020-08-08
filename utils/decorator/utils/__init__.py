@@ -55,5 +55,6 @@ async def run_before_func_run(**kwargs):
         elif connector_app.request.method == 'DELETE':
             await ConnectorFuncsDeleteBase(**kwargs).run()
         elif connector_app.request.method == 'GET':
-            await connector.get_before_hander(connector_app,**kwargs)
+            if connector.get_before_hander:
+                await connector.get_before_hander(connector_app,**kwargs)
             return await ConnectorFuncsGetBase(**kwargs).run()

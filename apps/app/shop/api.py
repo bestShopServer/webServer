@@ -5,7 +5,7 @@ from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from router import route
-from apps.web.shop.rule import ShopPageRules
+from apps.app.shop.rule import ShopPageRules
 
 
 @route(None,id=True)

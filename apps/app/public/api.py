@@ -10,6 +10,8 @@ from models.shop import ShopPage,ShopConfig
 from apps.app.public.serializers import ShopPageForAppSerializer,ShopConfigForAppSerializer
 from router import route
 
+from data.base import datacity
+
 @route()
 class index(BaseHandler):
 
@@ -43,4 +45,8 @@ class menu(BaseHandler):
         return {"data":menuData}
 
 
-
+@route(None,id=True)
+class citycode(BaseHandler):
+    @Core_connector(isTransaction=False,is_query_standard=False)
+    async def get(self, pk=None):
+        return {"data": await datacity(redis=self.redis).get()}

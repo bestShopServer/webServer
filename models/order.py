@@ -108,7 +108,28 @@ class OrderList(BaseModel):
     class Meta:
         db_table = 'orderlist'
 
+class ShopCart(BaseModel):
+    """
+    购物车表
+    """
 
+    id = BigAutoField()
+    gdid = BigIntegerField(verbose_name="商品ID")
+    gd_img = CharField(max_length=255, verbose_name="图片", default='')
+    gd_name = CharField(max_length=120, verbose_name="商品名称",default="")
+    gd_price = DecimalField(max_digits=18, decimal_places=6, default=0.000, verbose_name="商品价格(单价)")
+    gd_number = IntegerField(verbose_name="商品数量", default=0)
+    gd_item_no = CharField(max_length=60,verbose_name="商品货号",default="")
+    gd_weight = IntegerField(verbose_name="商品重量(单位克)",default=0)
+    gd_sku_id = BigIntegerField(verbose_name="skulinkid  当为0代表默认规格",default=0)
+    gd_sku_name = CharField(verbose_name="规格名称",default="",max_length=60)
+    gd_unit = CharField(max_length=20, verbose_name="单位", default="件")
+
+    fare_amount = DecimalField(max_digits=18, decimal_places=6, default=0.000, verbose_name="运费")
+    fare_no = CharField(max_length=60,verbose_name="运单号",default="")
+
+    class Meta:
+        db_table = 'orderlist'
 
 
 class Address(BaseModel):

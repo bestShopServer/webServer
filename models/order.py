@@ -115,6 +115,8 @@ class ShopCart(BaseModel):
 
     id = BigAutoField()
     gdid = BigIntegerField(verbose_name="商品ID")
+    userid = BigIntegerField(verbose_name="用户代码", null=True)
+
     gd_img = CharField(max_length=255, verbose_name="图片", default='')
     gd_name = CharField(max_length=120, verbose_name="商品名称",default="")
     gd_price = DecimalField(max_digits=18, decimal_places=6, default=0.000, verbose_name="商品价格(单价)")
@@ -125,11 +127,8 @@ class ShopCart(BaseModel):
     gd_sku_name = CharField(verbose_name="规格名称",default="",max_length=60)
     gd_unit = CharField(max_length=20, verbose_name="单位", default="件")
 
-    fare_amount = DecimalField(max_digits=18, decimal_places=6, default=0.000, verbose_name="运费")
-    fare_no = CharField(max_length=60,verbose_name="运单号",default="")
-
     class Meta:
-        db_table = 'orderlist'
+        db_table = 'shopcart'
 
 
 class Address(BaseModel):

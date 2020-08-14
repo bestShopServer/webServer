@@ -1,8 +1,8 @@
 
 
 from apps.app.order.forms import AddressForm
-from models.order import Address
-from apps.app.order.serializers import AddressForAppSerializer
+from models.order import Address,ShopCart
+from apps.app.order.serializers import AddressForAppSerializer,ShopCartForAppSerializer
 
 class AddressRules:
 
@@ -52,6 +52,42 @@ class AddressRules:
                     "model_class": Address,
                     "page":True,
                     "serializers":AddressForAppSerializer,
+                    "query_params":[
+                        {
+                            "key":"userid",
+                            "value":"user.userid",
+                            "data_src":"data_pool",
+                            "pool":"self"
+                        },
+                    ],
+                }
+            }
+        )
+
+class ShopCartRules:
+
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "id",
+                "shopcart": {
+                    "model_class": ShopCart
+                }
+            }
+        )
+
+    @staticmethod
+    def get():
+        return dict(
+            isTransaction=False,
+            robot={
+                "pk_key": "id",
+                "shopcart": {
+                    "model_class": ShopCart,
+                    "page":True,
+                    "serializers":ShopCartForAppSerializer,
                     "query_params":[
                         {
                             "key":"userid",

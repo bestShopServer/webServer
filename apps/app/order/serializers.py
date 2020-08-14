@@ -22,3 +22,18 @@ class AddressForAppSerializer(serializers.Serializer):
 
     address_detail = serializers.CharField()
     address_default = serializers.CharField()
+
+class ShopCartForAppSerializer(serializers.Serializer):
+
+    id = serializers.IntegerField()
+    gdid = serializers.IntegerField()
+
+    gd_img = serializers.CharField()
+    gd_name = serializers.CharField()
+    gd_price = serializers.DecimalField(max_digits=18,decimal_places=2)
+    gd_number = serializers.IntegerField()
+    gd_item_no = serializers.CharField()
+    gd_weight = serializers.IntegerField()
+    gd_sku_id = serializers.IntegerField()
+    gd_sku_name = serializers.CharField()
+    gd_unit = serializers.CharField()

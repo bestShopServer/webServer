@@ -136,7 +136,7 @@ class shopcart(BaseHandler):
         shopcartObj = shopcartObj[0]
         shopcartObj.gd_number += int(number)
 
-        await self.db.execute(shopcartObj)
+        await self.db.update(shopcartObj)
 
     @Core_connector(**ShopCartRules().delete())
     async def delete(self, *args, **kwargs):

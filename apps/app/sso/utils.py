@@ -8,6 +8,7 @@ import base64
 import json
 
 from models.user import User
+from models.order import Address
 from utils.hash import get_token
 
 from cryptokit import AESCrypto
@@ -102,6 +103,13 @@ class wexinLogin(loginBase):
         token = get_token()
 
         user.token = token
+
+        address = await self.app.db.execute(Address.select().where(Address.userid == user.userid,Address.address_default=='0'))
+
+        if len(address):
+            user.address = address[0]
+        else:
+            user.address = None
 
         data = UserForAppSerializer(user, many=False).data
 

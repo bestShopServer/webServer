@@ -14,7 +14,7 @@ class idGenerator(object):
     async def ordercode(self):
         t = UtilTime().arrow_to_string(format_v="YYYYMMDDHHmmss")
         self.key = t
-        res = "TC%s%03d"%(self.key,await self.redis.incr(self.key))
+        res = "HG%s%03d"%(self.key,await self.redis.incr(self.key))
         await self.redis.expire(self.key,10)
         return res
 

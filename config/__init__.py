@@ -13,6 +13,8 @@ common=dict(
 common['static'] = os.path.join(common['basedir'],"static")
 common['images'] = os.path.join(common['static'],"images")
 
+common['callback_url_for_wechat'] = "{}{}".format(common['serverurl'],"/app/order/wechat_callback")
+
 mysql=dict(
 	host = 'localhost',
 	port = 3306,

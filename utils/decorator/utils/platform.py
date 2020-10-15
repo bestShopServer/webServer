@@ -14,6 +14,9 @@ class ConnectorPlatForm(ConnectorFuncsBase):
         """
         平台处理
         """
+
+        self.connector_app.platform = self.connector_app.request.headers.get_list("Platform")
+
         return
         print(self.connector_app.request.uri.split("/")[3])
         if self.connector_app.request.uri.split("/")[3] == 'app':

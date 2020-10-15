@@ -62,7 +62,7 @@ class OrderDetail(BaseModel):
     orderid = CharField(max_length=19, verbose_name="订单ID")
 
     memo = CharField(verbose_name="买家备注",default="",max_length=60)
-    source = CharField(verbose_name="来源",choices=ORDER_SOURCE_CHOICES,default='0')
+    source = CharField(max_length=1,verbose_name="来源",choices=ORDER_SOURCE_CHOICES,default='3')
     pay_type = CharField(max_length=1,verbose_name="支付方式",default="0",choices=ORDER_PAYTYPE_CHOICES)
 
     name = CharField(max_length=60, verbose_name="收货人", default='')

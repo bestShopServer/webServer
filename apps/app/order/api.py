@@ -134,7 +134,7 @@ class shopcart(BaseHandler):
             raise PubErrorCustom("无此数据")
 
 
-        shopcartObj[0].gd_number += number
+        shopcartObj[0].gd_number += int(number)
 
         await self.db.execute(shopcartObj)
 

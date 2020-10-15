@@ -6,6 +6,8 @@ from utils.database import RedisPool,MysqlPool
 from loguru import logger
 from utils.app import Application
 
+from utils.time_st import UtilTime
+
 
 class Server(object):
 
@@ -37,6 +39,7 @@ class Server(object):
 
     def start(self):
         try:
+            logger.info(UtilTime().arrow_to_string())
             logger.info("server start...")
             loop = asyncio.get_event_loop()
             app = self.make_app(loop)

@@ -37,3 +37,14 @@ class ShopCartForAppSerializer(serializers.Serializer):
     gd_sku_id = serializers.IntegerField()
     gd_sku_name = serializers.CharField()
     gd_unit = serializers.CharField()
+
+class OrderForAppSerializer(serializers.Serializer):
+
+    orderid = serializers.CharField()
+    status = serializers.CharField()
+    fare_amount = serializers.DecimalField(max_digits=18,decimal_places=2)
+    pay_amount = serializers.DecimalField(max_digits=18,decimal_places=2)
+    #
+    # orderlist = serializers.SerializerMethodField()
+    # orderdetail = serializers.SerializerMethodField()
+

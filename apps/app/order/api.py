@@ -2,9 +2,13 @@
 import json
 from decimal import Decimal
 
+from peewee import JOIN
+
 from utils.database import MysqlPool
 
 from apps.base import BaseHandler
+
+from apps.app.order.serializers import OrderForAppSerializer
 
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
@@ -142,7 +146,7 @@ class shopcart(BaseHandler):
             raise PubErrorCustom("无此数据")
 
         shopcartObj = shopcartObj[0]
-        shopcartObj.gd_number += int(number)
+        shopcartObj.gd_number = int(number)
 
         await self.db.update(shopcartObj)
 
@@ -236,6 +240,22 @@ class order(BaseHandler):
 
         return {"data":orderid}
 
+    @Core_connector(isTicket=False)
+    async def get(self, pk=None):
+
+        query = Order.select(Order, OrderDetail, OrderList). \
+            join(OrderDetail, join_type=JOIN.INNER, on=(OrderDetail.orderid == Order.orderid)). \
+            join(OrderList, join_type=JOIN.INNER, on=(OrderList.orderid == Order.orderid)). \
+            where(Order.userid == 1)
+
+        if pk:
+            query = query.where(Order.orderid == pk)
+
+            return {"data":OrderForAppSerializer(await self.db.execute(query),many=False).data}
+
+        else:
+            return {"data":OrderForAppSerializer(await self.db.execute(query),many=True).data}
+
 
 @route(None,id=True)
 class orderpay(BaseHandler):
@@ -307,3 +327,4 @@ class wechat_callback(BaseHandler):
         except Exception:
             self.finish("""<xml><return_code><![CDATA[FAIL]]></return_code>                          
                                     <return_msg><![CDATA[Signature_Error]]></return_msg></xml>""")
+

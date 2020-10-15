@@ -133,8 +133,8 @@ class shopcart(BaseHandler):
         if not len(shopcartObj):
             raise PubErrorCustom("无此数据")
 
-
-        shopcartObj[0].gd_number += int(number)
+        shopcartObj = shopcartObj[0]
+        shopcartObj.gd_number += int(number)
 
         await self.db.execute(shopcartObj)
 

@@ -13,6 +13,8 @@ from models.order import Address
 from models.order import ShopCart
 from models.goods import Goods,GoodsLinkSku
 
+from loguru import logger
+
 @route(None,id=True)
 class address(BaseHandler):
 
@@ -122,18 +124,18 @@ class shopcart(BaseHandler):
         if not pk:
             raise PubErrorCustom("id不能为空!")
 
-        operation = self.data.get("operation","+")
+        number = self.data.get("number", None)
 
         shopcartObj = await self.db.execute(ShopCart.select().for_update().where(ShopCart.id == pk))
+
+        logger.info(shopcartObj)
 
         if not len(shopcartObj):
             raise PubErrorCustom("无此数据")
 
-        shopcartObj = shopcartObj[0]
-        if operation == '+':
-            shopcartObj.gd_number += 1
-        else:
-            shopcartObj.gd_number -= 1
+
+        shopcartObj[0].gd_number += number
+
         await self.db.execute(shopcartObj)
 
     @Core_connector(**ShopCartRules().delete())
@@ -142,4 +144,11 @@ class shopcart(BaseHandler):
 
     @Core_connector(**ShopCartRules().get())
     async def get(self, pk=None):
+        pass
+
+@route()
+class order(BaseHandler):
+
+    @Core_connector()
+    async def post(self, *args, **kwargs):
         pass

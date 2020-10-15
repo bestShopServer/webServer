@@ -34,6 +34,6 @@ class UserForAppSerializer(serializers.Serializer):
     def get_address(self,obj):
 
         if obj.address:
-            return UserForAppSerializer(obj.address,many=True).data
+            return AddressForAppSerializer(obj.address,many=True).data
         else:
             return None

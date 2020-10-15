@@ -28,11 +28,13 @@ class PayBase(object):
                     app=self.app,
                     trade=self.trade
                 ).request()
-            else:
+            elif self.trade['method'] == 'callback':
                 return await PayForWechat(
                     app=self.app,
                     trade=self.trade
                 ).callback()
+            else:
+                raise PubErrorCustom("method({}) error!".format(self.trade['method']))
         else:
             raise PubErrorCustom("暂不提供此支付方式!")
 

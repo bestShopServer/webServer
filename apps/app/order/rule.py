@@ -59,6 +59,12 @@ class AddressRules:
                             "data_src":"data_pool",
                             "pool":"self"
                         },
+                        {
+                            "key": "address_default",
+                            "value": "data.address_default",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        },
                     ],
                 }
             }

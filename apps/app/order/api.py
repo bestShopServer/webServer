@@ -175,7 +175,7 @@ class order(BaseHandler):
         if not len(shopcarts):
             raise PubErrorCustom("请选择购买的商品!")
 
-        if not len(address_id):
+        if not address_id:
             raise PubErrorCustom("请填写收货地址!")
 
         orderid = await self.idGeneratorClass.ordercode()

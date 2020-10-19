@@ -207,7 +207,7 @@ class order(BaseHandler):
                 gd_unit=item['gd_unit']
             ))
 
-            price += Decimal(str(item['gd_price']) * int(item['gd_number']))
+            price += Decimal(str(item['gd_price'])) * int(item['gd_number'])
 
         await self.db.create(Order, **dict(
             userid=self.user.userid,

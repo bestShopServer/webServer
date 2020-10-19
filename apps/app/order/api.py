@@ -178,7 +178,7 @@ class order(BaseHandler):
         if not address_id:
             raise PubErrorCustom("请填写收货地址!")
 
-        orderid = await self.idGeneratorClass.ordercode()
+        orderid = await self.idGeneratorClass().ordercode()
 
         price = Decimal(0.0)
 

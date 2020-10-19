@@ -235,7 +235,7 @@ class order(BaseHandler):
             city_name=address.city_name,
             county_code=address.county_code,
             county_name=address.county_name,
-            detail=address.detail
+            detail=address.address_detail
         ))
 
         return {"data":orderid}

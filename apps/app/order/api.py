@@ -320,6 +320,8 @@ class wechat_callback(BaseHandler):
 
     async def post(self, *args, **kwargs):
 
+        msg = self.request.body.decode('utf-8')
+        logger.info("微信回调数据=>{}".format(msg))
         self.set_header("Content-Type", "text/xml; charset=UTF-8")
         try:
             async with MysqlPool().get_conn.atomic_async():
@@ -328,7 +330,8 @@ class wechat_callback(BaseHandler):
                     trade={
                         "pay_key": "15176427685562895401199204202038",
                         "method": "callback",
-                        "paytype":'0'
+                        "paytype":'0',
+                        "callback_msg":msg
                     }
                 ).run()
             self.finish("""<xml><return_code><![CDATA[SUCCESS]]></return_code>

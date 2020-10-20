@@ -243,17 +243,26 @@ class order(BaseHandler):
     @Core_connector(isTicket=False,isTransaction=False)
     async def get(self, pk=None):
 
-        query = Order.select(Order, OrderDetail, OrderList). \
+        query = Order.select(Order, OrderDetail). \
             join(OrderDetail, join_type=JOIN.INNER, on=(OrderDetail.orderid == Order.orderid)). \
-            join(OrderList, join_type=JOIN.INNER, on=(OrderList.orderid == Order.orderid)). \
             where(Order.userid == 1)
 
         if pk:
             query = query.where(Order.orderid == pk)
 
-            return {"data":OrderForAppSerializer(await self.db.execute(query),many=False).data}
+            row = await self.db.execute(query)
+
+            if len(row):
+                row = row[0]
+
+            return {"data": OrderForAppSerializer(row, many=False).data}
 
         else:
+
+            row = await self.db.execute(query)
+
+            orderids = [ item.orderid for item in row ]
+
             return {"data":OrderForAppSerializer(await self.db.execute(query),many=True).data}
 
 

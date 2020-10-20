@@ -12,6 +12,14 @@ class ShopCartBase(object):
 
         self.app = kwargs.get("app")
 
+class OrderBase(object):
+
+    def __init__(self):
+        pass
+
+    def query(self):
+        pass
+
 class PayBase(object):
 
     def __init__(self,**kwargs):
@@ -77,7 +85,7 @@ class PayForWechat(object):
         data['sign_type'] = 'MD5'
 
         data['sign'] = self.hashdata(data,self.trade['pay_key'])
-
+        logger.info(data)
         param = {'root': data}
         xml = xmltodict.unparse(param)
 

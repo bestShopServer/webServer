@@ -121,8 +121,10 @@ class PayForWechat(object):
     async def callback(self):
 
         # msg = request.body.decode('utf-8')
+        logger.info("支付回调数据=>{}".format(self.trade))
         xmlmsg = xmltodict.parse(self.trade['callback_msg'])
 
+        logger.info("回调数据=>{}".format(xmlmsg))
         return_code = xmlmsg['xml']['return_code']
 
         logger.info("腾讯支付回调数据:\n\t",xmlmsg['xml'])

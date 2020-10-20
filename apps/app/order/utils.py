@@ -4,6 +4,7 @@ from decimal import Decimal
 from loguru import logger
 from utils.exceptions import PubErrorCustom
 
+from utils.time_st import UtilTime
 from models.order import Order
 
 class ShopCartBase(object):
@@ -127,7 +128,8 @@ class PayForWechat(object):
         logger.info("回调数据=>{}".format(xmlmsg))
         return_code = xmlmsg['xml']['return_code']
 
-        logger.info("腾讯支付回调数据:\n\t",xmlmsg['xml'])
+        logger.info(return_code)
+        logger.info("腾讯支付回调数据:{}\n\t",xmlmsg['xml'])
 
         if return_code == 'SUCCESS':
 
@@ -156,6 +158,8 @@ class PayForWechat(object):
 
                 order.trade_no = xmlmsg['xml']['transaction_id']
                 order.status='1'
+
+                order.status_list = json.dumps(json.loads(order.status_list).append({"status": "1", "time": UtilTime().timestamp}))
 
                 await self.app.db.update(order)
             else:

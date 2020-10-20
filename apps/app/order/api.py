@@ -158,7 +158,7 @@ class shopcart(BaseHandler):
     async def get(self, pk=None):
         pass
 
-@route()
+@route(None,id=True)
 class order(BaseHandler):
 
     """
@@ -240,7 +240,7 @@ class order(BaseHandler):
 
         return {"data":orderid}
 
-    @Core_connector(isTicket=False)
+    @Core_connector(isTicket=False,isTransaction=False)
     async def get(self, pk=None):
 
         query = Order.select(Order, OrderDetail, OrderList). \

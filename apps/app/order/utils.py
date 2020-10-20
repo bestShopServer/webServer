@@ -104,7 +104,7 @@ class PayForWechat(object):
             timeStamp = str(int(time.time()))
 
             data = {
-                "appId": "",
+                "appId": self.trade['appid'],
                 "nonceStr": data['nonce_str'],
                 "package": "prepay_id=" + prepay_id,
                 "signType": 'MD5',

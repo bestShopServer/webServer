@@ -8,7 +8,7 @@ from utils.database import MysqlPool
 
 from apps.base import BaseHandler
 
-from apps.app.order.serializers import OrderForAppSerializer
+from apps.app.order.serializers import OrderForAppSerializer,orderOrderDetailForAppSerializer
 
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
@@ -158,7 +158,7 @@ class shopcart(BaseHandler):
     async def get(self, pk=None):
         pass
 
-@route(None,id=True)
+@route()
 class order(BaseHandler):
 
     """
@@ -194,20 +194,41 @@ class order(BaseHandler):
             elif obj.gd_status == '2':
                 raise PubErrorCustom("商品{}已售罄!".format(obj.gd_name))
 
-            await self.db.create(OrderList, **dict(
-                orderid=orderid,
-                gdid=obj.gdid,
-                gd_img=json.loads(obj.gd_banners)[0][1],
-                gd_price=item['gd_price'],
-                gd_number=item['gd_number'],
-                gd_item_no=item['gd_item_no'],
-                gd_weight=item['gd_weight'],
-                gd_sku_id=item['gd_sku_id'],
-                gd_sku_name=item['gd_sku_name'],
-                gd_unit=item['gd_unit']
-            ))
+            if obj.gd_specs_name_default_flag == '0':
+                orderlistObj = await self.db.create(OrderList, **dict(
+                    orderid=orderid,
+                    gdid=obj.gdid,
+                    gd_name=obj.gd_name,
+                    gd_img=json.loads(obj.gd_banners)[0][1],
+                    gd_price=obj.gd_show_price,
+                    gd_item_no=obj.gd_item_no,
+                    gd_weight=obj.gd_weight,
+                    gd_unit=obj.gd_unit,
+                    gd_sku_id=item['gd_sku_id'],
+                    gd_sku_name=item['gd_sku_name'],
+                    gd_number=item['gd_number']
+                ))
+            else:
+                try:
+                    skuObj = await self.db.get(GoodsLinkSku, id=item['gd_sku_id'])
+                except GoodsLinkSku.DoesNotExist:
+                    raise PubErrorCustom("SkuId{}不存在!".format(item['gd_sku_id']))
 
-            price += Decimal(str(item['gd_price'])) * int(item['gd_number'])
+                orderlistObj = await self.db.create(OrderList, **dict(
+                    orderid=orderid,
+                    gdid=obj.gdid,
+                    gd_img=skuObj.image,
+                    gd_price=skuObj.price,
+                    gd_name=obj.gd_name,
+                    gd_item_no=skuObj.item_no,
+                    gd_weight=skuObj.weight,
+                    gd_unit=obj.gd_unit,
+                    gd_sku_id=item['gd_sku_id'],
+                    gd_sku_name=item['gd_sku_name'],
+                    gd_number=item['gd_number']
+                ))
+
+            price += orderlistObj.gd_price * int(item['gd_number'])
 
         await self.db.create(Order, **dict(
             userid=self.user.userid,
@@ -240,30 +261,79 @@ class order(BaseHandler):
 
         return {"data":orderid}
 
-    @Core_connector(isTicket=False,isTransaction=False)
+@route()
+class orderlist(BaseHandler):
+
+    """
+    订单列表查询
+    """
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+
+        status = self.data.get("status",None)
+
+        query = Order.select(Order).where(Order.userid == self.user.userid)
+
+        if status and status!='all':
+            query = query.where(Order.status == status)
+
+        row = await self.db.execute(query)
+
+        orderids = [item.orderid for item in row]
+
+        if len(orderids):
+            orderlistTmp = await self.db.execute(OrderList.select().where(OrderList.orderid << orderids))
+
+            for item in row:
+                for itemOrderlist in orderlistTmp:
+                    if item.orderid == itemOrderlist.orderid:
+                        if hasattr(item, "orderlist") and item.orderlist:
+                            item.orderlist.append(itemOrderlist)
+                        else:
+                            item.orderlist = [itemOrderlist]
+
+        return {"data": OrderForAppSerializer(row, many=True).data}
+
+@route(None,id=True)
+class orderdetail(BaseHandler):
+
+    """
+    订单详情查询
+    """
+
+    @Core_connector( isTransaction=False)
     async def get(self, pk=None):
 
         query = Order.select(Order, OrderDetail). \
             join(OrderDetail, join_type=JOIN.INNER, on=(OrderDetail.orderid == Order.orderid)). \
-            where(Order.userid == 1)
+            where(Order.userid == self.user.userid)
 
         if pk:
             query = query.where(Order.orderid == pk)
-
-            row = await self.db.execute(query)
-
-            if len(row):
-                row = row[0]
-
-            return {"data": OrderForAppSerializer(row, many=False).data}
-
         else:
+            raise PubErrorCustom("请传入订单号!")
 
-            row = await self.db.execute(query)
+        row = await self.db.execute(query)
 
-            orderids = [ item.orderid for item in row ]
+        orderids = [item.orderid for item in row]
 
-            return {"data":OrderForAppSerializer(await self.db.execute(query),many=True).data}
+        if len(orderids):
+            orderlistTmp = await self.db.execute(OrderList.select().where(OrderList.orderid << orderids))
+
+            for item in row:
+                for itemOrderlist in orderlistTmp:
+                    if item.orderid == itemOrderlist.orderid:
+                        if hasattr(item, "orderlist") and item.orderlist:
+                            item.orderlist.append(itemOrderlist)
+                        else:
+                            item.orderlist = [itemOrderlist]
+
+        if len(row):
+            row = row[0]
+        return {"data": orderOrderDetailForAppSerializer(row, many=False).data}
+
 
 
 @route(None,id=True)

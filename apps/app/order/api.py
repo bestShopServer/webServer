@@ -335,6 +335,34 @@ class orderdetail(BaseHandler):
         return {"data": orderOrderDetailForAppSerializer(row, many=False).data}
 
 
+@route()
+class ordercount(BaseHandler):
+
+    """
+    订单数目查询
+    """
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+        r_data={
+            "dfk":0,
+            "dfh":0,
+            "dsh":0,
+            "tkz":0
+        }
+
+        for item in await self.db.execute(Order.select(Order).where(Order.userid == self.user.userid)):
+            if item.status == '0':
+                r_data['dfk'] += 1
+            elif item.status == '1':
+                r_data['dfh'] += 1
+            elif item.status == '2':
+                r_data['dsh'] += 1
+            elif item.status == '6':
+                r_data['tkz'] += 1
+
+        return {"data":r_data}
 
 @route(None,id=True)
 class orderpay(BaseHandler):

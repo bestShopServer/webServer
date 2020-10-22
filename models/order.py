@@ -35,6 +35,7 @@ class Order(BaseModel):
     id = BigAutoField()
     orderid = CharField(max_length=19,verbose_name="订单ID")
     userid = BigIntegerField(verbose_name="用户代码", null=True)
+    super_userid = BigIntegerField(verbose_name="商铺管理员用户代码",null=True)
     status = CharField(max_length=1,choices=ORDER_STATUS_CHOICES,verbose_name="状态",default="0")
     status_list = CharField(max_length=2048,
                             verbose_name="""

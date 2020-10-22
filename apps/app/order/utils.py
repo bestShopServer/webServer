@@ -6,6 +6,7 @@ from utils.exceptions import PubErrorCustom
 
 from utils.time_st import UtilTime
 from models.order import Order
+from models.setting import FareRule
 
 class ShopCartBase(object):
 
@@ -20,6 +21,29 @@ class OrderBase(object):
 
     def query(self):
         pass
+
+class FareBase(object):
+
+    def __init__(self,**kwargs):
+
+        self.app = kwargs.get("app")
+        self.goods = kwargs.get("goods")
+
+    async def fare_cals(self,id=None):
+
+        try:
+            obj = await self.app.db.get(FareRule, fare_rule_id=id)
+        except FareRule.DoesNotExist:
+            logger.info("运费规则{}不存在!".format(id))
+            return Decimal('0.0')
+
+        #按重量计费
+        if obj.fare_rule_fee_type == '0':
+            pass
+        #按件计费
+        else:
+            pass
+
 
 class PayBase(object):
 

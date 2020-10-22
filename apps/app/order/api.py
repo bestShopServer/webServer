@@ -232,6 +232,7 @@ class order(BaseHandler):
 
         await self.db.create(Order, **dict(
             userid=self.user.userid,
+            super_userid = 1, #先写死
             orderid=orderid,
             status='0',
             status_list=json.dumps([{"status": "0", "time": UtilTime().timestamp}]),

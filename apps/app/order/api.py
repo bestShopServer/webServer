@@ -20,7 +20,7 @@ from router import route
 from apps.app.order.rule import AddressRules,ShopCartRules
 from models.order import Address
 
-from models.order import ShopCart,Order,OrderList,OrderDetail
+from models.order import ShopCart,Order,OrderList,OrderDetail,OrderRefund
 from models.goods import Goods,GoodsLinkSku
 
 from apps.app.order.utils import PayBase
@@ -399,17 +399,54 @@ class orderpay(BaseHandler):
         return {"data":await PayBase(
             app=self,
             trade={
-                "appid":"wx2c4649a77ef8edcd",
-                "mch_id":"1514182671",
                 "out_trade_no":order.orderid,
                 "total_fee" : int(amount * 100),
                 "openid":self.user.uuid,
-                "pay_key":"15176427685562895401199204202038",
                 "spbill_create_ip":self.request.remote_ip,
                 "paytype":paytype,
                 "method":"create"
             }
         ).run()}
+
+
+@route(None,id=True)
+class order_refund_apply(BaseHandler):
+    """
+    订单退款申请
+    """
+
+    @Core_connector()
+    async def put(self, pk=None):
+        if not pk:
+            raise PubErrorCustom("订单号不能为空!")
+
+        try:
+            await self.db.get(OrderRefund, orderid=pk)
+            raise PubErrorCustom("已申请退款!")
+        except Order.DoesNotExist:
+            pass
+
+        order = await self.db.execute(Order.select().for_update().where(Order.orderid == pk))
+        if not len(order):
+            raise PubErrorCustom("订单{}不存在!".format(pk))
+        else:
+            order = order[0]
+
+        order.status = '6'
+        order.status_list = json.loads(order.status_list).append({"status": "6", "time": UtilTime().timestamp})
+
+        refundObj = await self.db.create(OrderRefund, **dict(
+            orderid=order.orderid,
+            refund_id = await self.idGeneratorClass().ordercode(),
+            status = '0',
+            pay_amount = order.pay_amount,
+            refund_amount = order.pay_amount
+        ))
+
+        await self.db.update(order)
+
+        return {"data": refundObj.orderid}
+
 
 @route()
 class wechat_callback(BaseHandler):
@@ -427,7 +464,6 @@ class wechat_callback(BaseHandler):
                 await PayBase(
                     app=self,
                     trade={
-                        "pay_key": "15176427685562895401199204202038",
                         "method": "callback",
                         "paytype":'0',
                         "callback_msg":msg

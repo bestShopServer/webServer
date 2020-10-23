@@ -27,6 +27,28 @@ ORDER_PAYTYPE_CHOICES = (
     ('2', '银联支付'),
 )
 
+REFUND_STATUS_CHOICES = (
+    ('0', '申请退款'),
+    ('1', '正在退款'),
+    ('2', '退款成功'),
+    ('3', '拒绝退款'),
+)
+
+class OrderRefund(BaseModel):
+    """
+    退款表
+    """
+
+    id = BigAutoField()
+    refund_id = CharField(max_length=19,verbose_name="退款ID")
+    orderid = CharField(max_length=19,verbose_name="订单ID")
+    status = CharField(max_length=1,verbose_name="退款状态",choices=REFUND_STATUS_CHOICES)
+    pay_amount = DecimalField(verbose_name="订单金额", max_digits=18, decimal_places=6, default=0.0)
+    refund_amount = DecimalField(verbose_name="退款金额", max_digits=18, decimal_places=6, default=0.0)
+
+    class Meta:
+        db_table = 'refund'
+
 class Order(BaseModel):
     """
     订单表
@@ -105,6 +127,8 @@ class OrderList(BaseModel):
 
     fare_amount = DecimalField(max_digits=18, decimal_places=6, default=0.000, verbose_name="运费")
     fare_no = CharField(max_length=60,verbose_name="运单号",default="")
+
+    fare_status = CharField(max_length=1,verbose_name="发货状态,0-已发货,1-未发货")
 
     class Meta:
         db_table = 'orderlist'

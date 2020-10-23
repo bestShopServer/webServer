@@ -1,15 +1,20 @@
 
 import json
 from peewee import JOIN
+from utils.database import MysqlPool
 from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from utils.exceptions import PubErrorCustom
 from router import route
 
-from models.order import OrderList,Order,OrderDetail
+from models.order import OrderList,Order,OrderDetail,OrderRefund
 from models.user import User
 
-from apps.web.order.serializers import OrderSerializerForOrder
+from apps.web.order.serializers import OrderSerializerForOrder,OrderSerializerForOrderDetail
+
+from loguru import logger
+
+from apps.app.order.utils import PayBase
 
 
 
@@ -20,7 +25,7 @@ class order(BaseHandler):
     订单管理
     """
 
-    @Core_connector(isTransaction=False,isTicket=False)
+    @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
         status = self.data.get("status", None)
@@ -34,25 +39,30 @@ class order(BaseHandler):
         query = Order.select(Order,OrderDetail,User). \
                 join(OrderDetail, join_type=JOIN.INNER, on=(OrderDetail.orderid == Order.orderid)). \
                 join(User, join_type=JOIN.INNER, on=(User.userid == Order.userid)). \
-                where(Order.super_userid == self.user.userid)
+                where(Order.super_userid == 1)
 
-        if status and status != 'all':
-            query = query.where(Order.status == status)
+        if pk:
+            query = query.where(Order.orderid == pk)
 
-        if orderid :
-            query = query.where(Order.orderid == orderid)
+        else:
+            if status and status != 'all':
+                query = query.where(Order.status == status)
 
-        if name:
-            query = query.where(OrderDetail.name == name)
+            if orderid :
+                query = query.where(Order.orderid == orderid)
 
-        if phone:
-            query = query.where(OrderDetail.phone == phone)
+            if name:
+                query = query.where(OrderDetail.name == name)
 
-        if start_time and end_time:
-            query = query.where(Order.createtime >= start_time,Order.createtime<=end_time)
+            if phone:
+                query = query.where(OrderDetail.phone == phone)
 
-        query = query.paginate(self.data['page'], self.data['size'])
+            if start_time and end_time:
+                query = query.where(Order.createtime >= start_time,Order.createtime<=end_time)
+
+            query = query.paginate(self.data['page'], self.data['size'])
         row = await self.db.execute(query)
+        count = len(row)
 
         orderids = [item.orderid for item in row]
 
@@ -73,4 +83,105 @@ class order(BaseHandler):
                         else:
                             item.orderlist = [itemOrderlist]
 
-        return {"data":OrderSerializerForOrder(row,many=True).data}
+        if not pk:
+            return {"data":OrderSerializerForOrder(row,many=True).data,"count":count}
+        else:
+            if len(row):
+                row=row[0]
+            else:
+                raise PubErrorCustom("无此订单详情!")
+            return {"data":OrderSerializerForOrderDetail(row,many=False).data,"count":count}
+
+@route(None,id=True)
+class order_refund_agree(BaseHandler):
+
+    """
+    订单退款同意
+    """
+
+    @Core_connector()
+    async def put(self, pk=None):
+        if not pk:
+            raise PubErrorCustom("订单号不能为空!")
+
+        obj = await self.db.execute(OrderRefund.select().for_update().where(OrderRefund.orderid == pk))
+
+        if not len(obj):
+            raise PubErrorCustom("退款信息{}不存在!".format(pk))
+        else:
+            obj = obj[0]
+
+        if obj.status == '3':
+            raise PubErrorCustom("退款单已拒绝,请勿非法操作!")
+        elif obj.status == '1':
+            raise PubErrorCustom("退款单正在退款,请勿操作!")
+        elif obj.status == '2':
+            raise PubErrorCustom("退款单退款成功,请勿非法操作!")
+
+        await PayBase(
+            app=self,
+            trade={
+                "out_trade_no": obj.orderid,
+                "out_refund_no":obj.refund_id,
+                "total_fee": int(obj.pay_amount * 100),
+                "refund_fee":int(obj.refund_amount * 100),
+                "method":"refund"
+            }
+        ).run()
+
+        obj.status = '1'
+        await self.db.update(obj)
+
+@route()
+class wechat_refund_callback(BaseHandler):
+    """
+    微信支付平台订单退款回调
+    """
+
+    async def post(self, *args, **kwargs):
+
+        msg = self.request.body.decode('utf-8')
+        logger.info("微信回调数据=>{}".format(msg))
+        self.set_header("Content-Type", "text/xml; charset=UTF-8")
+        try:
+            async with MysqlPool().get_conn.atomic_async():
+                await PayBase(
+                    app=self,
+                    trade={
+                        "method": "callback",
+                        "paytype":'0',
+                        "callback_msg":msg
+                    }
+                ).run()
+            self.finish("""<xml><return_code><![CDATA[SUCCESS]]></return_code>
+                            <return_msg><![CDATA[OK]]></return_msg></xml>""")
+        except Exception:
+            self.finish("""<xml><return_code><![CDATA[FAIL]]></return_code>                          
+                                    <return_msg><![CDATA[Signature_Error]]></return_msg></xml>""")
+
+@route(None,id=True)
+class order_refund_reject(BaseHandler):
+
+    """
+    订单退款拒绝
+    """
+
+    @Core_connector()
+    async def put(self, pk=None):
+        if not pk:
+            raise PubErrorCustom("订单号不能为空!")
+
+        obj = await self.db.execute(OrderRefund.select().for_update().where(OrderRefund.orderid == pk))
+
+        if not len(obj):
+            raise PubErrorCustom("退款信息{}不存在!".format(pk))
+        else:
+            obj = obj[0]
+
+        if obj.status == '2':
+            raise PubErrorCustom("退款单已退款,请勿非法操作!")
+        elif obj.status == '1':
+            raise PubErrorCustom("退款单已拒绝,请勿重复操作!")
+
+        obj.status = '3'
+        await self.db.update(obj)

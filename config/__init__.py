@@ -19,6 +19,12 @@ common['callback_url_for_wechat'] = "{}/{}{}{}".format(
     common['api_base'],
     "/app/order/wechat_callback")
 
+common['refund_callback_url_for_wechat'] = "{}/{}{}{}".format(
+    common['serverurl'],
+    common['version'],
+    common['api_base'],
+    "/web/order/wechat_refund_callback")
+
 print(common)
 
 mysql=dict(

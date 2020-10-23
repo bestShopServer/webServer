@@ -5,7 +5,7 @@ from loguru import logger
 from utils.exceptions import PubErrorCustom
 
 from utils.time_st import UtilTime
-from models.order import Order
+from models.order import Order,OrderRefund
 from models.setting import FareRule
 
 class ShopCartBase(object):
@@ -52,7 +52,15 @@ class PayBase(object):
         self.app = kwargs.get("app")
         self.trade = kwargs.get("trade")
 
+    async def get_base_params(self):
+
+        self.trade['appid'] = "wx2c4649a77ef8edcd"
+        self.trade['mch_id'] = "1514182671"
+        self.trade['pay_key'] = "15176427685562895401199204202038"
+
     async def run(self):
+
+        await self.get_base_params()
 
         if self.trade['paytype'] == '0':
 
@@ -66,6 +74,16 @@ class PayBase(object):
                     app=self.app,
                     trade=self.trade
                 ).callback()
+            elif self.trade['method'] == 'refund':
+                return await PayForWechat(
+                    app=self.app,
+                    trade=self.trade
+                ).refund()
+            elif self.trade['method'] == 'refund_callback':
+                return await PayForWechat(
+                    app=self.app,
+                    trade=self.trade
+                ).refund_callback()
             else:
                 raise PubErrorCustom("method({}) error!".format(self.trade['method']))
         else:
@@ -76,6 +94,7 @@ class PayForWechat(object):
     def __init__(self,**kwargs):
 
         self.createUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder"
+        self.refundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund"
         self.app = kwargs.get("app")
         self.trade = kwargs.get("trade")
 
@@ -168,10 +187,11 @@ class PayForWechat(object):
 
                 total_fee = Decimal(str(total_fee))
 
-                try:
-                    order = await self.app.db.get(Order, orderid=out_trade_no)
-                except Order.DoesNotExist:
+                order = await self.app.db.execute(Order.select().for_update().where(Order.orderid == out_trade_no))
+                if not len(order):
                     raise PubErrorCustom("订单{}不存在!".format(out_trade_no))
+                else:
+                    order = order[0]
 
                 if order.pay_amount * 100 != total_fee:
                     raise Exception("金额不一致")
@@ -185,6 +205,88 @@ class PayForWechat(object):
 
                 order.status_list = json.dumps(json.loads(order.status_list).append({"status": "1", "time": UtilTime().timestamp}))
 
+                await self.app.db.update(order)
+            else:
+                raise Exception("error")
+        else:
+            raise Exception("error")
+
+    async def refund(self):
+
+        data = {}
+
+        data['appid'] = self.trade['appid']
+        data['mch_id'] = self.trade['mch_id']
+        data['nonce_str'] = ''.join(random.sample(string.ascii_letters + string.digits, 30))
+        data['out_trade_no'] = self.trade['out_trade_no']
+        data['sign_type'] = 'MD5'
+        data['out_refund_no'] = self.trade['out_refund_no']
+        data['total_fee'] = self.trade['total_fee']
+        data['refund_fee'] = self.trade['refund_fee']
+        data['notify_url'] = self.app.settings['refund_callback_url_for_wechat']
+
+        data['sign'] = self.hashdata(data, self.trade['pay_key'])
+        logger.info(data)
+        param = {'root': data}
+        xml = xmltodict.unparse(param)
+
+        res = requests.request(method="POST", data=xml.encode('utf-8'), url=self.refundUrl,
+                               headers={'Content-Type': 'text/xml'})
+
+        xmlmsg = xmltodict.parse(res.content.decode('utf-8'))
+
+        if xmlmsg['xml']['return_code'] != 'SUCCESS':
+            raise PubErrorCustom(xmlmsg['xml']['return_msg'])
+
+
+    async def refund_callback(self):
+
+        # msg = request.body.decode('utf-8')
+        logger.info("退款回调数据=>{}".format(self.trade))
+        xmlmsg = xmltodict.parse(self.trade['callback_msg'])
+
+        logger.info("回调数据=>{}".format(xmlmsg))
+        return_code = xmlmsg['xml']['return_code']
+
+        if return_code == 'SUCCESS':
+
+            sign = self.hashdata(xmlmsg['xml'], self.trade['pay_key'])
+            if sign != xmlmsg['xml']['sign']:
+                logger.error(sign)
+                raise Exception("非法操作！")
+
+            if  xmlmsg['xml']['result_code'] == 'SUCCESS':
+                out_trade_no = xmlmsg['xml']['out_trade_no']
+                refund_fee = xmlmsg['xml']['refund_fee']
+
+                refund_fee = Decimal(str(refund_fee))
+
+                order_refund = await self.app.db.execute(OrderRefund.select().for_update().where(OrderRefund.orderid == out_trade_no))
+                if not len(order_refund):
+                    raise PubErrorCustom("退款信息{}不存在!".format(out_trade_no))
+                else:
+                    order_refund = order_refund[0]
+
+                if order_refund.refund_amount * 100 != refund_fee:
+                    raise Exception("金额不一致")
+
+                if order_refund.status=='2':
+                    logger.error("退款单已处理!")
+                    raise Exception("退款单已处理!")
+
+                # order_refund.trade_no = xmlmsg['xml']['transaction_id']
+                order_refund.status='2'
+
+                order = await self.app.db.execute(Order.select().for_update().where(Order.orderid == out_trade_no))
+                if not len(order):
+                    raise PubErrorCustom("订单{}不存在!".format(out_trade_no))
+                else:
+                    order = order[0]
+
+                order.status = '5'
+                order.status_list = json.dumps(json.loads(order.status_list).append({"status": "5", "time": UtilTime().timestamp}))
+
+                await self.app.db.update(order_refund)
                 await self.app.db.update(order)
             else:
                 raise Exception("error")

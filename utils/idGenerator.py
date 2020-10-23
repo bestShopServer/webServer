@@ -18,6 +18,13 @@ class idGenerator(object):
         await self.redis.expire(self.key,10)
         return res
 
+    async def refund(self):
+        t = UtilTime().arrow_to_string(format_v="YYYYMMDDHHmmss")
+        self.key = t
+        res = "RE%s%03d"%(self.key,await self.redis.incr(self.key))
+        await self.redis.expire(self.key,10)
+        return res
+
     async def goodscategory(self,level):
         self.key= "goodscategoryById"
         print(level)

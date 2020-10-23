@@ -9,6 +9,7 @@ class OrderDetailSerializerForOrder(serializers.Serializer):
     name = serializers.CharField()
     phone = serializers.CharField()
     source = serializers.CharField()
+    pay_type = serializers.CharField()
 
     user = serializers.SerializerMethodField()
 
@@ -23,10 +24,13 @@ class OrderListSerializerForOrder(serializers.Serializer):
     gd_price = serializers.CharField()
     gd_number = serializers.CharField()
     gd_unit = serializers.CharField()
+    gd_sku_name = serializers.CharField()
+    gd_sku_id = serializers.IntegerField()
 
 class UserSerializerForOrder(serializers.Serializer):
 
     name = serializers.CharField()
+    userid = serializers.IntegerField()
 
 class OrderSerializerForOrder(serializers.Serializer):
 

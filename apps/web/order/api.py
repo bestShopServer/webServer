@@ -20,11 +20,11 @@ class order(BaseHandler):
     订单管理
     """
 
-    @Core_connector(isTransaction=False)
+    @Core_connector(isTransaction=False,isTicket=False)
     async def get(self, pk=None):
 
         status = self.data.get("status", None)
-        orderid = self.data.get("userid",None)
+        orderid = self.data.get("orderid",None)
         name = self.data.get("name",None)
         phone = self.data.get("phone", None)
         start_time = self.data.get("start_time", None)
@@ -51,6 +51,7 @@ class order(BaseHandler):
         if start_time and end_time:
             query = query.where(Order.createtime >= start_time,Order.createtime<=end_time)
 
+        query = query.paginate(self.data['page'], self.data['size'])
         row = await self.db.execute(query)
 
         orderids = [item.orderid for item in row]

@@ -39,7 +39,7 @@ class order(BaseHandler):
         query = Order.select(Order,OrderDetail,User). \
                 join(OrderDetail, join_type=JOIN.INNER, on=(OrderDetail.orderid == Order.orderid)). \
                 join(User, join_type=JOIN.INNER, on=(User.userid == Order.userid)). \
-                where(Order.super_userid == 1)
+                where(Order.super_userid == self.user.userid)
 
         if pk:
             query = query.where(Order.orderid == pk)
@@ -84,6 +84,18 @@ class order(BaseHandler):
                             item.orderlist = [itemOrderlist]
 
         if not pk:
+            if len(orderids):
+                orderRefundQuery = OrderRefund.select().where(OrderRefund.orderid << orderids)
+
+                orderRefundTmp = await self.db.execute(orderRefundQuery)
+
+                for item in row:
+                    item.orderrefund = None
+                    for itemOrderlist in orderRefundTmp:
+                        if item.orderid == itemOrderlist.orderid:
+                            item.orderrefund = itemOrderlist
+                            break
+
             return {"data":OrderSerializerForOrder(row,many=True).data,"count":count}
         else:
             if len(row):

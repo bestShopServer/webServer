@@ -27,6 +27,11 @@ class OrderListSerializerForOrder(serializers.Serializer):
     gd_sku_name = serializers.CharField()
     gd_sku_id = serializers.IntegerField()
 
+class OrderRefundSerializerForOrder(serializers.Serializer):
+
+    refund_id = serializers.CharField()
+    status = serializers.CharField()
+
 class UserSerializerForOrder(serializers.Serializer):
 
     name = serializers.CharField()
@@ -40,6 +45,11 @@ class OrderSerializerForOrder(serializers.Serializer):
     orderdetail = serializers.SerializerMethodField()
     orderlist = serializers.SerializerMethodField()
     pay_amount = serializers.DecimalField(max_digits=18,decimal_places=2)
+    orderrefund = serializers.SerializerMethodField()
+
+    def get_orderrefund(self,obj):
+
+        return OrderRefundSerializerForOrder(obj.orderrefund,many=False).data
 
     def get_createtime(self,obj):
 

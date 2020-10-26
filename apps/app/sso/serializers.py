@@ -29,11 +29,3 @@ class UserForAppSerializer(serializers.Serializer):
     pic = serializers.CharField()
     name = serializers.CharField()
     token = serializers.CharField()
-    address = serializers.SerializerMethodField()
-
-    def get_address(self,obj):
-
-        if obj.address:
-            return AddressForAppSerializer(obj.address,many=True).data
-        else:
-            return None

@@ -117,17 +117,17 @@ class Core_connector:
                 response = await self.__run(func,outside_self,*args, **kwargs)
                 self.__response__validate(outside_self,func)
 
-                outside_self.finish(response)
+                await outside_self.finish(response)
             except PubErrorCustom as e:
-                outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None))
+                await outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None))
                 s = traceback.format_exc()
                 logger.error(s)
             except InnerErrorCustom as e:
-                outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None,rescode=e.code))
+                await outside_self.finish(HttpResponse(success=False, msg=e.msg, data=None,rescode=e.code))
                 s = traceback.format_exc()
                 logger.error(s)
             except Exception as e:
-                outside_self.finish(HttpResponse(success=False, msg=str(e), data=None))
+                await outside_self.finish(HttpResponse(success=False, msg=str(e), data=None))
                 s = traceback.format_exc()
                 logger.error(s)
 

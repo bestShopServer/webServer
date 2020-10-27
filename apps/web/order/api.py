@@ -16,8 +16,6 @@ from loguru import logger
 
 from apps.app.order.utils import PayBase
 
-
-
 @route(None,id=True)
 class order(BaseHandler):
 
@@ -165,10 +163,10 @@ class wechat_refund_callback(BaseHandler):
                         "callback_msg":msg
                     }
                 ).run()
-            self.finish("""<xml><return_code><![CDATA[SUCCESS]]></return_code>
+            await self.finish("""<xml><return_code><![CDATA[SUCCESS]]></return_code>
                             <return_msg><![CDATA[OK]]></return_msg></xml>""")
         except Exception:
-            self.finish("""<xml><return_code><![CDATA[FAIL]]></return_code>                          
+            await self.finish("""<xml><return_code><![CDATA[FAIL]]></return_code>                          
                                     <return_msg><![CDATA[Signature_Error]]></return_msg></xml>""")
 
 @route(None,id=True)

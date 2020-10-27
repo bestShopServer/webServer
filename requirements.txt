@@ -12,4 +12,5 @@ cryptokit
 WTForms
 wtforms_tornado
 django==2.0.7
+django-cors-headers
 djangorestframework==3.8.2

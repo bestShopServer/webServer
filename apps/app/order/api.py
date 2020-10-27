@@ -388,7 +388,7 @@ class orderpay(BaseHandler):
 
         try:
             orderdetail = await self.db.get(OrderDetail, orderid=pk)
-        except Order.DoesNotExist:
+        except OrderDetail.DoesNotExist:
             raise PubErrorCustom("订单{}不存在!".format(pk))
 
         orderdetail.pay_type = paytype
@@ -423,7 +423,7 @@ class order_refund_apply(BaseHandler):
         try:
             await self.db.get(OrderRefund, orderid=pk)
             raise PubErrorCustom("已申请退款!")
-        except Order.DoesNotExist:
+        except OrderRefund.DoesNotExist:
             pass
 
         order = await self.db.execute(Order.select().for_update().where(Order.orderid == pk))

@@ -445,7 +445,7 @@ class order_refund_apply(BaseHandler):
             order = order[0]
 
         order.status = '6'
-        order.status_list = json.loads(order.status_list).append({"status": "6", "time": UtilTime().timestamp})
+        order.status_list = json.dumps(json.loads(order.status_list).append({"status": "6", "time": UtilTime().timestamp}))
 
         refundObj = await self.db.create(OrderRefund, **dict(
             orderid=order.orderid,

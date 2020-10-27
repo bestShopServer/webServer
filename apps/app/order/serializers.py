@@ -84,6 +84,11 @@ class OrderForAppSerializer(serializers.Serializer):
     def get_orderlist(self,obj):
         return OrderListForAppSerializer(obj.orderlist,many=True).data
 
+class OrderRefundSerializerForAppSerializer(serializers.Serializer):
+
+    refund_id = serializers.CharField()
+    status = serializers.CharField()
+
 class orderOrderDetailForAppSerializer(serializers.Serializer):
 
 
@@ -94,6 +99,7 @@ class orderOrderDetailForAppSerializer(serializers.Serializer):
     pay_amount = serializers.DecimalField(max_digits=18,decimal_places=2)
     orderlist = serializers.SerializerMethodField()
     orderdetail = serializers.SerializerMethodField()
+    orderrefund = serializers.SerializerMethodField()
 
     def get_orderlist(self,obj):
         return OrderListForAppSerializer(obj.orderlist,many=True).data
@@ -103,3 +109,6 @@ class orderOrderDetailForAppSerializer(serializers.Serializer):
 
     def get_status_list(self,obj):
         return json.loads(obj.status_list)
+
+    def get_orderrefund(self,obj):
+        return OrderRefundSerializerForAppSerializer(obj.orderrefund,many=False).data

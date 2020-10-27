@@ -331,6 +331,18 @@ class orderdetail(BaseHandler):
                         else:
                             item.orderlist = [itemOrderlist]
 
+        if len(orderids):
+            orderRefundQuery = OrderRefund.select().where(OrderRefund.orderid << orderids)
+
+            orderRefundTmp = await self.db.execute(orderRefundQuery)
+
+            for item in row:
+                item.orderrefund = None
+                for itemOrderlist in orderRefundTmp:
+                    if item.orderid == itemOrderlist.orderid:
+                        item.orderrefund = itemOrderlist
+                        break
+
         if len(row):
             row = row[0]
         return {"data": orderOrderDetailForAppSerializer(row, many=False).data}

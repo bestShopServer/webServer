@@ -10,7 +10,7 @@ from apps.base import BaseHandler
 
 from data.base import datacity
 
-from apps.web.public.rule import AttachMentGroupRules,AttachMentRules
+from apps.web.public.rule import AttachMentGroupRules,AttachMentRules,MenuRules
 from router import route
 
 @route()
@@ -112,6 +112,29 @@ class attachment(BaseHandler):
         pass
 
     @Core_connector(**AttachMentRules.get())
+    async def get(self, pk=None):
+        pass
+
+@route(None,id=True)
+class menu(BaseHandler):
+
+    """
+    菜单管理
+    """
+
+    @Core_connector(**MenuRules.post())
+    async def post(self,*args,**kwargs):
+        pass
+
+    @Core_connector(**MenuRules.put())
+    async def put(self,*args,**kwargs):
+        pass
+
+    @Core_connector(**MenuRules.delete())
+    async def delete(self,*args,**kwargs):
+        pass
+
+    @Core_connector(**MenuRules.get())
     async def get(self, pk=None):
         pass
 

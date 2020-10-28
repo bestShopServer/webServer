@@ -15,3 +15,17 @@ class AttachMentSerializer(serializers.Serializer):
     type = serializers.CharField()
     url = serializers.CharField()
     grouid = serializers.IntegerField()
+
+
+class MenuSerializer(serializers.Serializer):
+
+    id = serializers.IntegerField()
+    parent_id = serializers.IntegerField()
+    title = serializers.CharField()
+    type = serializers.CharField()
+    pic = serializers.CharField()
+    sort = serializers.CharField()
+    component = serializers.CharField()
+    component_name = serializers.CharField()
+    path = serializers.CharField()
+    keep = serializers.CharField()

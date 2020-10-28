@@ -32,3 +32,33 @@ class AttachMent(BaseModel):
         db_table = 'attachment'
 
 
+MENU_TYPES_CHOICES = (
+    ('0', '菜单'),
+    ('1', '按钮'),
+    ('2', '内页'),
+)
+
+KEEP_CHOICES = (
+    ('0', '是'),
+    ('1', '否'),
+)
+
+class Menu(BaseModel):
+
+    """
+    菜单表
+    """
+
+    id = BigAutoField(primary_key=True)
+    parent_id = BigIntegerField(default=0,verbose_name="父级id")
+    title = CharField(max_length=255,verbose_name="标题",default="")
+    type = CharField(max_length=1,verbose_name="类型",choices=MENU_TYPES_CHOICES,default="0")
+    pic = CharField(max_length=255,verbose_name="图标",default="")
+    sort = IntegerField(default=0,verbose_name="排序")
+    component = CharField(max_length=255,verbose_name="前端组件",default="")
+    component_name = CharField(max_length=255,verbose_name="组件名称",default="")
+    path = CharField(max_length=255,verbose_name="地址",default="")
+    keep = CharField(max_length=1,verbose_name="是否缓冲",default="1",choices=KEEP_CHOICES)
+
+    class Meta:
+        db_table = 'menu'

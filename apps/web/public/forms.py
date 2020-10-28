@@ -1,9 +1,11 @@
 
 
-from wtforms.fields import StringField,IntegerField
+from wtforms.fields import StringField,IntegerField,SelectField
 from wtforms import ValidationError
 from wtforms_tornado import Form
 from wtforms.validators import DataRequired, Length
+
+from models.public import MENU_TYPES_CHOICES,KEEP_CHOICES
 
 
 class AttachMentGroupForm(Form):
@@ -29,3 +31,22 @@ class AttachMentForm(Form):
     def validate_type(self,field):
         if field.data not in ('image', 'video'):
             raise ValidationError("类型超出范围(图片,视频)")
+
+class MenuForm(Form):
+
+    id = IntegerField
+    parent_id = IntegerField
+    title = StringField("标题", validators=[DataRequired(message="请输入标题")])
+    type = SelectField(
+        label='计费方式',
+        choices=MENU_TYPES_CHOICES
+    )
+    pic = StringField("图片", validators=[DataRequired(message="请传入图片")])
+    sort = IntegerField()
+    component = StringField("组件", validators=[DataRequired(message="请输入组件")])
+    component_name = StringField("组件名称", validators=[DataRequired(message="请输入组件名称")])
+    path = StringField("路由地址", validators=[DataRequired(message="请输入路由地址")])
+    keep = SelectField(
+        label='路由地址',
+        choices=KEEP_CHOICES
+    )

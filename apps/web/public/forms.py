@@ -34,11 +34,11 @@ class AttachMentForm(Form):
 
 class MenuForm(Form):
 
-    id = IntegerField
-    parent_id = IntegerField
+    id = IntegerField()
+    parent_id = IntegerField()
     title = StringField("标题", validators=[DataRequired(message="请输入标题")])
     type = SelectField(
-        label='计费方式',
+        label='菜单类型',
         choices=MENU_TYPES_CHOICES
     )
     pic = StringField("图片", validators=[DataRequired(message="请传入图片")])

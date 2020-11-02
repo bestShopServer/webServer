@@ -37,7 +37,7 @@ class order(BaseHandler):
         query = Order.select(Order,OrderDetail,User). \
                 join(OrderDetail, join_type=JOIN.INNER, on=(OrderDetail.orderid == Order.orderid)). \
                 join(User, join_type=JOIN.INNER, on=(User.userid == Order.userid)). \
-                where(Order.super_userid == self.user.userid)
+                where(Order.merchant_id == self.user.merchant_id)
 
         if pk:
             query = query.where(Order.orderid == pk)

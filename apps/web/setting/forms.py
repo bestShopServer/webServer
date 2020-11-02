@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired, Length
 class FareRuleForm(Form):
 
     fare_rule_id = IntegerField()
-    userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
     fare_rule_name = StringField("规则名称", validators=[DataRequired(message="请输入规则名称"), Length(min=2,max=60, message="规则名称长度为1-60")])
 
     fare_rule_fee_type = SelectField(

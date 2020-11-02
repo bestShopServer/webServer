@@ -23,7 +23,7 @@ class FareRuleRules:
                             "model_class": FareLinkCity,
                             "data_pool": {
                                 "instance": {
-                                    "userid": "userid",
+                                    "merchant_id": "merchant_id",
                                     "fare_rule_id": "fare_rule_id"
                                 }
                             }
@@ -50,7 +50,7 @@ class FareRuleRules:
                             "model_class": FareLinkCity,
                             "data_pool": {
                                 "instance": {
-                                    "userid": "userid",
+                                    "merchant_id": "merchant_id",
                                     "fare_rule_id": "fare_rule_id"
                                 }
                             }
@@ -88,8 +88,8 @@ class FareRuleRules:
                     "serializers":FareRuleSerializer,
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         }

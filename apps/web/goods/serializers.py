@@ -67,7 +67,7 @@ class GoodsSerializer(serializers.Serializer):
 class GoodsLinkCitySerializer(serializers.Serializer):
 
     id = serializers.IntegerField()
-    userid = serializers.IntegerField()
+    merchant_id = serializers.IntegerField()
     gdid = serializers.IntegerField()
     citycode = serializers.CharField()
     cityname = serializers.CharField()
@@ -76,7 +76,7 @@ class GoodsLinkCitySerializer(serializers.Serializer):
 class GoodsLinkCateGorySerializer(serializers.Serializer):
 
     id = serializers.IntegerField()
-    userid = serializers.IntegerField()
+    merchant_id = serializers.IntegerField()
     gdid = serializers.IntegerField()
     gdcgid = serializers.IntegerField()
     gdcgname = serializers.SerializerMethodField()
@@ -90,7 +90,7 @@ class GoodsLinkSkuSerializer(serializers.Serializer):
 
     id = serializers.IntegerField()
     gdid = serializers.IntegerField()
-    userid = serializers.IntegerField()
+    merchant_id = serializers.IntegerField()
     skus = serializers.SerializerMethodField()
     image = serializers.CharField()
     price = serializers.DecimalField(max_digits=18,decimal_places=2)
@@ -107,7 +107,7 @@ class GoodsLinkSkuSerializer(serializers.Serializer):
 class GoodsDetailSerializer(serializers.Serializer):
 
     gdid = serializers.IntegerField()
-    userid = serializers.IntegerField()
+    merchant_id = serializers.IntegerField()
 
     gd_name = serializers.CharField()
     gd_banners = serializers.SerializerMethodField()

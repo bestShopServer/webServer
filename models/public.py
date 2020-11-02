@@ -9,8 +9,8 @@ class AttachMentGroup(BaseModel):
     素材分组表
     """
 
-    id=BigAutoField(primary_key=True)
-    userid = BigIntegerField(default=0)
+    id = BigAutoField(primary_key=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
     name = CharField(max_length=255,verbose_name="分组名称",null=True)
     type = CharField(max_length=20,verbose_name="类型")
 
@@ -23,7 +23,7 @@ class AttachMent(BaseModel):
     素材表
     """
     id=BigAutoField(primary_key=True)
-    userid = BigIntegerField(default=0)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
     name = CharField(max_length=255,verbose_name="名称",null=True)
     url = CharField(max_length=255,verbose_name="地址",null=True)
     type = CharField(max_length=20, verbose_name="类型")

@@ -97,7 +97,7 @@ class shoppagetype(BaseHandler):
         if type == '0':
             for item in await self.db.execute(\
                     ShopPage.select().for_update().\
-                            where(ShopPage.userid==self.user.userid,ShopPage.type << ['0','9'])):
+                            where(ShopPage.merchant_id==self.user.merchant_id,ShopPage.type << ['0','9'])):
                 if int(pk) == item.id:
                     item.type = type
                 else:

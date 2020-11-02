@@ -57,8 +57,8 @@ class ShopPageRules:
                     "sort": [ShopPage.type,ShopPage.createtime.desc()],
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         },
@@ -96,7 +96,7 @@ class ShopConfigRules:
     def put():
         return dict(
             robot={
-                "pk_key": "userid",
+                "pk_key": "merchant_id",
                 "shopconfig": {
                     "form_class": ShopConfigForm,
                     "model_class": ShopConfig,
@@ -109,7 +109,7 @@ class ShopConfigRules:
     def delete():
         return dict(
             robot={
-                "pk_key": "userid",
+                "pk_key": "merchant_id",
                 "shopconfig": {
                     "model_class": ShopConfig
                 }
@@ -121,14 +121,14 @@ class ShopConfigRules:
         return dict(
             isTransaction=False,
             robot={
-                "pk_key": "userid",
+                "pk_key": "merchant_id",
                 "shopconfig": {
                     "model_class": ShopConfig,
                     "detail_serializers":ShopConfigSerializer,
                     "query_params": [
                         {
-                            "key": "userid",
-                            "value": "user.userid",
+                            "key": "merchant_id",
+                            "value": "user.merchant_id",
                             "data_src": "data_pool",
                             "pool": "self"
                         }

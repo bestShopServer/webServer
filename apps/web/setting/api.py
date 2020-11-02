@@ -43,7 +43,7 @@ class farerule_default_setting(BaseHandler):
         if not fare_rule_default:
             raise PubErrorCustom("请选择是否默认!")
 
-        for item in await self.db.execute(FareRule.select().for_update().where(FareRule.userid==self.user.userid)):
+        for item in await self.db.execute(FareRule.select().for_update().where(FareRule.merchant_id==self.user.merchant_id)):
             if pk == item.fare_rule_id:
                 item.fare_rule_default = fare_rule_default
             else:

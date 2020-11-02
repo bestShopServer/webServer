@@ -39,7 +39,7 @@ class GoodsRules:
                             "model_class": GoodsLinkCity,
                             "data_pool": {
                                 "instance": {
-                                    "userid": "userid",
+                                    "merchant_id": "merchant_id",
                                     "gdid": "gdid"
                                 }
                             }
@@ -48,7 +48,7 @@ class GoodsRules:
                             "model_class": GoodsLinkCateGory,
                             "data_pool": {
                                 "instance": {
-                                    "userid": "userid",
+                                    "merchant_id": "merchant_id",
                                     "gdid": "gdid"
                                 }
                             }
@@ -60,7 +60,7 @@ class GoodsRules:
                             "sort_key":"sort",
                             "data_pool": {
                                 "instance": {
-                                    "userid": "userid",
+                                    "merchant_id": "merchant_id",
                                     "gdid": "gdid"
                                 }
                             }
@@ -89,7 +89,7 @@ class GoodsRules:
                             "model_class": GoodsLinkCity,
                             "data_pool": {
                                 "instance": {
-                                    "userid": "userid",
+                                    "merchant_id": "merchant_id",
                                     "gdid": "gdid"
                                 }
                             }
@@ -98,7 +98,7 @@ class GoodsRules:
                             "model_class": GoodsLinkCateGory,
                             "data_pool": {
                                 "instance": {
-                                    "userid": "userid",
+                                    "merchant_id": "merchant_id",
                                     "gdid": "gdid"
                                 }
                             }
@@ -109,7 +109,7 @@ class GoodsRules:
                             "last_ids_level": 1,
                             "data_pool": {
                                 "instance": {
-                                    "userid": "userid",
+                                    "merchant_id": "merchant_id",
                                     "gdid": "gdid"
                                 }
                             }
@@ -153,8 +153,8 @@ class GoodsRules:
                     "page": True,
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         },
@@ -218,8 +218,8 @@ class GoodsbyidsRules:
                     "page": True,
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         },
@@ -246,8 +246,8 @@ class GoodsCateGoryStyleRules:
                 "goodscategorystyle" : {
                     "unique": [
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         }
@@ -266,8 +266,8 @@ class GoodsCateGoryStyleRules:
                 "goodscategorystyle": {
                     "unique": [
                         {
-                            "key": "userid",
-                            "value": "user.userid",
+                            "key": "merchant_id",
+                            "value": "user.merchant_id",
                             "data_src": "data_pool",
                             "pool": "self"
                         }
@@ -302,8 +302,8 @@ class GoodsCateGoryStyleRules:
                     "serializers":GoodsCateGoryStyleSerializer,
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         }
@@ -362,8 +362,8 @@ class GoodsCateGoryRules:
                     "sort":GoodsCateGory.sort,
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         },
@@ -428,8 +428,8 @@ class SkuGroupRules:
                     "page": True,
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         }
@@ -500,8 +500,8 @@ class GoodsLinkShopPageRules:
                     "sort": [ShopPage.type,ShopPage.createtime.desc()],
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         },

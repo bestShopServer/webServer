@@ -9,7 +9,7 @@ from apps.web.goods.customdict import GoodsCateGoryStyleTypecode
 class GoodsCateGoryStyleForm(Form):
 
     id = IntegerField()
-    userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
     typecode = StringField("分类样式代码", validators=[DataRequired(message="请输入分类样式代码"), Length(min=2,max=10, message="分类样式代码长度为1-20")])
     type = IntegerField("几级分类", validators=[DataRequired(message="请输入几级分类")])
 
@@ -28,7 +28,7 @@ class GoodsCateGoryForm(Form):
     level = IntegerField()
     sort = IntegerField(default=1)
     status = StringField("状态", default='0')
-    userid = IntegerField("用户代码", validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
     gdcgname = StringField("分类名称", validators=[DataRequired(message="请输入分类名称"), Length(min=2,max=10, message="分类名称长度为2-10")])
     url = StringField("分类图标")
     url_big = StringField("分类大图")
@@ -38,19 +38,19 @@ class SkuGroupForm(Form):
 
     group_id = IntegerField()
     group_name = StringField("分组名称", validators=[DataRequired(message="请输入分组名称"), Length(min=2,max=10, message="分组名称长度为2-10")])
-    userid = IntegerField("用户代码", validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
 
 class SkuSpecValueForm(Form):
 
     spec_id = IntegerField()
     group_id = IntegerField("分组ID",validators=[DataRequired(message="请输入分组ID")])
     spec_value =StringField("值名称", validators=[DataRequired(message="请输入值名称"), Length(min=2,max=10, message="值名称长度为2-20")])
-    userid = IntegerField("用户代码", validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
 
 class GoodsForm(Form):
 
     gdid = IntegerField()
-    userid = IntegerField("用户代码", validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
     gd_name = StringField("商品名称", validators=[DataRequired(message="请输入商品名称"), Length(min=2,max=60, message="商品名称长度为2-60")])
     gd_banners = StringField("商品轮播",default='[]')
     gd_status = StringField("上下架状态", default='1')

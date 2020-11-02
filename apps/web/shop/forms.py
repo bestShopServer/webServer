@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired, Length
 class ShopPageForm(Form):
 
     id = IntegerField()
-    userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
     title = StringField("标题", validators=[DataRequired(message="请输入标题"), Length(min=2,max=60, message="标题长度为2-60")])
     type = StringField(default='9')
 
@@ -26,5 +26,5 @@ class ShopPageForm(Form):
 class ShopConfigForm(Form):
 
     id = IntegerField()
-    userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
     navigation_data = StringField()

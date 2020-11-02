@@ -56,8 +56,8 @@ class AttachMentGroupRules:
                     "serializers":AttachMentGroupSerializer,
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         },
@@ -122,8 +122,8 @@ class AttachMentRules:
                     "serializers":AttachMentSerializer,
                     "query_params":[
                         {
-                            "key":"userid",
-                            "value":"user.userid",
+                            "key":"merchant_id",
+                            "value":"user.merchant_id",
                             "data_src":"data_pool",
                             "pool":"self"
                         },

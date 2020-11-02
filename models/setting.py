@@ -8,7 +8,7 @@ class FareRule(BaseModel):
     运费规则
     """
     fare_rule_id = BigAutoField(primary_key=True,verbose_name="规则ID")
-    userid = BigIntegerField(verbose_name="用户代码", null=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
     fare_rule_name = CharField(max_length=60,verbose_name="规则名称",default="")
     fare_rule_fee_type = CharField(max_length=1,verbose_name="计费方式 0-按重计费,1-按件计费",default="1")
     fare_rule_default = CharField(max_length=1,verbose_name="是否默认,0-是,1-否",default='1')
@@ -27,7 +27,7 @@ class FareLinkCity(BaseModel):
     """
 
     id = BigAutoField(primary_key=True,verbose_name="关联ID")
-    userid = BigIntegerField(verbose_name="用户代码", null=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
     fare_rule_id = BigIntegerField(verbose_name="运费规则ID",default=0)
     citycode = CharField(max_length=30,verbose_name="城市代码")
     cityname = CharField(max_length=60,verbose_name="城市名称")

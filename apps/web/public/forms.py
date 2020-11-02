@@ -11,7 +11,7 @@ from models.choices import *
 class AttachMentGroupForm(Form):
 
     id = IntegerField()
-    userid = IntegerField("用户代码",validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
     name = StringField("分组名称", validators=[DataRequired(message="请输入分组名称"), Length(min=2,max=30, message="分组名称长度为2-30")])
     type = StringField("素材类型", validators=[DataRequired(message="请输入素材类型")])
 
@@ -23,7 +23,7 @@ class AttachMentForm(Form):
 
     id = IntegerField()
     grouid = IntegerField()
-    userid = IntegerField("用户代码", validators=[DataRequired(message="请输入用户代码")])
+    merchant_id = IntegerField("商户ID",validators=[DataRequired(message="请输入商户ID")])
     name = StringField("素材名称", validators=[DataRequired(message="请输入素材名称"), Length(min=2,max=60, message="素材名称长度为2-60")])
     type = StringField("素材类型", validators=[DataRequired(message="请输入素材类型")])
     url = StringField("素材链接", validators=[DataRequired(message="请输入素材链接")])

@@ -5,6 +5,16 @@ from models.base import BaseModel
 
 from models.choices import *
 
+class Merchant(BaseModel):
+    """
+    商户表
+    """
+    merchant_id = BigAutoField(verbose_name="商户ID")
+    merchant_name = CharField(max_length=60, verbose_name="商户名称", default='')
+
+    class Meta:
+        db_table = 'merchant'
+
 class User(BaseModel):
 
     """
@@ -22,6 +32,8 @@ class User(BaseModel):
 
     points = DecimalField(max_digits=18, decimal_places=6, default=0.000, verbose_name="积分")
     balance = DecimalField(max_digits=18, decimal_places=6, default=0.000, verbose_name="余额")
+
+    merchant_id = BigIntegerField(verbose_name="商户ID")
 
     class Meta:
         db_table = 'user'

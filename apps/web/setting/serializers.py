@@ -6,7 +6,7 @@ from rest_framework import serializers
 
 class FareLinkCitySerializer(serializers.Serializer):
     id =  serializers.IntegerField()
-    userid =  serializers.IntegerField()
+    merchant_id =  serializers.IntegerField()
     fare_rule_id =  serializers.IntegerField()
     citycode = serializers.CharField()
     cityname = serializers.CharField()
@@ -14,7 +14,7 @@ class FareLinkCitySerializer(serializers.Serializer):
 class FareRuleSerializer(serializers.Serializer):
 
     fare_rule_id = serializers.IntegerField()
-    userid = serializers.IntegerField()
+    merchant_id = serializers.IntegerField()
     fare_rule_name = serializers.CharField()
     fare_rule_fee_type = serializers.CharField()
     fare_rule_default = serializers.CharField()

@@ -6,7 +6,7 @@ from utils.time_st import UtilTime
 
 class ShopConfigSerializer(serializers.Serializer):
     id =  serializers.IntegerField()
-    userid =  serializers.IntegerField()
+    merchant_id =  serializers.IntegerField()
     navigation_data = serializers.SerializerMethodField()
 
     def get_navigation_data(self,obj):
@@ -14,7 +14,7 @@ class ShopConfigSerializer(serializers.Serializer):
 
 class ShopPageSerializer(serializers.Serializer):
     id =  serializers.IntegerField()
-    userid =  serializers.IntegerField()
+    merchant_id =  serializers.IntegerField()
     title = serializers.CharField()
     createtime = serializers.SerializerMethodField()
     type = serializers.CharField()
@@ -24,7 +24,7 @@ class ShopPageSerializer(serializers.Serializer):
 
 class ShopPageDetailSerializer(serializers.Serializer):
     id =  serializers.IntegerField()
-    userid =  serializers.IntegerField()
+    merchant_id =  serializers.IntegerField()
     title = serializers.CharField()
     time_publish_flag = serializers.CharField()
     type = serializers.CharField()

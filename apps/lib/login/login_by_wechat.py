@@ -92,7 +92,8 @@ class wechatLogin(LoginBase):
                 "name": res.get("nickName"),
                 "sex": res.get("sex"),
                 "address": "{}-{}-{}".format(res.get("country"), res.get("city"), res.get("province")),
-                "pic": res.get("avatarUrl")
+                "pic": res.get("avatarUrl"),
+                "merchant_id":1
             })
 
             await self.app.db.create(UserAuth,**{

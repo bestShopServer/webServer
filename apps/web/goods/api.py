@@ -67,13 +67,13 @@ class goodscategory(BaseHandler):
     async def add_before_handler(self,**kwargs):
 
         try:
-            gcgsObj = await self.db.get(GoodsCateGoryStyle,userid=self.user.userid)
+            gcgsObj = await self.db.get(GoodsCateGoryStyle,merchant_id=self.user.merchant_id)
         except GoodsCateGoryStyle.DoesNotExist:
             raise PubErrorCustom("请先设置分类样式!")
 
         if self.data.get("gdcglastid",None):
             try:
-                lastcategory = await self.db.get(GoodsCateGory, gdcgid=self.data.get("gdcglastid",None), userid=self.user.userid)
+                lastcategory = await self.db.get(GoodsCateGory, gdcgid=self.data.get("gdcglastid",None), merchant_id=self.user.merchant_id)
                 self.data['level'] = lastcategory.level+1
             except GoodsCateGory.DoesNotExist:
                 raise PubErrorCustom("上级分类有误!")
@@ -130,7 +130,7 @@ class goodsdetail(BaseHandler):
         obj.gd_link_type = await self.db.execute(query)
 
         try:
-            obj.gd_fare_rule = await self.db.get(FareRule, fare_rule_id=obj.gd_fare_mould_id,userid=obj.userid)
+            obj.gd_fare_rule = await self.db.get(FareRule, fare_rule_id=obj.gd_fare_mould_id,merchant_id=obj.merchant_id)
         except FareRule.DoesNotExist:
             obj.gd_fare_rule = None
 
@@ -289,7 +289,7 @@ class skuspecvalue(BaseHandler):
         新增/修改前置处理
         """
         try:
-            await self.db.get(SkuGroup,group_id=self.data['group_id'],userid=self.user.userid)
+            await self.db.get(SkuGroup,group_id=self.data['group_id'],merchant_id=self.user.merchant_id)
         except SkuGroup.DoesNotExist:
             raise PubErrorCustom("分组不存在!")
 

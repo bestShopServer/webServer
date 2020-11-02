@@ -7,7 +7,7 @@ class GoodsCateGoryStyle(BaseModel):
     商品分类样式表 1-3级
     """
     id = BigAutoField(primary_key=True)
-    userid = BigIntegerField(verbose_name="用户代码",null=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
     typecode = CharField(max_length=20,verbose_name="分类样式代码")
     type = IntegerField(verbose_name="几级分类",default=1)
 
@@ -22,7 +22,7 @@ class GoodsCateGory(BaseModel):
     gdcgid = BigAutoField(primary_key=True)
     gdcgname = CharField(max_length=120, default="",verbose_name="分类名称",null=True)
 
-    userid = BigIntegerField(verbose_name="用户代码",null=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
 
     gdcglastid = CharField(max_length=10,default=0,verbose_name="上级代码",null=True)
 
@@ -48,7 +48,7 @@ class Goods(BaseModel):
     """
     gdid = BigAutoField(primary_key=True,verbose_name="商品ID")
 
-    userid = BigIntegerField(verbose_name="用户代码",null=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
 
     gd_name = CharField(max_length=120, verbose_name="商品名称", default='', null=True)
     gd_banners = CharField(max_length=2048, verbose_name="商品轮播,支持图片和视频['image','url'],['video','url']", default='[]')
@@ -130,7 +130,7 @@ class GoodsLinkCity(BaseModel):
     """
 
     id = BigAutoField(primary_key=True,verbose_name="关联ID")
-    userid = BigIntegerField(verbose_name="用户代码", null=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
     gdid = BigIntegerField(verbose_name="商品ID")
     citycode = CharField(max_length=30,verbose_name="城市代码")
     cityname = CharField(max_length=60,verbose_name="城市名称")
@@ -145,7 +145,7 @@ class GoodsLinkCateGory(BaseModel):
     """
 
     id = BigAutoField(primary_key=True,verbose_name="关联ID")
-    userid = BigIntegerField(verbose_name="用户代码", null=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
     gdid = BigIntegerField(verbose_name="商品ID")
     gdcgid = BigIntegerField(verbose_name="分类ID")
 
@@ -159,7 +159,7 @@ class GoodsLinkSku(BaseModel):
 
     id = BigAutoField(primary_key=True)
     gdid = BigIntegerField(verbose_name="商品ID", null=True)
-    userid = BigIntegerField(verbose_name="用户代码", null=True)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
     skus = CharField(max_length=1024,verbose_name='sku集合 {"group_id":1,"spec_id":2}',default=[])
 
     image = CharField(verbose_name="图片",max_length=255,default="")
@@ -183,7 +183,7 @@ class SkuGroup(BaseModel):
 
     group_id = BigAutoField(primary_key=True)
     group_name = CharField(verbose_name="sku组名称",default='',max_length=60)
-    userid = BigIntegerField(verbose_name="用户代码",null=True,default=0)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
 
     spec_values=None
 
@@ -200,7 +200,7 @@ class SkuSpecValue(BaseModel):
 
     group_id = BigIntegerField(verbose_name="sku组名称", default=0)
     spec_value = CharField(verbose_name="sku值名称",default="",max_length=60)
-    userid = BigIntegerField(verbose_name="用户代码", null=True,default=0)
+    merchant_id = BigIntegerField(verbose_name="商户ID")
 
     class Meta:
         db_table = 'skuspecvalue'

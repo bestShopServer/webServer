@@ -1,38 +1,7 @@
 
 from peewee import *
 from models.base import BaseModel
-
-ORDER_STATUS_CHOICES = (
-    ('0', '待付款'),
-    ('1', '待发货'),
-    ('2', '已发货'),
-    ('3', '已完成'),
-    ('4', '已取消'),
-    ('5', '已关闭'),
-    ('6', '退款中'),
-)
-
-ORDER_SOURCE_CHOICES = (
-    ('0', '安卓APP'),
-    ('1', '苹果APP'),
-    ('3', '微信小程序'),
-    ('4', '支付宝小程序'),
-    ('5', '百度小程序'),
-    ('6', '抖音小程序'),
-)
-
-ORDER_PAYTYPE_CHOICES = (
-    ('0', '微信支付'),
-    ('1', '支付宝支付'),
-    ('2', '银联支付'),
-)
-
-REFUND_STATUS_CHOICES = (
-    ('0', '申请退款'),
-    ('1', '正在退款'),
-    ('2', '退款成功'),
-    ('3', '拒绝退款'),
-)
+from models.choices import *
 
 class OrderRefund(BaseModel):
     """

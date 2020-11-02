@@ -9,7 +9,7 @@ from utils.exceptions import PubErrorCustom
 
 from router import route
 
-from apps.app.sso.utils import wexinLogin
+from apps.lib.login.login_by_wechat import wechatLogin
 
 @route()
 class wexin_auth(BaseHandler):
@@ -21,7 +21,7 @@ class wexin_auth(BaseHandler):
     @Core_connector(isTicket=False)
     async def post(self):
 
-        return await wexinLogin(app=self).wx_auth()
+        return await wechatLogin(app=self).wx_auth()
 
 
 @route()
@@ -32,4 +32,4 @@ class wexin_login(BaseHandler):
 
     @Core_connector(isTicket=False)
     async def post(self):
-        return await wexinLogin(app=self).wx_login()
+        return await wechatLogin(app=self).wx_login()

@@ -5,7 +5,7 @@ from wtforms import ValidationError
 from wtforms_tornado import Form
 from wtforms.validators import DataRequired, Length
 
-from models.public import MENU_TYPES_CHOICES,KEEP_CHOICES
+from models.choices import *
 
 
 class AttachMentGroupForm(Form):

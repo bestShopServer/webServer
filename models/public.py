@@ -1,6 +1,7 @@
 
 from peewee import *
 from models.base import BaseModel
+from models.choices import *
 
 class AttachMentGroup(BaseModel):
 
@@ -31,17 +32,6 @@ class AttachMent(BaseModel):
     class Meta:
         db_table = 'attachment'
 
-
-MENU_TYPES_CHOICES = (
-    ('0', '菜单'),
-    ('1', '按钮'),
-    ('2', '内页'),
-)
-
-KEEP_CHOICES = (
-    ('0', '是'),
-    ('1', '否'),
-)
 
 class Menu(BaseModel):
 

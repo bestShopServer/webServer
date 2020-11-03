@@ -7,7 +7,6 @@ from wtforms.validators import DataRequired, Length
 
 from models.choices import *
 
-
 class AttachMentGroupForm(Form):
 
     id = IntegerField()
@@ -36,17 +35,14 @@ class MenuForm(Form):
 
     id = IntegerField()
     parent_id = IntegerField()
-    title = StringField("标题", validators=[DataRequired(message="请输入标题")])
-    type = SelectField(
-        label='菜单类型',
-        choices=MENU_TYPES_CHOICES
-    )
-    pic = StringField("图片", validators=[DataRequired(message="请传入图片")])
+    title = StringField("标题")
+    type = StringField('菜单类型')
+    pic = StringField("图片")
     sort = IntegerField()
-    component = StringField("组件", validators=[DataRequired(message="请输入组件")])
-    component_name = StringField("组件名称", validators=[DataRequired(message="请输入组件名称")])
-    path = StringField("路由地址", validators=[DataRequired(message="请输入路由地址")])
-    keep = SelectField(
-        label='路由地址',
-        choices=KEEP_CHOICES
-    )
+    component = StringField("组件")
+    component_name = StringField("组件名称")
+    path = StringField("路由地址")
+    keep = StringField('是否缓存')
+
+    status = StringField("状态")
+    premission = StringField("权限标识")

@@ -50,5 +50,8 @@ class Menu(BaseModel):
     path = CharField(max_length=255,verbose_name="地址",default="")
     keep = CharField(max_length=1,verbose_name="是否缓冲",default="1",choices=KEEP_CHOICES)
 
+    premission = CharField(max_length=60,verbose_name="权限标识",default="")
+    status = CharField(max_length=1, verbose_name="状态", choices=STATUS_CHOICES, default='0')
+
     class Meta:
         db_table = 'menu'

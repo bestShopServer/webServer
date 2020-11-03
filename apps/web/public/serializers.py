@@ -29,3 +29,5 @@ class MenuSerializer(serializers.Serializer):
     component_name = serializers.CharField()
     path = serializers.CharField()
     keep = serializers.CharField()
+    status = serializers.CharField()
+    premission = serializers.CharField()

@@ -13,13 +13,13 @@ class BranchFrom(Form):
     branch_id = IntegerField()
 
     parent_branch_id = IntegerField()
-    branch_name = StringField("部门名称", validators=[DataRequired(message="部门名称")])
+    branch_name = StringField("部门名称")
 
     super_man_name = StringField("负责人")
     super_man_phone = StringField("联系电话")
     super_man_email = StringField("邮箱")
 
-    status = StringField("状态",default="0")
+    status = StringField("状态")
     sort = IntegerField()
 
 class UserRole0Form(Form):

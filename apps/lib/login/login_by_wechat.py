@@ -46,7 +46,7 @@ class wechatLogin(LoginBase):
         self.secret = kwargs.get("secret","6426ff42186d3a23deccccc890721658")
 
         self.login_type = '5'
-        self.role_code = '300000'
+        self.role_type = '2'
 
         super(wechatLogin, self).__init__(**kwargs)
 
@@ -84,16 +84,21 @@ class wechatLogin(LoginBase):
 
             user = await self.app.db.get(User, userid=user_auth_obj.userid)
 
+            user.name = res.get("nickName")
+            user.sex = res.get("sex")
+            user.address = "{}-{}-{}".format(res.get("country"), res.get("city"), res.get("province"))
+            user.pic = res.get("avatarUrl")
+
+            await self.app.db.update(user)
             self.check_status(user.status)
         except UserAuth.DoesNotExist:
 
             user = await self.app.db.create(User,**{
-                "role_code": self.role_code,
+                "role_type": self.role_type,
                 "name": res.get("nickName"),
                 "sex": res.get("sex"),
                 "address": "{}-{}-{}".format(res.get("country"), res.get("city"), res.get("province")),
-                "pic": res.get("avatarUrl"),
-                "merchant_id":1
+                "pic": res.get("avatarUrl")
             })
 
             await self.app.db.create(UserAuth,**{

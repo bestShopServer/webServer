@@ -40,7 +40,7 @@ class GoodsCateGory(BaseModel):
 class Goods(BaseModel):
 
     """
-    商品表基础信息表
+    商品表基础信息表gd_sku_link
     """
 
     """

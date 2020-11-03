@@ -13,6 +13,10 @@ from data.base import datacity
 from apps.web.public.rule import AttachMentGroupRules,AttachMentRules,MenuRules
 from router import route
 
+from models.public import Menu
+
+from apps.web.public.serializers import MenuSerializer
+
 @route()
 class file(BaseHandler):
     """
@@ -134,9 +138,41 @@ class menu(BaseHandler):
     async def delete(self,*args,**kwargs):
         pass
 
-    @Core_connector(**MenuRules.get())
+    @Core_connector(isTicket=False)
     async def get(self, pk=None):
-        pass
+
+        parent_id = self.data.get("parent_id", 0)
+        title = self.data.get("title", None)
+        # status = self.data.get("status", None)
+
+        c = 0
+
+        async def recursion(parent_id, c):
+            c += 1
+
+            query = Menu.select().where(
+                Menu.parent_id == parent_id
+            ).order_by(Menu.sort)
+
+            if c == 1:
+                if title:
+                    query = query.where(Menu.title == title)
+
+            res = await self.db.execute(
+                query
+            )
+
+            child = MenuSerializer(res, many=True).data
+
+            if not len(child):
+                return
+
+            for item in child:
+                item['child'] = await recursion(item['id'], c)
+
+            return child
+
+        return {"data": await recursion(parent_id=parent_id, c=c)}
 
 @route(None,id=True)
 class citycode(BaseHandler):

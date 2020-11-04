@@ -35,4 +35,3 @@ class UserRole0Form(Form):
 class UserRole0ForPutForm(Form):
 
     menus = StringField("菜单集合")
-    user_link_role = StringField("角色分配的用户")

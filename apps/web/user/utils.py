@@ -7,23 +7,26 @@ from apps.web.user.serializers import UserSerializer
 async def user_query(**kwargs):
 
     self = kwargs.get("self")
+    query = kwargs.get("query",None)
     isUserRole = kwargs.get("isUserRole",False)
     isBranch = kwargs.get("isBranch",False)
     isPhone = kwargs.get("isPhone",True)
     isEmail = kwargs.get("isEmail",True)
 
     name = self.data.get("name", None)
-
-    query = User.select()
+    role_id = self.data.get("role_id",None)
 
     if name:
         query = query.where(User.name == name)
 
-    query = query.where(
-        User.role_type == '0'
-    ).order_by(User.updtime.desc())
+    if role_id:
 
-    query = query.paginate(self.data['page'], self.data['size'])
+        query = query.where(User.userid << \
+                   [ item.userid \
+                        for item in  \
+                            await self.db.execute(UserLinkRole.select().where(UserLinkRole.role_id == role_id)) ])
+
+    query = query.order_by(User.updtime.desc()).paginate(self.data['page'], self.data['size'])
 
     obj = await self.db.execute(query)
 

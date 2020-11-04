@@ -1,12 +1,13 @@
-
+from peewee import JOIN
 from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from router import route
 
 from models.user import Branch,User,UserLinkRole,UserLinkBranch
 
+from utils.exceptions import PubErrorCustom
 
-from apps.web.user.rule import BranchRules,UserRoleRules,UserRoleForMenuRules
+from apps.web.user.rule import BranchRules,UserRoleRules,UserRoleForMenuRules,UserRoleLinkRules
 from apps.web.user.serializers import BranchSerializer
 
 from apps.web.user.utils import user_query
@@ -125,13 +126,35 @@ class menu_for_role(BaseHandler):
 class user_for_role(BaseHandler):
 
     """
-    查询用户(角色交易中)
+    用户角色关联交易
     """
 
-    @Core_connector(isTransaction=False,isTicket=False)
+    @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
         return await user_query(
                         self=self,
-                        isUserRole = True
+                        query= User.select(User).where(User.role_type == '0')
                     )
+
+    @Core_connector()
+    async def post(self,*args,**kwargs):
+
+        userids = self.data.get("userids")
+        role_id = self.data.get("role_id")
+
+        if not len(userids):
+            raise PubErrorCustom("授权用户列表为空!")
+
+        if not role_id:
+            raise PubErrorCustom("角色代码为空!")
+
+        for item in userids:
+            await self.db.create(UserLinkRole,**{
+                "role_id" : role_id,
+                "userid": item
+            })
+
+    @Core_connector(**UserRoleLinkRules.delete())
+    async def delete(self,*args,**kwargs):
+        pass

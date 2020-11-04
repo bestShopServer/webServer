@@ -53,6 +53,8 @@ class TestUnitBase(object):
             }
         )['data']
 
+        print(self.token)
+
 if __name__=='__main__':
 
     s = TestUnitBase()

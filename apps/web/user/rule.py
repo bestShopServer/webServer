@@ -128,21 +128,7 @@ class UserRoleRules:
                 "role" : {
                     "form_class": UserRole0ForPutForm,
                     "model_class": UserRole,
-                    "father": True,
-                    "child_form_link": {
-                        "userlinkrole":"user_link_role"
-                    },
-                    "child": {
-                        "userlinkrole": {
-                            "model_class": UserLinkRole,
-                            "data_pool": {
-                                "instance": {
-                                    "userid": "userid",
-                                    "branch_id": "branch_id"
-                                }
-                            }
-                        },
-                    }
+                    "father": True
                 }
             }
         )

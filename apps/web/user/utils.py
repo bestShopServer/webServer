@@ -10,11 +10,14 @@ async def user_query(**kwargs):
     query = kwargs.get("query",None)
     isUserRole = kwargs.get("isUserRole",False)
     isBranch = kwargs.get("isBranch",False)
-    isPhone = kwargs.get("isPhone",True)
-    isEmail = kwargs.get("isEmail",True)
+    isPhone = kwargs.get("isPhone",False)
+    isEmail = kwargs.get("isEmail",False)
+    isLoginName = kwargs.get("isLoginName",False)
 
     name = self.data.get("name", None)
     role_id = self.data.get("role_id",None)
+    branch_id = self.data.get("branch_id",None)
+    mobile = self.data.get("mobile",None)
 
     if name:
         query = query.where(User.name == name)
@@ -26,6 +29,18 @@ async def user_query(**kwargs):
                         for item in  \
                             await self.db.execute(UserLinkRole.select().where(UserLinkRole.role_id == role_id)) ])
 
+    if branch_id:
+        query = query.where(User.userid << \
+                   [ item.userid \
+                        for item in  \
+                            await self.db.execute(UserLinkBranch.select().where(UserLinkRole.branch_id == branch_id)) ])
+
+    if mobile:
+        query = query.where(User.userid << \
+                   [ item.userid \
+                        for item in  \
+                            await self.db.execute(UserAuth.select().where(UserAuth.account == mobile,UserAuth.type == '1')) ])
+
     query = query.order_by(User.updtime.desc()).paginate(self.data['page'], self.data['size'])
 
     obj = await self.db.execute(query)
@@ -35,6 +50,21 @@ async def user_query(**kwargs):
     userids = [item.userid for item in obj]
 
     if len(userids):
+
+        if isLoginName:
+
+            login_name_obj_tmp = await self.db.execute(
+                UserAuth.select().\
+                    where(UserAuth.userid << userids).\
+                    where(UserAuth.type == '0')
+            )
+
+            for item in obj:
+                item.login_name = None
+                for item1 in login_name_obj_tmp:
+                    if item.userid == item1.userid:
+                        item.login_name = item1
+                        break
 
         if isPhone:
 
@@ -67,7 +97,7 @@ async def user_query(**kwargs):
 
         if isUserRole:
             user_role_obj_tmp = await self.db.execute(
-                UserLinkRole.select(). \
+                UserLinkRole.select(UserLinkRole,UserRole). \
                     join(UserRole, join_type=JOIN.INNER, on=(UserRole.role_id == UserLinkRole.role_id)). \
                     where(UserLinkRole.userid << userids)
             )
@@ -75,14 +105,14 @@ async def user_query(**kwargs):
             for item in obj:
                 for item1 in user_role_obj_tmp:
                     if item.userid == item1.userid:
-                        if hasattr(item, "user_role_link") and item.user_role_link:
-                            item.user_role_link.append(item1)
+                        if hasattr(item, "userlinkrole") and item.userlinkrole:
+                            item.userlinkrole.append(item1)
                         else:
-                            item.user_role_link = [item1]
+                            item.userlinkrole = [item1]
         if isBranch:
 
             user_branch_obj_tmp = await self.db.execute(
-                UserLinkBranch.select(). \
+                UserLinkBranch.select(UserLinkBranch,Branch). \
                     join(Branch, join_type=JOIN.INNER, on=(Branch.branch_id == UserLinkBranch.branch_id)). \
                     where(UserLinkBranch.userid << userids)
             )
@@ -90,9 +120,9 @@ async def user_query(**kwargs):
             for item in obj:
                 for item1 in user_branch_obj_tmp:
                     if item.userid == item1.userid:
-                        if hasattr(item, "user_branch_link") and item.user_branch_link:
-                            item.user_branch_link.append(item1)
+                        if hasattr(item, "userlinkbranch") and item.userlinkbranch:
+                            item.userlinkbranch.append(item1)
                         else:
-                            item.user_branch_link = [item1]
+                            item.userlinkbranch = [item1]
 
         return {"data":UserSerializer(obj,many=True).data,"count":count}

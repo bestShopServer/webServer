@@ -3,11 +3,11 @@
 from apps.web.user.forms import \
     BranchFrom,UserRole0Form,UserRole0ForPutForm,\
         MenuLinkMerchantSettingPutForm,MenuLinkMerchantSettingPostForm,\
-            MerchantPostForm,MerchantPutForm
+            MerchantPostForm,MerchantPutForm,User0PostForm,User0PutForm
 
 from models.user import \
     Branch,UserLinkBranch,UserRole,UserLinkRole,\
-        MenuLinkMerchantSetting,Merchant
+        MenuLinkMerchantSetting,Merchant,User,UserAuth
 
 from apps.web.user.serializers import \
     UserRoleSerializer,UserRoleForMenuSerializer,\
@@ -299,6 +299,100 @@ class MerchantRules:
                 "merchant": {
                     "model_class": Merchant,
                     "serializers":MerchantSerializer
+                }
+            }
+        )
+
+class UserRules:
+
+    @staticmethod
+    def post():
+        return dict(
+            robot={
+                "pk_key": "userid",
+                "user" : {
+                    "form_class": User0PostForm,
+                    "model_class": User,
+                    "father": True,
+                    "child_form_link": {
+                        "userlinkrole":"roles",
+                        "userlinkbranch":"branchs"
+                    },
+                    "child": {
+                        "userlinkrole": {
+                            "model_class": UserLinkRole,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid"
+                                }
+                            }
+                        },
+                        "userlinkbranch": {
+                            "model_class": UserLinkBranch,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        )
+
+    @staticmethod
+    def put():
+        return dict(
+            robot={
+                "pk_key": "userid",
+                "user": {
+                    "form_class": User0PutForm,
+                    "model_class": User,
+                    "father": True,
+                    "child_form_link": {
+                        "userlinkrole": "roles",
+                        "userlinkbranch": "branchs"
+                    },
+                    "child": {
+                        "userlinkrole": {
+                            "model_class": UserLinkRole,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid"
+                                }
+                            }
+                        },
+                        "userlinkbranch": {
+                            "model_class": UserLinkBranch,
+                            "data_pool": {
+                                "instance": {
+                                    "userid": "userid"
+                                }
+                            }
+                        },
+                    }
+                }
+            }
+        )
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "userid",
+                "user": {
+                    "model_class": User,
+                    "child": {
+                        "userlinkrole": {
+                            "model_class": UserLinkRole,
+                        },
+                        "userlinkbranch": {
+                            "model_class": UserLinkBranch,
+                        },
+                        "userauth": {
+                            "model_class": UserAuth,
+                        }
+                    }
                 }
             }
         )

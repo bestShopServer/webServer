@@ -43,10 +43,12 @@ class UserAuthByPhoneEmailSerializer(serializers.Serializer):
     account = serializers.CharField()
 
 class UserRoleForNameSerializer(serializers.Serializer):
+    role_id = serializers.IntegerField()
     role_name = serializers.CharField()
 
 class UserRoleLinkSerializer(serializers.Serializer):
 
+    id = serializers.IntegerField()
     userrole = serializers.SerializerMethodField()
 
     def get_userrole(self,obj):
@@ -71,8 +73,9 @@ class UserSerializer(serializers.Serializer):
 
     phone = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
-    user_role_link = serializers.SerializerMethodField()
-    user_branch_link = serializers.SerializerMethodField()
+    login_name = serializers.SerializerMethodField()
+    userlinkrole = serializers.SerializerMethodField()
+    userlinkbranch = serializers.SerializerMethodField()
 
     def get_phone(self,obj):
         if hasattr(obj,"phone") and obj.phone:
@@ -86,16 +89,22 @@ class UserSerializer(serializers.Serializer):
         else:
             return None
 
-    def get_user_role_link(self,obj):
-        if hasattr(obj,"user_role_link") and obj.user_role_link:
-            return UserRoleLinkSerializer(obj.user_role_link,many=False).data
+    def get_login_name(self,obj):
+        if hasattr(obj,"login_name") and obj.email:
+            return UserAuthByPhoneEmailSerializer(obj.login_name,many=False).data
         else:
             return None
 
-    def get_user_branch_link(self,obj):
+    def get_userlinkrole(self,obj):
+        if hasattr(obj,"userlinkrole") and obj.userlinkrole:
+            return UserRoleLinkSerializer(obj.userlinkrole,many=True).data
+        else:
+            return None
 
-        if hasattr(obj,"user_branch_link") and obj.user_branch_link:
-            return UserBranchLinkSerializer(obj.user_branch_link,many=False).data
+    def get_userlinkbranch(self,obj):
+
+        if hasattr(obj,"userlinkbranch") and obj.userlinkbranch:
+            return UserBranchLinkSerializer(obj.userlinkbranch,many=True).data
         else:
             return None
 

@@ -3,13 +3,13 @@ from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from router import route
 
-from models.user import Branch,User,UserLinkRole,UserLinkBranch,MenuLinkMerchantSetting
+from models.user import Branch,User,UserLinkRole,UserLinkBranch,MenuLinkMerchantSetting,UserAuth,UserRole
 
 from utils.exceptions import PubErrorCustom
 
 from apps.web.user.rule import BranchRules,UserRoleRules,\
             UserRoleForMenuRules,UserRoleLinkRules,MerchantRules,\
-                MenuLinkMerchantSettingRules
+                MenuLinkMerchantSettingRules,UserRules
 from apps.web.user.serializers import BranchSerializer
 
 from apps.web.user.utils import user_query
@@ -136,7 +136,9 @@ class user_for_role(BaseHandler):
 
         return await user_query(
                         self=self,
-                        query= User.select(User).where(User.role_type == '0')
+                        query= User.select(User).where(User.role_type == '0'),
+                        isPhone = True,
+                        isEmail  = True
                     )
 
     @Core_connector()
@@ -215,4 +217,107 @@ class menulinkmerchantsetting(BaseHandler):
 
     @Core_connector(**MenuLinkMerchantSettingRules.get())
     async def get(self, pk=None):
+        pass
+
+@route(None,id=True)
+class user(BaseHandler):
+
+    """
+    用户管理
+    """
+
+    async def add_after_handler(self,**kwargs):
+
+        mobile = self.data.get("mobile",None)
+        email = self.data.get("email",None)
+        login_name = self.data.get("login_name", None)
+
+        async def createUserAuth(account,type):
+            if await self.db.count(
+                    UserAuth.select().where(UserAuth.account == account, UserAuth.type == type)) > 0:
+                if type == '0':
+                    raise PubErrorCustom("登录账号已存在!")
+                elif type == '1':
+                    raise PubErrorCustom("手机号已存在!")
+                elif type == '2':
+                    raise PubErrorCustom("邮箱已存在!")
+
+            await self.db.create(UserAuth, **{
+                "userid": self.pk,
+                "type": type,
+                "account": account,
+                "ticket": self.data.get("password")
+            })
+
+        if mobile:
+            await createUserAuth(account=mobile,type="1")
+
+        if email:
+            await createUserAuth(account=email,type="2")
+
+        if login_name:
+            await createUserAuth(account=login_name,type="0")
+
+    async def upd_before_handler(self,**kwargs):
+
+        pk = kwargs.get("pk")
+
+        mobile = self.data.get("mobile", None)
+        email = self.data.get("email", None)
+        login_name = self.data.get("login_name", None)
+
+        async def updUserAuth(account, type,pk):
+
+            if await self.db.count(
+                    UserAuth.select().where(
+                        UserAuth.account == account,
+                        UserAuth.type == type,
+                        UserAuth.userid != pk)) > 0:
+                if type == '0':
+                    raise PubErrorCustom("登录账号已存在!")
+                elif type == '1':
+                    raise PubErrorCustom("手机号已存在!")
+                elif type == '2':
+                    raise PubErrorCustom("邮箱已存在!")
+
+            try:
+                user_auth_obj = await self.db.get(UserAuth,userid = pk,type = type)
+                if self.data.get("password"):
+                    user_auth_obj.ticket = self.data.get("password")
+                user_auth_obj.account = account
+                await self.db.update(user_auth_obj)
+
+            except UserAuth.DoesNotExist:
+                raise PubErrorCustom("系统异常{}-{}".format(account,type))
+
+        if mobile:
+            await updUserAuth(account=mobile, type="1",pk=pk)
+
+        if email:
+            await updUserAuth(account=email, type="2",pk=pk)
+
+        if login_name:
+            await updUserAuth(account=login_name, type="0",pk=pk)
+
+    @Core_connector(**{**UserRules.post(),**{"add_after_handler":add_after_handler}})
+    async def post(self,*args,**kwargs):
+        return {"data":self.pk}
+
+    @Core_connector(**{**UserRules.put(),**{"upd_before_handler":upd_before_handler}})
+    async def put(self,*args,**kwargs):
+        pass
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+        return await user_query(
+                        self=self,
+                        query= User.select(User).where(User.role_type == '0'),
+                        isPhone = True,
+                        isEmail  = True,
+                        isLoginName = True
+                    )
+
+    @Core_connector(**UserRules.delete())
+    async def delete(self,*args,**kwargs):
         pass

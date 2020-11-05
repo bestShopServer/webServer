@@ -5,6 +5,12 @@ STATUS_CHOICES = (
     ('1', '禁用'),
 )
 
+#是否默认
+DEFAULT_CHOICES = (
+    ('0', '是'),
+    ('1', '否'),
+)
+
 #用户状态
 USER_STATUS_CHOICES = (
     ('0','启用'),

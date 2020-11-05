@@ -3,11 +3,13 @@ from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from router import route
 
-from models.user import Branch,User,UserLinkRole,UserLinkBranch
+from models.user import Branch,User,UserLinkRole,UserLinkBranch,MenuLinkMerchantSetting
 
 from utils.exceptions import PubErrorCustom
 
-from apps.web.user.rule import BranchRules,UserRoleRules,UserRoleForMenuRules,UserRoleLinkRules
+from apps.web.user.rule import BranchRules,UserRoleRules,\
+            UserRoleForMenuRules,UserRoleLinkRules,MerchantRules,\
+                MenuLinkMerchantSettingRules
 from apps.web.user.serializers import BranchSerializer
 
 from apps.web.user.utils import user_query
@@ -157,4 +159,60 @@ class user_for_role(BaseHandler):
 
     @Core_connector(**UserRoleLinkRules.delete())
     async def delete(self,*args,**kwargs):
+        pass
+
+@route(None,id=True)
+class merchant(BaseHandler):
+
+    """
+    租户管理
+    """
+
+    @Core_connector(**MerchantRules.post())
+    async def post(self,*args,**kwargs):
+        return {"data":self.pk}
+
+    @Core_connector(**MerchantRules.put())
+    async def put(self,*args,**kwargs):
+        pass
+
+    @Core_connector(**MerchantRules.delete())
+    async def delete(self,*args,**kwargs):
+        pass
+
+    @Core_connector(**MerchantRules.get())
+    async def get(self, pk=None):
+        pass
+
+@route(None,id=True)
+class menulinkmerchantsetting(BaseHandler):
+
+    """
+    租户规则管理
+    """
+
+    async def add_before_handler(self,**kwargs):
+        """
+        新增/修改前置处理
+        """
+        if self.data.get("default",None) and self.data.get("default")=='0':
+            for item in await self.db.execute(
+                    MenuLinkMerchantSetting.select().for_update().where(MenuLinkMerchantSetting.default == '0')):
+                item.default = '1'
+                await self.db.update(item)
+
+    @Core_connector(**{**MenuLinkMerchantSettingRules.post(),**{"add_before_handler":add_before_handler}})
+    async def post(self,*args,**kwargs):
+        return {"data":self.pk}
+
+    @Core_connector(**{**MenuLinkMerchantSettingRules.put(),**{"upd_before_handler":add_before_handler}})
+    async def put(self,*args,**kwargs):
+        pass
+
+    @Core_connector(**MenuLinkMerchantSettingRules.delete())
+    async def delete(self,*args,**kwargs):
+        pass
+
+    @Core_connector(**MenuLinkMerchantSettingRules.get())
+    async def get(self, pk=None):
         pass

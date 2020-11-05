@@ -1,9 +1,17 @@
 
 
-from apps.web.user.forms import BranchFrom,UserRole0Form,UserRole0ForPutForm
-from models.user import Branch,UserLinkBranch,UserRole,UserLinkRole
+from apps.web.user.forms import \
+    BranchFrom,UserRole0Form,UserRole0ForPutForm,\
+        MenuLinkMerchantSettingPutForm,MenuLinkMerchantSettingPostForm,\
+            MerchantPostForm,MerchantPutForm
 
-from apps.web.user.serializers import UserRoleSerializer,UserRoleForMenuSerializer
+from models.user import \
+    Branch,UserLinkBranch,UserRole,UserLinkRole,\
+        MenuLinkMerchantSetting,Merchant
+
+from apps.web.user.serializers import \
+    UserRoleSerializer,UserRoleForMenuSerializer,\
+        MenuLinkMerchantSettingSerializer,MerchantSerializer
 
 class BranchRules:
 
@@ -187,6 +195,110 @@ class UserRoleLinkRules:
                 "pk_key": "id",
                 "userlinkrole": {
                     "model_class": UserLinkRole
+                }
+            }
+        )
+
+class MenuLinkMerchantSettingRules:
+
+    @staticmethod
+    def post():
+        return dict(
+            robot={
+                "pk_key": "id",
+                "menulinkmerchantsetting" : {
+                    "form_class": MenuLinkMerchantSettingPostForm,
+                    "model_class": MenuLinkMerchantSetting,
+                    "father": True
+                }
+            }
+        )
+
+    @staticmethod
+    def put():
+        return dict(
+            robot={
+                "pk_key": "id",
+                "menulinkmerchantsetting" : {
+                    "form_class": MenuLinkMerchantSettingPutForm,
+                    "model_class": MenuLinkMerchantSetting,
+                    "father": True
+                }
+            }
+        )
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "id",
+                "menulinkmerchantsetting": {
+                    "model_class": MenuLinkMerchantSetting
+                }
+            }
+        )
+
+    @staticmethod
+    def get():
+        return dict(
+            isTransaction=False,
+            robot={
+                "pk_key": "id",
+                "menulinkmerchantsetting": {
+                    "model_class": MenuLinkMerchantSetting,
+                    "serializers":MenuLinkMerchantSettingSerializer
+                }
+            }
+        )
+
+class MerchantRules:
+
+    @staticmethod
+    def post():
+        return dict(
+            robot={
+                "pk_key": "merchant_id",
+                "merchant" : {
+                    "form_class": MerchantPostForm,
+                    "model_class": Merchant,
+                    "father": True
+                }
+            }
+        )
+
+    @staticmethod
+    def put():
+        return dict(
+            robot={
+                "pk_key": "merchant_id",
+                "merchant" : {
+                    "form_class": MerchantPutForm,
+                    "model_class": Merchant,
+                    "father": True
+                }
+            }
+        )
+
+    @staticmethod
+    def delete():
+        return dict(
+            robot={
+                "pk_key": "merchant_id",
+                "merchant": {
+                    "model_class": Merchant
+                }
+            }
+        )
+
+    @staticmethod
+    def get():
+        return dict(
+            isTransaction=False,
+            robot={
+                "pk_key": "merchant_id",
+                "merchant": {
+                    "model_class": Merchant,
+                    "serializers":MerchantSerializer
                 }
             }
         )

@@ -38,7 +38,6 @@ class UserRoleForMenuSerializer(serializers.Serializer):
 
         return json.loads(obj.menus)
 
-
 class UserAuthByPhoneEmailSerializer(serializers.Serializer):
 
     account = serializers.CharField()
@@ -53,10 +52,8 @@ class UserRoleLinkSerializer(serializers.Serializer):
     def get_userrole(self,obj):
         return UserRoleForNameSerializer(obj.userrole,many=False).data
 
-
 class UserBranchForNameSerializer(serializers.Serializer):
     branch_name = serializers.CharField()
-
 
 class UserBranchLinkSerializer(serializers.Serializer):
     branch = serializers.SerializerMethodField()
@@ -101,3 +98,24 @@ class UserSerializer(serializers.Serializer):
             return UserBranchLinkSerializer(obj.user_branch_link,many=False).data
         else:
             return None
+
+class MenuLinkMerchantSettingSerializer(serializers.Serializer):
+
+    id = serializers.IntegerField()
+    default = serializers.CharField()
+    name = serializers.CharField()
+    status = serializers.CharField()
+    memo = serializers.CharField()
+
+class MerchantSerializer(serializers.Serializer):
+
+    merchant_id = serializers.IntegerField()
+    merchant_name = serializers.CharField()
+
+    sort = serializers.IntegerField()
+    memo = serializers.CharField()
+
+    status = serializers.CharField()
+
+    expire_time = serializers.IntegerField()
+    createtime = serializers.IntegerField()

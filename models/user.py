@@ -118,6 +118,21 @@ class UserLinkBranch(BaseModel):
     class Meta:
         db_table = 'userlinkbranch'
 
+class MenuLinkMerchantSetting(BaseModel):
+    """
+    租户权限范围授权配置表
+    """
+
+    id = BigAutoField(primary_key=True)
+    default = CharField(max_length=1,verbose_name="是否默认",default='1',choices=DEFAULT_CHOICES)
+    name = CharField(max_length=60,verbose_name="权限名称",default="")
+    status = CharField(max_length=1, verbose_name="状态", choices=STATUS_CHOICES,default='0')
+    memo = CharField(max_length=255,verbose_name="描述",default="")
+    menus = TextField(verbose_name="菜单集合",default="[]")
+
+    class Meta:
+        db_table = 'menulinkmerchantsetting'
+
 
 class Merchant(BaseModel):
     """

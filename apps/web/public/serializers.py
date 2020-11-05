@@ -24,7 +24,7 @@ class MenuSerializer(serializers.Serializer):
     title = serializers.CharField()
     type = serializers.CharField()
     pic = serializers.CharField()
-    sort = serializers.CharField()
+    sort = serializers.IntegerField()
     component = serializers.CharField()
     component_name = serializers.CharField()
     path = serializers.CharField()

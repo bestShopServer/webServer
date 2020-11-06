@@ -33,7 +33,7 @@ async def user_query(**kwargs):
         query = query.where(User.userid << \
                    [ item.userid \
                         for item in  \
-                            await self.db.execute(UserLinkBranch.select().where(UserLinkRole.branch_id == branch_id)) ])
+                            await self.db.execute(UserLinkBranch.select().where(UserLinkBranch.branch_id == branch_id)) ])
 
     if mobile:
         query = query.where(User.userid << \

@@ -134,6 +134,7 @@ class user_for_role(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
+        self.data['role_id'] = pk
         return await user_query(
                         self=self,
                         query= User.select(User).where(User.role_type == '0'),

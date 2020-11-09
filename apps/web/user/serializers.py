@@ -78,7 +78,7 @@ class UserSerializer(serializers.Serializer):
     userlinkbranch = serializers.SerializerMethodField()
 
     def get_mobile(self,obj):
-        if hasattr(obj,"phone") and obj.phone:
+        if hasattr(obj,"mobile") and obj.mobile:
             return UserAuthByPhoneEmailSerializer(obj.mobile,many=False).data
         else:
             return None

@@ -46,6 +46,8 @@ class UserAuth(BaseModel):
     account = CharField(max_length=60,verbose_name="账号",default="")
     ticket = CharField(max_length=60,verbose_name="令牌/密码",default="e10adc3949ba59abbe56e057f20f883e")
 
+    is_password = CharField(max_length=1,verbose_name="是否可以密码登录",choices=DEFAULT_CHOICES,default="0")
+
     class Meta:
         db_table = 'userauth'
 

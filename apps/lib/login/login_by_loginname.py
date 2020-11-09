@@ -22,16 +22,19 @@ class loginNameLogin(LoginBase):
         account = self.app.data.get("loginname",None)
         ticket = self.app.data.get('password',None)
 
-        try:
-            user_auth_obj = await self.app.db.get(UserAuth,
-                        account=account,
-                        ticket=ticket,
-                        type=self.login_type)
+        res = await self.app.db.execute(
+            UserAuth.select().where(
+                UserAuth.account == account,
+                UserAuth.ticket == ticket,
+                UserAuth.is_password == '0'
+            )
+        )
 
-            user = await self.app.db.get(User, userid=user_auth_obj.userid)
-            self.check_status(user.status)
-        except UserAuth.DoesNotExist:
+        if not len(res):
             raise PubErrorCustom("登录账号或密码错误!")
+
+        user = await self.app.db.get(User, userid=res[0].userid)
+        self.check_status(user.status)
 
         token = get_token()
 

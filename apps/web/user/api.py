@@ -267,6 +267,17 @@ class user(BaseHandler):
         mobile = self.data.get("mobile", None)
         email = self.data.get("email", None)
         login_name = self.data.get("login_name", None)
+        password = self.data.get("password")
+
+        if password:
+            await self.db.execute(
+                UserAuth.update({
+                    UserAuth.ticket : password
+                }).where(
+                    UserAuth.userid == pk,
+                    UserAuth.is_password == '0'
+                )
+            )
 
         async def updUserAuth(account, type,pk):
 
@@ -284,13 +295,26 @@ class user(BaseHandler):
 
             try:
                 user_auth_obj = await self.db.get(UserAuth,userid = pk,type = type)
-                if self.data.get("password"):
-                    user_auth_obj.ticket = self.data.get("password")
                 user_auth_obj.account = account
                 await self.db.update(user_auth_obj)
 
             except UserAuth.DoesNotExist:
-                raise PubErrorCustom("系统异常{}-{}".format(account,type))
+
+                res = await self.db.execute(
+                    UserAuth.select().where(
+                        UserAuth.userid == pk,
+                        UserAuth.is_password == '0'
+                    )
+                )
+                if not len(res):
+                    raise PubErrorCustom("系统异常{}".format(pk))
+
+                await self.db.create(UserAuth, **{
+                    "userid": self.pk,
+                    "type": type,
+                    "account": account,
+                    "ticket": res[0].ticket
+                })
 
         if mobile:
             await updUserAuth(account=mobile, type="1",pk=pk)

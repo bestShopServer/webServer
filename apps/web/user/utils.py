@@ -10,7 +10,7 @@ async def user_query(**kwargs):
     query = kwargs.get("query",None)
     isUserRole = kwargs.get("isUserRole",False)
     isBranch = kwargs.get("isBranch",False)
-    isMobile = kwargs.get("isPhone",False)
+    isMobile = kwargs.get("isMobile",False)
     isEmail = kwargs.get("isEmail",False)
     isLoginName = kwargs.get("isLoginName",False)
 

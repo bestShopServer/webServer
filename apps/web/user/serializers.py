@@ -79,7 +79,7 @@ class UserSerializer(serializers.Serializer):
 
     def get_mobile(self,obj):
         if hasattr(obj,"phone") and obj.phone:
-            return UserAuthByPhoneEmailSerializer(obj.phone,many=False).data
+            return UserAuthByPhoneEmailSerializer(obj.mobile,many=False).data
         else:
             return None
 

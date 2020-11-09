@@ -34,9 +34,16 @@ class UserRole0Form(Form):
     sort = IntegerField()
     status = StringField("状态",default="0")
 
-class UserRole0ForPutForm(UserRole0Form):
+class UserRole0ForPutForm(Form):
 
-    menus = StringField("菜单集合")
+    role_id = IntegerField()
+    role_type = StringField()
+
+    role_name = StringField()
+
+    sort = IntegerField()
+    status = StringField()
+    menus = StringField()
 
 class MenuLinkMerchantSettingPostForm(Form):
 

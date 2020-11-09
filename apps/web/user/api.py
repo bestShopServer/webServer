@@ -139,7 +139,8 @@ class user_for_role(BaseHandler):
                         self=self,
                         query= User.select(User).where(User.role_type == '0'),
                         isMobile = True,
-                        isEmail  = True
+                        isEmail  = True,
+                        isBranch=True
                     )
 
     @Core_connector()

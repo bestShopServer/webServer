@@ -315,7 +315,9 @@ class user(BaseHandler):
                         query= User.select(User).where(User.role_type == '0'),
                         isMobile = True,
                         isEmail  = True,
-                        isLoginName = True
+                        isLoginName = True,
+                        isBranch= True,
+                        isUserRole=True
                     )
 
     @Core_connector(**UserRules.delete())

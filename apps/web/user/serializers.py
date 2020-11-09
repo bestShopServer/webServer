@@ -70,6 +70,7 @@ class UserSerializer(serializers.Serializer):
     name = serializers.CharField()
     pic = serializers.CharField()
     memo = serializers.CharField()
+    sex = serializers.CharField()
 
     mobile = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()

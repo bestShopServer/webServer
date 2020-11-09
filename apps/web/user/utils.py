@@ -10,7 +10,7 @@ async def user_query(**kwargs):
     query = kwargs.get("query",None)
     isUserRole = kwargs.get("isUserRole",False)
     isBranch = kwargs.get("isBranch",False)
-    isPhone = kwargs.get("isPhone",False)
+    isMobile = kwargs.get("isPhone",False)
     isEmail = kwargs.get("isEmail",False)
     isLoginName = kwargs.get("isLoginName",False)
 
@@ -18,6 +18,10 @@ async def user_query(**kwargs):
     role_id = self.data.get("role_id",None)
     branch_id = self.data.get("branch_id",None)
     mobile = self.data.get("mobile",None)
+    status = self.data.get("status",None)
+
+    if status and status != 'all':
+        query = query.where(User.status == status)
 
     if name:
         query = query.where(User.name == name)
@@ -66,7 +70,7 @@ async def user_query(**kwargs):
                         item.login_name = item1
                         break
 
-        if isPhone:
+        if isMobile:
 
             phone_obj_tmp = await self.db.execute(
                 UserAuth.select().\
@@ -75,10 +79,10 @@ async def user_query(**kwargs):
             )
 
             for item in obj:
-                item.phone = None
+                item.mobile = None
                 for item1 in phone_obj_tmp:
                     if item.userid == item1.userid:
-                        item.phone = item1
+                        item.mobile = item1
                         break
 
         if isEmail:

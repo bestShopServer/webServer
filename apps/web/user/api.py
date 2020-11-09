@@ -137,7 +137,7 @@ class user_for_role(BaseHandler):
         return await user_query(
                         self=self,
                         query= User.select(User).where(User.role_type == '0'),
-                        isPhone = True,
+                        isMobile = True,
                         isEmail  = True
                     )
 
@@ -313,7 +313,7 @@ class user(BaseHandler):
         return await user_query(
                         self=self,
                         query= User.select(User).where(User.role_type == '0'),
-                        isPhone = True,
+                        isMobile = True,
                         isEmail  = True,
                         isLoginName = True
                     )

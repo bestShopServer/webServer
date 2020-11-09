@@ -71,13 +71,13 @@ class UserSerializer(serializers.Serializer):
     pic = serializers.CharField()
     memo = serializers.CharField()
 
-    phone = serializers.SerializerMethodField()
+    mobile = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     login_name = serializers.SerializerMethodField()
     userlinkrole = serializers.SerializerMethodField()
     userlinkbranch = serializers.SerializerMethodField()
 
-    def get_phone(self,obj):
+    def get_mobile(self,obj):
         if hasattr(obj,"phone") and obj.phone:
             return UserAuthByPhoneEmailSerializer(obj.phone,many=False).data
         else:

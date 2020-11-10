@@ -2,7 +2,7 @@ from peewee import JOIN
 from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from router import route
-
+from loguru import logger
 from models.user import Branch,User,UserLinkRole,UserLinkBranch,MenuLinkMerchantSetting,UserAuth,UserRole
 
 from utils.exceptions import PubErrorCustom
@@ -41,6 +41,7 @@ class branch(BaseHandler):
     """
 
     async def upd_before_handler(self,**kwargs):
+        logger.info("pk=>{},parent_branch_id=>{}".format(kwargs.get("pk"),self.data.get("parent_branch_id")))
         if kwargs.get("pk") == self.data.get("parent_branch_id"):
             self.data['parent_branch_id'] = 0
 

@@ -42,11 +42,9 @@ class branch(BaseHandler):
 
     async def upd_before_handler(self,**kwargs):
 
-        connector_app = kwargs.get("connector_app")
-
-        logger.info("pk=>{},parent_branch_id=>{}".format(kwargs.get("pk"),connector_app.data.get("parent_branch_id")))
-        if kwargs.get("pk") == connector_app.data.get("parent_branch_id"):
-            connector_app.data.setdefault("parent_branch_id",0)
+        logger.info("pk=>{},parent_branch_id=>{}".format(kwargs.get("pk"),self.data.get("parent_branch_id")))
+        if str(kwargs.get("pk")) == str(self.data.get("parent_branch_id")):
+            self.data.setdefault("parent_branch_id",0)
 
 
     @Core_connector(**BranchRules.post())

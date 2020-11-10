@@ -44,7 +44,7 @@ class branch(BaseHandler):
 
         logger.info("pk=>{},parent_branch_id=>{}".format(kwargs.get("pk"),self.data.get("parent_branch_id")))
         if str(kwargs.get("pk")) == str(self.data.get("parent_branch_id")):
-            self.data.setdefault("parent_branch_id",0)
+            self.data["parent_branch_id"] = 0
 
 
     @Core_connector(**BranchRules.post())

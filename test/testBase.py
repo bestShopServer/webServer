@@ -48,7 +48,7 @@ class TestUnitBase(object):
             method="POST",
             url="/sso/login",
             data={
-                "loginname": "admin",
+                "loginname": "9336578@qq.com",
                 "password": "e10adc3949ba59abbe56e057f20f883e"
             }
         )['data']

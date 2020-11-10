@@ -220,31 +220,38 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
         if self.connector_app.request.method == 'PUT':
 
-            if instance_data.get(auto_increment_key, None) or robot_table.get("uniqueKey",None):
+            if instance_data.get(auto_increment_key, None):
                 # res = model_class(**instance_data)
                 # await self.connector_app.db.update(res)
 
                 try:
-                    if instance_data.get(auto_increment_key, None):
-                        res = await self.connector_app.db.get(model_class,
-                                                        **{
-                                                            auto_increment_key : instance_data.get(auto_increment_key, None)
-                                                        }
-                                                        )
-                    else:
-                        res = await self.connector_app.db.get(model_class,
-                                                        **{
-                                                           key: instance_data.get(key, None) for key in robot_table.get("uniqueKey",None)
-                                                        }
-                                                        )
+                    res = await self.connector_app.db.get(model_class,
+                                                    **{
+                                                        auto_increment_key : instance_data.get(auto_increment_key, None)
+                                                    }
+                                                    )
+                    for key in [k for k in model_class._meta.fields]:
+                        if instance_data.get(key, None):
+                            setattr(res, key, instance_data[key])
+                    await self.connector_app.db.update(res)
                 except model_class.DoesNotExist:
                     raise PubErrorCustom("不存在!")
 
-                for key in [k for k in model_class._meta.fields]:
-                    if instance_data.get(key,None):
-                        setattr(res,key,instance_data[key])
-                await self.connector_app.db.update(res)
 
+            elif robot_table.get("uniqueKey",None):
+                try:
+                    res = await self.connector_app.db.get(model_class,
+                                                          **{
+                                                              key: instance_data.get(key, None) for key in
+                                                              robot_table.get("uniqueKey", None)
+                                                          }
+                                                          )
+                    for key in [k for k in model_class._meta.fields]:
+                        if instance_data.get(key, None):
+                            setattr(res, key, instance_data[key])
+                    await self.connector_app.db.update(res)
+                except model_class.DoesNotExist:
+                    res = await self.connector_app.db.create(model_class, **instance_data)
             else:
                 await self.check_unique(robot_table=robot_table)
                 res = await self.connector_app.db.create(model_class, **instance_data)

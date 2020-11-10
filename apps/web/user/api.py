@@ -43,7 +43,8 @@ class branch(BaseHandler):
     async def upd_before_handler(self,**kwargs):
         logger.info("pk=>{},parent_branch_id=>{}".format(kwargs.get("pk"),self.data.get("parent_branch_id")))
         if kwargs.get("pk") == self.data.get("parent_branch_id"):
-            self.data['parent_branch_id'] = 0
+            self.data.setdefault("parent_branch_id",0)
+
 
     @Core_connector(**BranchRules.post())
     async def post(self,*args,**kwargs):

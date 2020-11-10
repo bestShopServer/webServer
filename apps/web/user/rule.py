@@ -356,6 +356,7 @@ class UserRules:
                     "child": {
                         "userlinkrole": {
                             "model_class": UserLinkRole,
+                            "uniqueKey":["userid","role_id"],
                             "data_pool": {
                                 "instance": {
                                     "userid": "userid"
@@ -364,6 +365,7 @@ class UserRules:
                         },
                         "userlinkbranch": {
                             "model_class": UserLinkBranch,
+                            "uniqueKey": ["userid", "branch_id"],
                             "data_pool": {
                                 "instance": {
                                     "userid": "userid"

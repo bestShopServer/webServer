@@ -67,6 +67,7 @@ class UserRole(BaseModel):
     status = CharField(max_length=1,verbose_name="状态",choices=STATUS_CHOICES,default='0')
 
     menus = TextField(verbose_name="菜单集合",default="[]")
+    merchant_id = BigIntegerField(verbose_name="商户ID")
 
     class Meta:
         db_table = 'role'
@@ -101,6 +102,7 @@ class Branch(BaseModel):
     super_man_email = CharField(max_length=60,verbose_name="邮箱",default='')
 
     status = CharField(max_length=1, verbose_name="状态", choices=STATUS_CHOICES,default='0')
+    merchant_id = BigIntegerField(verbose_name="商户ID")
 
     sort = IntegerField(default=0,verbose_name="排序")
 

@@ -55,11 +55,9 @@ class UserRoleLinkSerializer(serializers.Serializer):
         return UserRoleForNameSerializer(obj.userrole,many=False).data
 
 class UserBranchForNameSerializer(serializers.Serializer):
-    branch_id = serializers.IntegerField()
     branch_name = serializers.CharField()
 
 class UserBranchLinkSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
     branch = serializers.SerializerMethodField()
 
     def get_branch(self, obj):

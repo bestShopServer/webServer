@@ -156,14 +156,26 @@ class user_for_role(BaseHandler):
             raise PubErrorCustom("角色代码为空!")
 
         for item in userids:
-            await self.db.create(UserLinkRole,**{
-                "role_id" : role_id,
-                "userid": item
-            })
 
-    @Core_connector(**UserRoleLinkRules.delete())
-    async def delete(self,*args,**kwargs):
-        pass
+            if await self.db.count(
+                UserLinkRole.select().where(
+                    UserLinkRole.role_id == role_id,
+                    UserLinkRole.userid == item
+                )
+            ) <= 0:
+                await self.db.create(UserLinkRole,**{
+                    "role_id" : role_id,
+                    "userid": item
+                })
+
+    @Core_connector()
+    async def delete(self,pk=None):
+        await self.db.execute(
+            UserLinkRole.delete().where(
+                UserLinkRole.role_id == pk,
+                UserLinkRole.userid << self.data.get("ids")
+            )
+        )
 
 @route(None,id=True)
 class merchant(BaseHandler):

@@ -220,16 +220,23 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
         if self.connector_app.request.method == 'PUT':
 
-            if instance_data.get(auto_increment_key, None):
+            if instance_data.get(auto_increment_key, None) or robot_table.get("uniqueKey",None):
                 # res = model_class(**instance_data)
                 # await self.connector_app.db.update(res)
 
                 try:
-                    res = await self.connector_app.db.get(model_class,
-                                                    **{
-                                                        auto_increment_key : instance_data.get(auto_increment_key, None)
-                                                    }
-                                                    )
+                    if instance_data.get(auto_increment_key, None):
+                        res = await self.connector_app.db.get(model_class,
+                                                        **{
+                                                            auto_increment_key : instance_data.get(auto_increment_key, None)
+                                                        }
+                                                        )
+                    else:
+                        res = await self.connector_app.db.get(model_class,
+                                                        **{
+                                                           key: instance_data.get(key, None) for key in robot_table.get("uniqueKey",None)
+                                                        }
+                                                        )
                 except model_class.DoesNotExist:
                     raise PubErrorCustom("不存在!")
 

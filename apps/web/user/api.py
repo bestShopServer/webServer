@@ -40,11 +40,15 @@ class branch(BaseHandler):
     部门管理
     """
 
+    async def upd_before_handler(self,**kwargs):
+        if kwargs.get("pk") == self.data.get("parent_branch_id"):
+            self.data['parent_branch_id'] = 0
+
     @Core_connector(**BranchRules.post())
     async def post(self,*args,**kwargs):
         return {"data":self.pk}
 
-    @Core_connector(**BranchRules.put())
+    @Core_connector(**{**BranchRules.put(),**{"upd_before_handler":upd_before_handler}})
     async def put(self,*args,**kwargs):
         pass
 

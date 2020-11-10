@@ -2,6 +2,8 @@
 import json
 from rest_framework import serializers
 
+from utils.time_st import UtilTime
+
 class BranchSerializer(serializers.Serializer):
 
     branch_id = serializers.IntegerField()
@@ -121,13 +123,21 @@ class MenuLinkMerchantSettingSerializer(serializers.Serializer):
 
 class MerchantSerializer(serializers.Serializer):
 
+
+
     merchant_id = serializers.IntegerField()
     merchant_name = serializers.CharField()
 
     sort = serializers.IntegerField()
     memo = serializers.CharField()
 
-    status = serializers.CharField()
+    status = serializers.SerializerMethodField()
 
     expire_time = serializers.IntegerField()
     createtime = serializers.IntegerField()
+
+    def get_status(self,obj):
+        if obj.expire_time <= UtilTime().timestamp:
+            return '1'
+        else:
+            return '0'

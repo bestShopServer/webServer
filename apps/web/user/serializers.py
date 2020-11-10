@@ -137,7 +137,10 @@ class MerchantSerializer(serializers.Serializer):
     createtime = serializers.IntegerField()
 
     def get_status(self,obj):
-        if obj.expire_time <= UtilTime().timestamp:
-            return '1'
-        else:
-            return '0'
+        if obj.status =='0':
+            if obj.expire_time <= UtilTime().timestamp:
+                return '1'
+            else:
+                return '0'
+
+        return obj.status

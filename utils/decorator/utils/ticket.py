@@ -17,7 +17,9 @@ class ConnectorTicket(ConnectorFuncsBase):
             raise InnerErrorCustom(code="20001", msg="用户令牌失效!")
         else:
             token = token[0]
-            self.connector_app.token = token
+
+        self.connector_app.token = token
+
         c = self.connector_app.redisC(key=token)
         res = await c.get_dict()
 

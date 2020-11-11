@@ -267,7 +267,12 @@ class userrole0(BaseHandler):
     系统角色管理
     """
 
-    @Core_connector(**UserRoleRules.post())
+    async def add_before_handler(self,**kwargs):
+        if self.user.merchant_id:
+            self.data['role_type'] = '1'
+
+    @Core_connector(**{**UserRoleRules.post(),
+                       **{"add_before_handler":add_before_handler}})
     async def post(self,*args,**kwargs):
         return {"data":self.pk}
 
@@ -304,12 +309,10 @@ class user_for_role(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
-        role_type = self.data.get("role_type","0")
-
         self.data['role_id'] = pk
         return await user_query(
                         self=self,
-                        query= User.select(User).where(User.role_type == role_type),
+                        query= User.select(User),
                         isMobile = True,
                         isEmail  = True,
                         isBranch=True

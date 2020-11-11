@@ -10,6 +10,8 @@ class ConnectorFuncsBase(object):
         self.kwargs = kwargs.get("kwargs")
         self.pk = kwargs.get("pk")
 
+        self.platform = self.connector_app.request.uri.split("/")[3]
+
     def get_model_table_name(self,model):
         return model._meta.table_name
 

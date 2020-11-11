@@ -113,7 +113,9 @@ class wechatLogin(LoginBase):
 
         data = UserForAppSerializer(user, many=False).data
 
-        await self.app.redis.set(token, user.userid)
+        await self.app.redisC(key=token).set_dict({
+            "userid":user.userid
+        })
 
         return {"data":data}
 

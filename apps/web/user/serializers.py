@@ -123,8 +123,6 @@ class MenuLinkMerchantSettingSerializer(serializers.Serializer):
 
 class MerchantSerializer(serializers.Serializer):
 
-
-
     merchant_id = serializers.IntegerField()
     merchant_name = serializers.CharField()
 
@@ -144,3 +142,29 @@ class MerchantSerializer(serializers.Serializer):
                 return '0'
 
         return obj.status
+
+
+
+
+class MerchantLinkUserSerializer(serializers.Serializer):
+
+    merchant_id = serializers.SerializerMethodField()
+    merchant_name = serializers.SerializerMethodField()
+    memo = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    expire_time = serializers.SerializerMethodField()
+
+    def get_merchant_id(self,obj):
+        return obj.merchant.merchant_id
+
+    def get_merchant_name(self,obj):
+        return obj.merchant.merchant_name
+
+    def get_memo(self,obj):
+        return obj.merchant.memo
+
+    def get_status(self,obj):
+        return obj.merchant.status
+
+    def get_expire_time(self,obj):
+        return obj.merchant.expire_time

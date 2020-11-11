@@ -3,16 +3,65 @@ from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
 from router import route
 from loguru import logger
-from models.user import Branch,User,UserLinkRole,UserLinkBranch,MenuLinkMerchantSetting,UserAuth,UserRole
+from models.user import Branch,User,UserLinkRole,UserLinkBranch,\
+                            MenuLinkMerchantSetting,UserAuth,UserRole,\
+                                UserLinkMerchant,Merchant
 
 from utils.exceptions import PubErrorCustom
+
+from utils.time_st import UtilTime
 
 from apps.web.user.rule import BranchRules,UserRoleRules,\
             UserRoleForMenuRules,UserRoleLinkRules,MerchantRules,\
                 MenuLinkMerchantSettingRules,UserRules
-from apps.web.user.serializers import BranchSerializer
+from apps.web.user.serializers import BranchSerializer,MerchantLinkUserSerializer
 
 from apps.web.user.utils import user_query
+
+
+@route()
+class merchant_select(BaseHandler):
+
+    """
+    租户选择
+    """
+
+    @Core_connector()
+    async def get(self, *args, **kwargs):
+
+        obj = await self.db.execute(
+            UserLinkMerchant.\
+                select(
+                    UserLinkMerchant,
+                    Merchant
+                ).\
+                join(
+                    Merchant, join_type=JOIN.INNER,
+                        on = (
+                                Merchant.merchant_id == UserLinkMerchant.merchant_id
+                        )
+                ).\
+                where(
+                    UserLinkMerchant.userid == self.user.userid,
+                )
+        )
+
+        return {"data":MerchantLinkUserSerializer(obj,many=True).data,"count":len(obj)}
+
+@route(None,id=True)
+class merchant_select_ok(BaseHandler):
+
+    """
+    租户选择结果
+    """
+
+    @Core_connector()
+    async def put(self , pk=None):
+
+        c = self.redisC(key=self.token)
+        res = await c.get_dict()
+        res['merchant_id'] = pk
+        await c.set_dict(res)
 
 @route()
 class userinfo(BaseHandler):
@@ -21,14 +70,14 @@ class userinfo(BaseHandler):
     用户
     """
 
-    @Core_connector()
+    @Core_connector(isMerchant=True)
     async def get(self, *args, **kwargs):
 
         return {"data": {
             "userid": self.user.userid,
             "merchant_id": self.user.merchant_id,
             "username": self.user.name,
-            "rolecode": "1",
+            "rolecode": "",
             "avatar": 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604320145113&di=c0f37be5cc6331c65ec5773edbf7c1da&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F18%2F20170318012043_H4mRj.jpeg',
             "menu": []
         }}

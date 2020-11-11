@@ -38,6 +38,8 @@ class loginNameLogin(LoginBase):
 
         token = get_token()
 
-        await self.app.redis.set(token, user.userid)
+        await self.app.redisC(key=token).set_dict({
+            "userid":user.userid
+        })
 
         return {"data":token}

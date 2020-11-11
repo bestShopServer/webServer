@@ -120,6 +120,10 @@ class MenuLinkMerchantSettingSerializer(serializers.Serializer):
     name = serializers.CharField()
     status = serializers.CharField()
     memo = serializers.CharField()
+    menus = serializers.SerializerMethodField()
+
+    def get_menus(self,obj):
+        return json.loads(obj.menus)
 
 class MerchantSerializer(serializers.Serializer):
 

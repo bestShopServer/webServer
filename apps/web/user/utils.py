@@ -1,6 +1,8 @@
 
 from peewee import JOIN
-from models.user import User,UserLinkRole,UserLinkBranch,UserRole,Branch,UserAuth
+from models.user import User,UserLinkRole,\
+        UserLinkBranch,UserRole,Branch,UserAuth,\
+            UserLinkMerchant
 
 from apps.web.user.serializers import UserSerializer
 
@@ -25,6 +27,11 @@ async def user_query(**kwargs):
 
     if name:
         query = query.where(User.name == name)
+
+    query = query.where(User.userid << \
+               [ item.userid \
+                    for item in  \
+                        await self.db.execute(UserLinkMerchant.select().where(UserLinkMerchant.merchant_id == self.user.merchant_id)) ])
 
     if role_id:
 

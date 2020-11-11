@@ -179,11 +179,9 @@ class user(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
-        role_type = self.data.get("role_type", "0")
-
         return await user_query(
                         self=self,
-                        query= User.select(User).where(User.role_type == role_type),
+                        query= User.select(User),
                         isMobile = True,
                         isEmail  = True,
                         isLoginName = True,

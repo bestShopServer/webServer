@@ -227,7 +227,7 @@ class branch(BaseHandler):
         status = self.data.get("status",None)
 
         c = 0
-
+        logger.info( self.user.merchant_id)
         async def recursion(parent_branch_id,c):
             c += 1
 

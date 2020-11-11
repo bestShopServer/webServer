@@ -9,59 +9,12 @@ from models.user import Branch,User,UserLinkRole,UserLinkBranch,\
 
 from utils.exceptions import PubErrorCustom
 
-from utils.time_st import UtilTime
-
 from apps.web.user.rule import BranchRules,UserRoleRules,\
             UserRoleForMenuRules,UserRoleLinkRules,MerchantRules,\
                 MenuLinkMerchantSettingRules,UserRules
-from apps.web.user.serializers import BranchSerializer,MerchantLinkUserSerializer
+from apps.web.user.serializers import BranchSerializer
 
 from apps.web.user.utils import user_query
-
-
-@route()
-class merchant_select(BaseHandler):
-
-    """
-    租户选择
-    """
-
-    @Core_connector()
-    async def get(self, *args, **kwargs):
-
-        obj = await self.db.execute(
-            UserLinkMerchant.\
-                select(
-                    UserLinkMerchant,
-                    Merchant
-                ).\
-                join(
-                    Merchant, join_type=JOIN.INNER,
-                        on = (
-                                Merchant.merchant_id == UserLinkMerchant.merchant_id
-                        )
-                ).\
-                where(
-                    UserLinkMerchant.userid == self.user.userid,
-                )
-        )
-
-        return {"data":MerchantLinkUserSerializer(obj,many=True).data,"count":len(obj)}
-
-@route(None,id=True)
-class merchant_select_ok(BaseHandler):
-
-    """
-    租户选择结果
-    """
-
-    @Core_connector()
-    async def put(self , pk=None):
-
-        c = self.redisC(key=self.token)
-        res = await c.get_dict()
-        res['merchant_id'] = pk
-        await c.set_dict(res)
 
 @route()
 class userinfo(BaseHandler):
@@ -70,12 +23,28 @@ class userinfo(BaseHandler):
     用户
     """
 
-    @Core_connector(isMerchant=True)
-    async def get(self, *args, **kwargs):
+    async def merchant_token_handler(self):
+
+        merchant_id = self.data.get("merchant_id",None)
+        if not merchant_id:
+            raise PubErrorCustom("租户ID为空")
+
+        redis_cli = self.redisC(key=self.token)
+        response = await redis_cli.get_dict()
+        response['merchant_id'] = merchant_id
+        await redis_cli.set_dict(response)
+        return response
+
+    @Core_connector()
+    async def get(self, pk=None):
+
+        merchant_obj=None
+        if self.user.role_type == '1':
+            merchant_obj = await self.merchant_token_handler()
 
         return {"data": {
             "userid": self.user.userid,
-            "merchant_id": self.user.merchant_id,
+            "merchant_id": merchant_obj['merchant_id'] if merchant_obj else 0,
             "username": self.user.name,
             "rolecode": "",
             "avatar": 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604320145113&di=c0f37be5cc6331c65ec5773edbf7c1da&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F18%2F20170318012043_H4mRj.jpeg',

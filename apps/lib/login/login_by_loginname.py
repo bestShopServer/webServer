@@ -1,6 +1,8 @@
 
+from peewee import JOIN
 from apps.lib.login.base import LoginBase
-from models.user import User,UserAuth
+from models.user import User,UserAuth,UserLinkMerchant,Merchant
+from apps.web.user.serializers import MerchantLinkUserSerializer
 from utils.hash import get_token
 
 from utils.exceptions import PubErrorCustom
@@ -16,6 +18,29 @@ class loginNameLogin(LoginBase):
         self.login_type = '0'
 
         super(loginNameLogin, self).__init__(**kwargs)
+
+    async def get_merchants(self,user):
+
+        if user.role_type == '1':
+            obj = await self.app.db.execute(
+                UserLinkMerchant. \
+                    select(
+                    UserLinkMerchant,
+                    Merchant
+                ). \
+                    join(
+                    Merchant, join_type=JOIN.INNER,
+                    on=(
+                            Merchant.merchant_id == UserLinkMerchant.merchant_id
+                    )
+                ). \
+                    where(
+                    UserLinkMerchant.userid == user.userid,
+                )
+            )
+
+            return MerchantLinkUserSerializer(obj, many=True).data
+
 
     async def login(self):
 
@@ -42,4 +67,9 @@ class loginNameLogin(LoginBase):
             "userid":user.userid
         })
 
-        return {"data":token}
+        return {
+            "data":{
+                "token":token,
+                "merchants": await self.get_merchants(user)
+            }
+        }

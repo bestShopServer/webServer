@@ -45,6 +45,7 @@ class userinfo(BaseHandler):
             )
 
             return MerchantLinkUserSerializer(obj, many=True).data
+        return None
 
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
@@ -53,14 +54,16 @@ class userinfo(BaseHandler):
         # if self.user.role_type == '1':
         #     merchant_obj = await self.merchant_token_handler()
 
-        return {"data": {
+        data = {
             "userid": self.user.userid,
             "username": self.user.name,
             "rolecode": "",
             "avatar": 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604320145113&di=c0f37be5cc6331c65ec5773edbf7c1da&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F18%2F20170318012043_H4mRj.jpeg',
             "menu": [],
-            "merchants":self.get_merchants(self.user)
-        }}
+            "merchants": await self.get_merchants(self.user)
+        }
+
+        return {"data": data}
 
 
 @route(None, id=True)
@@ -502,6 +505,27 @@ class merchant_for_setting(BaseHandler):
             SettingLinkMerchant.select().\
                 join(Merchant, join_type=JOIN.INNER, on=(Merchant.merchant_id == SettingLinkMerchant.merchant_id)). \
                 where(SettingLinkMerchant.setting_id == pk)
+        )
+
+        if len(obj):
+            return {"data":MerchantSerializer(obj[0].merchant,many=True).data}
+        else:
+            return {"data":[]}
+
+@route(None,id=True)
+class setting_for_merchant(BaseHandler):
+
+    """
+    租户查询权限
+    """
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+        obj = await self.db.execute(
+            SettingLinkMerchant.select().\
+                join(MenuLinkMerchantSetting, join_type=JOIN.INNER, on=(MenuLinkMerchantSetting.id == SettingLinkMerchant.setting_id)). \
+                where(SettingLinkMerchant.merchant_id == pk)
         )
 
         if len(obj):

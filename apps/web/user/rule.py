@@ -7,7 +7,7 @@ from apps.web.user.forms import \
 
 from models.user import \
     Branch,UserLinkBranch,UserRole,UserLinkRole,\
-        MenuLinkMerchantSetting,Merchant,User,UserAuth
+        MenuLinkMerchantSetting,Merchant,User,UserAuth,UserLinkMerchant
 
 from apps.web.user.serializers import \
     UserRoleSerializer,UserRoleForMenuSerializer,\
@@ -261,7 +261,20 @@ class MerchantRules:
                 "merchant" : {
                     "form_class": MerchantPostForm,
                     "model_class": Merchant,
-                    "father": True
+                    "father": True,
+                    "child_form_link": {
+                        "userlinkmerchant": "merchants",
+                    },
+                    "child": {
+                        "userlinkmerchant": {
+                            "model_class": UserLinkMerchant,
+                            "data_pool": {
+                                "instance": {
+                                    "merchant_id": "merchant_id"
+                                }
+                            }
+                        },
+                    }
                 }
             }
         )

@@ -388,8 +388,12 @@ class merchant(BaseHandler):
             "account": account,
             "ticket": password
         })
-
         self.data['userid'] = user_obj.userid
+        self.data['merchants'] = [
+            {
+                "userid":user_obj.userid
+            }
+        ]
 
     @Core_connector(**{**MerchantRules.post(),**{"add_before_handler":add_before_handler}})
     async def post(self,*args,**kwargs):

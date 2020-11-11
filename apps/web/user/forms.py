@@ -82,6 +82,8 @@ class MerchantPostForm(Form):
         default="0"
     )
     expire_time = IntegerField("到期时间",default=0)
+    merchants = StringField()
+    userid = IntegerField()
 
 class MerchantPutForm(Form):
 

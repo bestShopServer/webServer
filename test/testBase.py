@@ -4,7 +4,7 @@ import requests,json
 class TestUnitBase(object):
 
     def __init__(self):
-        self.base_url =  "http://62.234.150.156/v1/api/web"
+        self.base_url =  "http://localhost:8888/v1/api/web"
         self.token = None
 
         self.get_token()
@@ -49,7 +49,7 @@ class TestUnitBase(object):
             url="/sso/login",
             data={
                 "loginname": "9336578@qq.com",
-                "password": "4d974f12b2349c766c913432d32b47c2"
+                "password": "123456"
             }
         )['data']
 

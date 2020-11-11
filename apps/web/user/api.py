@@ -92,15 +92,7 @@ class get_menu(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
-        return await user_query(
-                        self=self,
-                        query= User.select(User),
-                        isMobile = True,
-                        isEmail  = True,
-                        isLoginName = True,
-                        isBranch= True,
-                        isUserRole=True
-                    )
+        return {"data":[]}
 
 @route(None,id=True)
 class user(BaseHandler):

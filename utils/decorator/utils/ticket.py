@@ -12,12 +12,12 @@ class ConnectorTicket(ConnectorFuncsBase):
 
     async def get_token(self):
         token = self.connector_app.request.headers.get_list("Authorization")
-        self.connector_app.token = token
 
         if len(token) <= 0:
             raise InnerErrorCustom(code="20001", msg="用户令牌失效!")
         else:
             token = token[0]
+            self.connector_app.token = token
         c = self.connector_app.redisC(key=token)
         res = await c.get_dict()
 

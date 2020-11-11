@@ -87,6 +87,22 @@ class merchant_select_ok(BaseHandler):
 
 
 @route(None,id=True)
+class get_menu(BaseHandler):
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+        return await user_query(
+                        self=self,
+                        query= User.select(User),
+                        isMobile = True,
+                        isEmail  = True,
+                        isLoginName = True,
+                        isBranch= True,
+                        isUserRole=True
+                    )
+
+@route(None,id=True)
 class user(BaseHandler):
 
     """
@@ -490,7 +506,7 @@ class merchant_for_setting(BaseHandler):
             if await self.db.count(
                 SettingLinkMerchant.select().where(
                     SettingLinkMerchant.setting_id == setting_id,
-                    SettingLinkMerchant.merchant_id == item
+                    SettingLinkMerchant.merchant_id == item['merchant_id']
                 )
             ) <= 0:
                 await self.db.create(SettingLinkMerchant,**{

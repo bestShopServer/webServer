@@ -12,7 +12,7 @@ from utils.exceptions import PubErrorCustom
 from apps.web.user.rule import BranchRules,UserRoleRules,\
             UserRoleForMenuRules,UserRoleLinkRules,MerchantRules,\
                 MenuLinkMerchantSettingRules,UserRules
-from apps.web.user.serializers import BranchSerializer
+from apps.web.user.serializers import BranchSerializer,MerchantSerializer
 
 from apps.web.user.utils import user_query
 
@@ -462,3 +462,17 @@ class merchant_for_setting(BaseHandler):
                     "setting_id" : setting_id,
                     "merchant_id": item
                 })
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+        obj = await self.db.execute(
+            SettingLinkMerchant.select().\
+                join(Merchant, join_type=JOIN.INNER, on=(Merchant.merchant_id == SettingLinkMerchant.merchant_id)). \
+                where(SettingLinkMerchant.setting_id == pk)
+        )
+
+        if len(obj):
+            return {"data":MerchantSerializer(obj[0].merchant,many=True).data}
+        else:
+            return {"data":[]}

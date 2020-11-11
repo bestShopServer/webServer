@@ -32,6 +32,9 @@ class ConnectorTicket(ConnectorFuncsBase):
             self.connector_app.user = await self.connector_app.db.get(User, userid=self.token_data.get("userid",None))
             self.connector_app.user.merchant_id = self.token_data.get("merchant_id",0)
 
+            if self.connector_app.user.role_type == '1' and not self.connector_app.user.merchant_id:
+                raise InnerErrorCustom(code="20005", msg="非法租户!")
+
         except User.DoesNotExist:
             raise InnerErrorCustom(code="20003", msg="用户已关闭!")
 
@@ -44,7 +47,7 @@ class ConnectorTicket(ConnectorFuncsBase):
         if self.connector.isMerchant:
             merchant_id = self.token_data.get("merchant_id",None)
             if not merchant_id:
-                raise InnerErrorCustom(code="30001", msg="租户令牌失效!")
+                raise InnerErrorCustom(code="30003", msg="租户令牌失效!")
 
             try:
                 self.connector_app.merchant = await self.connector_app.db.get(Merchant, merchant_id=merchant_id)
@@ -57,7 +60,6 @@ class ConnectorTicket(ConnectorFuncsBase):
 
             if self.connector_app.merchant.expire_time <= UtilTime().timestamp:
                 raise InnerErrorCustom(code="30002", msg="租户已过期!")
-
 
     async def app_run(self):
         await self.user_handler()

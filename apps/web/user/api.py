@@ -7,6 +7,8 @@ from models.user import Branch,User,UserLinkRole,UserLinkBranch,\
                             MenuLinkMerchantSetting,UserAuth,UserRole,\
                                 UserLinkMerchant,Merchant,SettingLinkMerchant
 
+from models.public import Menu
+
 from utils.exceptions import PubErrorCustom
 
 from apps.web.user.rule import BranchRules,UserRoleRules,\
@@ -14,6 +16,7 @@ from apps.web.user.rule import BranchRules,UserRoleRules,\
                 MenuLinkMerchantSettingRules,UserRules
 from apps.web.user.serializers import BranchSerializer,MerchantSerializer,\
         MerchantLinkUserSerializer,MenuLinkMerchantSettingSerializer
+from apps.web.public.serializers import MenuSerializer
 
 from apps.web.user.utils import user_query
 
@@ -92,7 +95,24 @@ class get_menu(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
-        return {"data":[]}
+        menus = list(set([ role.menus for role in  await self.db.execute(
+            UserRole.select(). \
+                where(
+                    UserRole.status == '0',
+                    UserRole.role_id << [ item.role_id for item in  await self.db.execute (
+                        UserLinkRole.select().where(UserLinkRole.userid == self.user.userid)
+                    ) ]
+            )
+        ) ]))
+
+        obj = await self.db.execute(
+            Menu.select().where(
+                Menu.status == '0',
+                Menu.id << menus
+            )
+        )
+
+        return {"data":MenuSerializer(obj,many=True).data}
 
 @route(None,id=True)
 class user(BaseHandler):

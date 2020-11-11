@@ -1,7 +1,7 @@
 
 
-from apps.web.user.forms import \
-    BranchFrom,UserRole0Form,UserRole0ForPutForm,\
+from apps.web.merchant.forms import \
+    BranchFrom,UserRole1Form,UserRole1ForPutForm,\
         MenuLinkMerchantSettingPutForm,MenuLinkMerchantSettingPostForm,\
             MerchantPostForm,MerchantPutForm,User0PostForm,User0PutForm
 
@@ -9,7 +9,7 @@ from models.user import \
     Branch,UserLinkBranch,UserRole,UserLinkRole,\
         MenuLinkMerchantSetting,Merchant,User,UserAuth
 
-from apps.web.user.serializers import \
+from apps.web.merchant.serializers import \
     UserRoleSerializer,UserRoleForMenuSerializer,\
         MenuLinkMerchantSettingSerializer,MerchantSerializer
 
@@ -24,20 +24,6 @@ class BranchRules:
                     "form_class": BranchFrom,
                     "model_class": Branch,
                     "father": True,
-                    # "child_form_link": {
-                    #     "userlinkbranch":"user_link_branch"
-                    # },
-                    # "child": {
-                    #     "userlinkbranch": {
-                    #         "model_class": UserLinkBranch,
-                    #         "data_pool": {
-                    #             "instance": {
-                    #                 "userid": "userid",
-                    #                 "branch_id": "branch_id"
-                    #             }
-                    #         }
-                    #     },
-                    # }
                 }
             }
         )
@@ -51,20 +37,6 @@ class BranchRules:
                     "form_class": BranchFrom,
                     "model_class": Branch,
                     "father": True,
-                    # "child_form_link": {
-                    #     "userlinkbranch":"user_link_branch"
-                    # },
-                    # "child": {
-                    #     "userlinkbranch": {
-                    #         "model_class": UserLinkBranch,
-                    #         "data_pool": {
-                    #             "instance": {
-                    #                 "userid": "userid",
-                    #                 "branch_id": "branch_id"
-                    #             }
-                    #         }
-                    #     },
-                    # }
                 }
             }
         )
@@ -85,34 +57,6 @@ class BranchRules:
             }
         )
 
-    # @staticmethod
-    # def get():
-    #     return dict(
-    #         isTransaction=False,
-    #         robot={
-    #             "pk_key": "branch_id",
-    #             "branch": {
-    #                 "model_class": Branch,
-    #                 "serializers":BranchSerializer,
-    #                 "page": True,
-    #                 "query_params":[
-    #                     {
-    #                         "key":"branch_name",
-    #                         "value":"data.branch_name",
-    #                         "data_src":"data_pool",
-    #                         "pool":"self"
-    #                     },
-    #                     {
-    #                         "key":"status",
-    #                         "value": "data.status",
-    #                         "data_src":"data_pool",
-    #                         "pool":"self"
-    #                     }
-    #                 ]
-    #             }
-    #         }
-    #     )
-
 class UserRoleRules:
 
     @staticmethod
@@ -121,7 +65,7 @@ class UserRoleRules:
             robot={
                 "pk_key": "role_id",
                 "role" : {
-                    "form_class": UserRole0Form,
+                    "form_class": UserRole1Form,
                     "model_class": UserRole,
                     "father": True
                 }
@@ -134,7 +78,7 @@ class UserRoleRules:
             robot={
                 "pk_key": "role_id",
                 "role" : {
-                    "form_class": UserRole0ForPutForm,
+                    "form_class": UserRole1ForPutForm,
                     "model_class": UserRole,
                     "father": True
                 }

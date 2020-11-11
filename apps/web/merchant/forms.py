@@ -8,8 +8,6 @@ from wtforms.validators import DataRequired, Length,Email
 
 from models.choices import *
 
-
-
 class BranchFrom(Form):
 
     branch_id = IntegerField()
@@ -23,6 +21,8 @@ class BranchFrom(Form):
 
     status = StringField("状态")
     sort = IntegerField()
+
+    merchant_id = IntegerField()
 
 class UserRole0Form(Form):
 
@@ -44,6 +44,32 @@ class UserRole0ForPutForm(Form):
     sort = IntegerField()
     status = StringField()
     menus = StringField()
+
+class UserRole1Form(Form):
+
+    role_id = IntegerField()
+    role_type = StringField("角色分类",default='1')
+
+    role_name = StringField("角色名称", validators=[DataRequired(message="请输入角色名称")])
+
+    sort = IntegerField()
+    status = StringField("状态",default="0")
+
+    merchant_id = IntegerField("租户ID", validators=[DataRequired(message="请输入租户ID")])
+
+
+class UserRole1ForPutForm(Form):
+
+    role_id = IntegerField()
+    role_type = StringField()
+
+    role_name = StringField()
+
+    sort = IntegerField()
+    status = StringField()
+    menus = StringField()
+
+    merchant_id = IntegerField()
 
 class MenuLinkMerchantSettingPostForm(Form):
 

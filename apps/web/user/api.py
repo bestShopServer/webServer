@@ -58,11 +58,17 @@ class user(BaseHandler):
     用户管理
     """
 
+    async def add_before_handler(self,**kwargs):
+        if self.user.merchant_id:
+            self.data['role_type'] = '1'
+
     async def add_after_handler(self,**kwargs):
 
         mobile = self.data.get("mobile",None)
         email = self.data.get("email",None)
         login_name = self.data.get("login_name", None)
+
+        pk = kwargs.get("pk")
 
         async def createUserAuth(account,type):
             if await self.db.count(
@@ -89,6 +95,12 @@ class user(BaseHandler):
 
         if login_name:
             await createUserAuth(account=login_name,type="0")
+
+        if self.user.merchant_id:
+            await self.db.create(UserLinkMerchant,**{
+                "userid":pk,
+                "merchant_id":self.user.merchant_id
+            })
 
     async def upd_before_handler(self,**kwargs):
 
@@ -155,7 +167,8 @@ class user(BaseHandler):
         if login_name:
             await updUserAuth(account=login_name, type="0",pk=pk)
 
-    @Core_connector(**{**UserRules.post(),**{"add_after_handler":add_after_handler}})
+    @Core_connector(**{**UserRules.post(),
+                       **{"add_after_handler":add_after_handler,"add_before_handler":add_before_handler}})
     async def post(self,*args,**kwargs):
         return {"data":self.pk}
 
@@ -166,9 +179,11 @@ class user(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
+        role_type = self.data.get("role_type", "0")
+
         return await user_query(
                         self=self,
-                        query= User.select(User).where(User.role_type == '0'),
+                        query= User.select(User).where(User.role_type == role_type),
                         isMobile = True,
                         isEmail  = True,
                         isLoginName = True,
@@ -219,7 +234,8 @@ class branch(BaseHandler):
             c += 1
 
             query = Branch.select().where(
-                            Branch.parent_branch_id == parent_branch_id
+                            Branch.parent_branch_id == parent_branch_id,
+                            Branch.merchant_id == self.user.merchant_id
                         ).order_by(Branch.sort)
 
             if c == 1:
@@ -288,10 +304,12 @@ class user_for_role(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
+        role_type = self.data.get("role_type","0")
+
         self.data['role_id'] = pk
         return await user_query(
                         self=self,
-                        query= User.select(User).where(User.role_type == '0'),
+                        query= User.select(User).where(User.role_type == role_type),
                         isMobile = True,
                         isEmail  = True,
                         isBranch=True

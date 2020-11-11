@@ -273,6 +273,8 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
             if hasattr(self.connector_app, "user") and form_data:
                 form_data['userid'] = self.connector_app.user.userid
+                if self.connector_app.user.merchant_id:
+                    form_data['merchant_id'] = self.connector_app.user.merchant_id
 
             if robot_table.get("father",None) and self.connector_app.request.method == 'PUT':
                 form_data[self.get_model_auto_increment_key(robot_table['model_class'])] = self.pk

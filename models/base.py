@@ -6,10 +6,8 @@ from utils.database.mysql import MysqlPool
 
 class BaseModel(Model):
 
-    createtime = BigIntegerField(default=MyTime().timestamp, verbose_name="创建时间")
-    updtime = BigIntegerField(default=MyTime().timestamp, verbose_name="修改时间")
-
-
+    createtime = BigIntegerField(default=0, verbose_name="创建时间")
+    updtime = BigIntegerField(default=0, verbose_name="修改时间")
 
     class Meta:
         database = MysqlPool().get_conn

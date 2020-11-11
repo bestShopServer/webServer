@@ -55,3 +55,17 @@ class Menu(BaseModel):
 
     class Meta:
         db_table = 'menu'
+
+class DeleteHandlerSave(BaseModel):
+
+    """
+    数据删除记录表
+    """
+
+    id = BigAutoField(primary_key=True)
+    table = CharField(max_length=60,verbose_name="表名",default="")
+    key = BigIntegerField()
+    operator_userid = BigIntegerField(default=0)
+
+    class Meta:
+        db_table = 'delete_handler_save'

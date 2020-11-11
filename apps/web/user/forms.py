@@ -24,6 +24,8 @@ class BranchFrom(Form):
     status = StringField("状态")
     sort = IntegerField()
 
+    merchant_id = IntegerField()
+
 class UserRole0Form(Form):
 
     role_id = IntegerField()
@@ -33,6 +35,8 @@ class UserRole0Form(Form):
 
     sort = IntegerField()
     status = StringField("状态",default="0")
+
+    merchant_id = IntegerField()
 
 class UserRole0ForPutForm(Form):
 

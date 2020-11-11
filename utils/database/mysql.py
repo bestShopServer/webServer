@@ -1,7 +1,11 @@
 
 import os,sys
-from peewee_async import Manager
+
 from peewee_async import PooledMySQLDatabase
+from models.custom_func import ManagerSon
+
+
+
 
 class MysqlPool:
     def __new__(cls, *args, **kwargs):
@@ -20,7 +24,7 @@ class MysqlPool:
                 min_connections=mysql['min_connections'],
                 max_connections=mysql['max_connections'],
                 charset=mysql['charset'])
-            cls.manager = Manager(cls.conn)
+            cls.manager = ManagerSon(cls.conn)
             cls.conn.set_allow_sync(False)
             cls._instance = super(MysqlPool, cls).__new__(cls, *args, **kwargs)
         return cls._instance

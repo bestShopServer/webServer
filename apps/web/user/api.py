@@ -495,7 +495,7 @@ class merchant_for_setting(BaseHandler):
             ) <= 0:
                 await self.db.create(SettingLinkMerchant,**{
                     "setting_id" : setting_id,
-                    "merchant_id": item
+                    "merchant_id": item['merchant_id']
                 })
 
     @Core_connector(isTransaction=False)

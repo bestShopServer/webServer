@@ -518,7 +518,7 @@ class merchant_for_setting(BaseHandler):
     async def get(self, pk=None):
 
         obj = await self.db.execute(
-            SettingLinkMerchant.select().\
+            SettingLinkMerchant.select(SettingLinkMerchant,Merchant).\
                 join(Merchant, join_type=JOIN.INNER, on=(Merchant.merchant_id == SettingLinkMerchant.merchant_id)). \
                 where(SettingLinkMerchant.setting_id == pk)
         )
@@ -539,7 +539,7 @@ class setting_for_merchant(BaseHandler):
     async def get(self, pk=None):
 
         obj = await self.db.execute(
-            SettingLinkMerchant.select().\
+            SettingLinkMerchant.select(SettingLinkMerchant,MenuLinkMerchantSetting).\
                 join(MenuLinkMerchantSetting, join_type=JOIN.INNER, on=(MenuLinkMerchantSetting.id == SettingLinkMerchant.setting_id)). \
                 where(SettingLinkMerchant.merchant_id == pk)
         )

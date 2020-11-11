@@ -12,7 +12,8 @@ from utils.exceptions import PubErrorCustom
 from apps.web.user.rule import BranchRules,UserRoleRules,\
             UserRoleForMenuRules,UserRoleLinkRules,MerchantRules,\
                 MenuLinkMerchantSettingRules,UserRules
-from apps.web.user.serializers import BranchSerializer,MerchantSerializer
+from apps.web.user.serializers import BranchSerializer,MerchantSerializer,\
+        MerchantLinkUserSerializer
 
 from apps.web.user.utils import user_query
 
@@ -23,9 +24,50 @@ class userinfo(BaseHandler):
     用户
     """
 
-    async def merchant_token_handler(self):
+    async def get_merchants(self,user):
 
-        merchant_id = self.data.get("merchant_id",None)
+        if user.role_type == '1':
+            obj = await self.app.db.execute(
+                UserLinkMerchant. \
+                    select(
+                    UserLinkMerchant,
+                    Merchant
+                ). \
+                    join(
+                    Merchant, join_type=JOIN.INNER,
+                    on=(
+                            Merchant.merchant_id == UserLinkMerchant.merchant_id
+                    )
+                ). \
+                    where(
+                    UserLinkMerchant.userid == user.userid,
+                )
+            )
+
+            return MerchantLinkUserSerializer(obj, many=True).data
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+        # merchant_obj=None
+        # if self.user.role_type == '1':
+        #     merchant_obj = await self.merchant_token_handler()
+
+        return {"data": {
+            "userid": self.user.userid,
+            "username": self.user.name,
+            "rolecode": "",
+            "avatar": 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604320145113&di=c0f37be5cc6331c65ec5773edbf7c1da&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F18%2F20170318012043_H4mRj.jpeg',
+            "menu": [],
+            "merchants":self.get_merchants(self.user)
+        }}
+
+
+@route(None, id=True)
+class merchant_select_ok(BaseHandler):
+
+    async def merchant_token_handler(self,merchant_id=None):
+
         if not merchant_id:
             raise PubErrorCustom("租户ID为空")
 
@@ -36,20 +78,10 @@ class userinfo(BaseHandler):
         return response
 
     @Core_connector()
-    async def get(self, pk=None):
+    async def put(self, pk=None):
 
-        merchant_obj=None
-        if self.user.role_type == '1':
-            merchant_obj = await self.merchant_token_handler()
+        await self.merchant_token_handler(merchant_id=pk)
 
-        return {"data": {
-            "userid": self.user.userid,
-            "merchant_id": merchant_obj['merchant_id'] if merchant_obj else 0,
-            "username": self.user.name,
-            "rolecode": "",
-            "avatar": 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604320145113&di=c0f37be5cc6331c65ec5773edbf7c1da&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F18%2F20170318012043_H4mRj.jpeg',
-            "menu": []
-        }}
 
 @route(None,id=True)
 class user(BaseHandler):

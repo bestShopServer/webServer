@@ -44,10 +44,10 @@ class ConnectorTicket(ConnectorFuncsBase):
             raise InnerErrorCustom(code="20004", msg="用户已冻结!")
 
     async def merchant_hander(self):
-        if self.connector.isMerchant:
+
+        merchant_id = self.token_data.get("merchant_id", None)
+        if merchant_id:
             merchant_id = self.token_data.get("merchant_id",None)
-            if not merchant_id:
-                raise InnerErrorCustom(code="30003", msg="租户令牌失效!")
 
             try:
                 self.connector_app.merchant = await self.connector_app.db.get(Merchant, merchant_id=merchant_id)

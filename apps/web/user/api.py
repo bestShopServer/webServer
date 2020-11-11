@@ -524,7 +524,7 @@ class merchant_for_setting(BaseHandler):
         )
 
         if len(obj):
-            return {"data":MerchantSerializer(obj[0].merchant,many=True).data}
+            return {"data":MerchantSerializer([ item.merchant for item in obj ],many=True).data}
         else:
             return {"data":[]}
 

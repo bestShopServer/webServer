@@ -152,6 +152,8 @@ class Merchant(BaseModel):
 
     expire_time = BigIntegerField(default=0,verbose_name="到期时间")
 
+    userid = BigIntegerField(verbose_name="第一个用户",default=0)
+
     class Meta:
         db_table = 'merchant'
 

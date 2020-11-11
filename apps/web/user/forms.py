@@ -92,6 +92,8 @@ class MerchantPutForm(Form):
     status = StringField()
     expire_time = IntegerField()
 
+    account = StringField()
+    password = StringField()
 
 class User0PostForm(Form):
 

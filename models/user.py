@@ -137,6 +137,18 @@ class MenuLinkMerchantSetting(BaseModel):
     class Meta:
         db_table = 'menulinkmerchantsetting'
 
+class SettingLinkMerchant(BaseModel):
+    """
+    租户权限规则关联租户
+    """
+
+    id = BigAutoField(primary_key=True)
+    setting_id = BigIntegerField()
+    merchant_id = BigIntegerField()
+
+    class Meta:
+        db_table = 'settinglinkmerchant'
+
 
 class Merchant(BaseModel):
     """

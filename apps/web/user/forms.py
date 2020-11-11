@@ -167,3 +167,5 @@ class User0PutForm(Form):
             t=r'^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$'
             if not re.match(t, field.data):
                 raise ValidationError("邮箱非法!")
+
+

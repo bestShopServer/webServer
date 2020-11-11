@@ -5,7 +5,7 @@ from router import route
 from loguru import logger
 from models.user import Branch,User,UserLinkRole,UserLinkBranch,\
                             MenuLinkMerchantSetting,UserAuth,UserRole,\
-                                UserLinkMerchant,Merchant
+                                UserLinkMerchant,Merchant,SettingLinkMerchant
 
 from utils.exceptions import PubErrorCustom
 
@@ -429,3 +429,36 @@ class merchant(BaseHandler):
     @Core_connector(**MerchantRules.get())
     async def get(self, pk=None):
         pass
+
+
+@route(None,id=True)
+class merchant_for_setting(BaseHandler):
+
+    """
+    租户权限规则关联租户
+    """
+
+    @Core_connector()
+    async def post(self,*args,**kwargs):
+
+        merchants = self.data.get("merchants")
+        setting_id = self.data.get("setting_id")
+
+        if not len(merchants):
+            raise PubErrorCustom("租户列表为空!")
+
+        if not setting_id:
+            raise PubErrorCustom("规则ID为空!")
+
+        for item in merchants:
+
+            if await self.db.count(
+                SettingLinkMerchant.select().where(
+                    SettingLinkMerchant.setting_id == setting_id,
+                    SettingLinkMerchant.merchant_id == item
+                )
+            ) <= 0:
+                await self.db.create(SettingLinkMerchant,**{
+                    "setting_id" : setting_id,
+                    "merchant_id": item
+                })

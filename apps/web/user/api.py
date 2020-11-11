@@ -13,7 +13,7 @@ from apps.web.user.rule import BranchRules,UserRoleRules,\
             UserRoleForMenuRules,UserRoleLinkRules,MerchantRules,\
                 MenuLinkMerchantSettingRules,UserRules
 from apps.web.user.serializers import BranchSerializer,MerchantSerializer,\
-        MerchantLinkUserSerializer
+        MerchantLinkUserSerializer,MenuLinkMerchantSettingSerializer
 
 from apps.web.user.utils import user_query
 
@@ -529,6 +529,6 @@ class setting_for_merchant(BaseHandler):
         )
 
         if len(obj):
-            return {"data":MerchantSerializer(obj[0].merchant,many=True).data}
+            return {"data":MenuLinkMerchantSettingSerializer(obj[0].menulinkmerchantsetting,many=True).data}
         else:
             return {"data":[]}

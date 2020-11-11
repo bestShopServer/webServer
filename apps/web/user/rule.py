@@ -166,7 +166,15 @@ class UserRoleRules:
                 "role": {
                     "model_class": UserRole,
                     "serializers":UserRoleSerializer,
-                    "page": True
+                    "page": True,
+                    "query_params": [
+                        {
+                            "key": "merchant_id",
+                            "value": "user.merchant_id",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        },
+                    ]
                 }
             }
         )

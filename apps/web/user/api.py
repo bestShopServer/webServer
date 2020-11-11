@@ -219,7 +219,7 @@ class branch(BaseHandler):
     async def delete(self,*args,**kwargs):
         pass
 
-    @Core_connector(isTicket=False)
+    @Core_connector()
     async def get(self, pk=None):
 
         parent_branch_id = self.data.get("parent_branch_id", 0)

@@ -4,7 +4,7 @@ import requests,json
 class TestUnitBase(object):
 
     def __init__(self):
-        self.base_url =  "http://localhost:8888/v1/api/web"
+        self.base_url =  "http://62.234.150.156/v1/api/web"
         self.token = None
 
         self.get_token()

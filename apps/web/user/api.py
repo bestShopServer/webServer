@@ -97,14 +97,14 @@ class get_menu(BaseHandler):
 
         level += 1
         if level == 1:
-            rows = [ item for item in res if item['parent_id'] == 0]
-            return self.recursion(rows, res, level)
+            rows['child'] = [ item for item in res if item['parent_id'] == 0]
+            self.recursion(rows['child'], res, level)
         else:
             for row in rows:
                 row['child'] = [item for item in res if item['parent_id'] == row['id']]
                 if not len(row['child']):
                     return
-                return self.recursion(row['child'], res, level)
+                self.recursion(row['child'], res, level)
 
 
     @Core_connector(isTransaction=False)
@@ -122,17 +122,19 @@ class get_menu(BaseHandler):
             menus += json.loads(role.menus)
 
         menus = list(set(menus))
-        logger.info(menus)
+
         res = json.loads(json.dumps(MenuSerializer(await self.db.execute(
             Menu.select().where(
                 Menu.status == '0',
                 Menu.id << menus
             )
         ),many=True).data))
-        logger.info(res)
-        rows = []
-        self.recursion(rows,res)
-        return {"data":rows}
+
+        menus={
+            "child":[]
+        }
+        self.recursion(menus,res)
+        return {"data":menus['child']}
 
 @route(None,id=True)
 class user(BaseHandler):

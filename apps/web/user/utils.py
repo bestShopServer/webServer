@@ -29,10 +29,14 @@ async def user_query(**kwargs):
         query = query.where(User.name == name)
 
     if self.user.merchant_id:
-        query = query.where(User.userid << \
+        query = query.where(
+                    User.role_type == '1',
+                    User.userid << \
                    [ item.userid \
                         for item in  \
                             await self.db.execute(UserLinkMerchant.select().where(UserLinkMerchant.merchant_id == self.user.merchant_id)) ])
+    else:
+        query = query.where(User.role_type == '0')
 
     if role_id:
 

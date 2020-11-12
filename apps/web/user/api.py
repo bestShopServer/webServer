@@ -553,8 +553,29 @@ class merchant_for_setting(BaseHandler):
 class setting_for_merchant(BaseHandler):
 
     """
-    租户查询权限
+    租户关联权限
     """
+
+    @Core_connector()
+    async def put(self, pk=None):
+
+        settings = self.data.get("settings")
+
+        if not len(settings):
+            raise PubErrorCustom("租户规则为空!")
+
+        for item in settings:
+
+            if await self.db.count(
+                SettingLinkMerchant.select().where(
+                    SettingLinkMerchant.setting_id == item['setting_id'],
+                    SettingLinkMerchant.merchant_id == pk
+                )
+            ) <= 0:
+                await self.db.create(SettingLinkMerchant,**{
+                    "merchant_id": pk,
+                    "setting_id": item['setting_id']
+                })
 
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):

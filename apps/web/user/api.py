@@ -137,7 +137,10 @@ class get_menu(BaseHandler):
             "child":[]
         }
         self.recursion(menus,res)
-        return {"data":menus['child']}
+        return {"data":{
+            "menus":menus,
+            "buttons":[]
+        }}
 
 @route(None,id=True)
 class user(BaseHandler):

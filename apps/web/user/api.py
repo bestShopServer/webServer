@@ -125,7 +125,7 @@ class get_menu(BaseHandler):
                 Menu.id << menus
             )
         ),many=True).data
-
+        logger.info(res)
         rows = []
         self.recursion(rows,res)
         return {"data":rows}

@@ -67,7 +67,7 @@ class ShopPageRules:
                             "value": "data.type",
                             "data_src": "data_pool",
                             "pool": "self",
-                            "default":['0','1'],
+                            "default":['0','9'],
                             "query":{
                                 "where": ShopPage.type.in_,
                             }

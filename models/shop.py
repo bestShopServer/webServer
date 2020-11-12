@@ -10,7 +10,7 @@ class ShopPage(BaseModel):
     id = BigAutoField(primary_key=True)
     merchant_id = BigIntegerField(verbose_name="商户ID")
     title = CharField(max_length=60,verbose_name="名称",default="")
-    type = CharField(max_length=1,verbose_name="类型  '0'-首页,'1'-其它,'9'-商品详情",default='1')
+    type = CharField(max_length=1,verbose_name="类型  '0'-首页,'1'-商品详情,'9'-其它",default='9')
     time_publish_flag = CharField(max_length=1,verbose_name="是否定时发布 0-是,1-否",default='1')
     time_publish = BigIntegerField(default=0,verbose_name="发布时间")
     html_data = TextField(default="{}")

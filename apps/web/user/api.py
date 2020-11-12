@@ -123,12 +123,12 @@ class get_menu(BaseHandler):
 
         menus = list(set(menus))
         logger.info(menus)
-        res = MenuSerializer(await self.db.execute(
+        res = json.loads(json.dumps(MenuSerializer(await self.db.execute(
             Menu.select().where(
                 Menu.status == '0',
                 Menu.id << menus
             )
-        ),many=True).data
+        ),many=True).data))
         logger.info(res)
         rows = []
         self.recursion(rows,res)

@@ -496,9 +496,24 @@ class merchant(BaseHandler):
     async def delete(self,*args,**kwargs):
         pass
 
-    @Core_connector(**MerchantRules.get())
+    @Core_connector(isTransaction=False)
     async def get(self, pk=None):
-        pass
+
+        obj = await self.db.execute(
+            Merchant.select(
+                Merchant,
+                User,
+                UserAuth
+            ).join(
+                User, join_type=JOIN.INNER, on=(Merchant.userid == User.userid),
+            ).join(
+                UserAuth, join_type=JOIN.INNER, on=(UserAuth.userid == User.userid)
+            ).where(
+                UserAuth.type == '0'
+            ).paginate(self.data['page'], self.data['size'])
+        )
+
+        return {"count":len(obj),"data":MerchantSerializer(obj,many=True).data}
 
 
 @route(None,id=True)

@@ -135,8 +135,16 @@ class MerchantSerializer(serializers.Serializer):
 
     status = serializers.SerializerMethodField()
 
+    account = serializers.SerializerMethodField()
+
     expire_time = serializers.IntegerField()
     createtime = serializers.IntegerField()
+
+    def get_account(self,obj):
+        if obj.user and obj.user.userauth:
+            return obj.user.userauth.account
+        else:
+            return None
 
     def get_status(self,obj):
         if obj.status =='0':

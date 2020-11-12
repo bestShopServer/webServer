@@ -559,7 +559,7 @@ class setting_for_merchant(BaseHandler):
     @Core_connector()
     async def put(self, pk=None):
 
-        settings = self.data.get("settings")
+        settings = self.data.get("settings",None)
 
         if not len(settings):
             raise PubErrorCustom("租户规则为空!")

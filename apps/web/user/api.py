@@ -95,6 +95,7 @@ class get_menu(BaseHandler):
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
         menus = []
+
         for role in await self.db.execute(
                 UserRole.select(). \
                         where(
@@ -105,6 +106,23 @@ class get_menu(BaseHandler):
                 )
         ):
             menus += json.loads(role.menus)
+
+        if self.user.role_type == '1':
+            for linksetting in await self.db.execute (
+                MenuLinkMerchantSetting.select().where(
+                    MenuLinkMerchantSetting.id <<
+                        [
+                            item.setting_id \
+                                for item in  \
+                                    await self.db.execute (
+                                        SettingLinkMerchant.select().where(
+                                            SettingLinkMerchant.merchant_id == self.user.merchant_id
+                                        )
+                                    )
+                        ]
+                )
+            ):
+                menus += json.loads(linksetting.menus)
 
         menus = list(set(menus))
 

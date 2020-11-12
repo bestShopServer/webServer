@@ -1,3 +1,4 @@
+import json
 from peewee import JOIN
 from apps.base import BaseHandler
 from utils.decorator.connector import Core_connector
@@ -108,17 +109,20 @@ class get_menu(BaseHandler):
 
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
-
-        menus = list(set([ role.menus for role in  await self.db.execute(
-            UserRole.select(). \
-                where(
+        menus = []
+        for role in await self.db.execute(
+                UserRole.select(). \
+                        where(
                     UserRole.status == '0',
-                    UserRole.role_id << [ item.role_id for item in  await self.db.execute (
+                    UserRole.role_id << [item.role_id for item in await self.db.execute(
                         UserLinkRole.select().where(UserLinkRole.userid == self.user.userid)
-                    ) ]
-            )
-        ) ]))
+                    )]
+                )
+        ):
+            menus += json.loads(role.menus)
 
+        menus = list(set(menus))
+        logger.info(menus)
         res = MenuSerializer(await self.db.execute(
             Menu.select().where(
                 Menu.status == '0',

@@ -591,3 +591,12 @@ class setting_for_merchant(BaseHandler):
             return {"data":MenuLinkMerchantSettingSerializer([item.menulinkmerchantsetting for item in obj],many=True).data}
         else:
             return {"data":[]}
+
+    @Core_connector()
+    async def delete(self,pk=None):
+        await self.db.execute(
+            SettingLinkMerchant.delete().where(
+                SettingLinkMerchant.setting_id << self.data.get("ids"),
+                SettingLinkMerchant.merchant_id == pk
+            )
+        )

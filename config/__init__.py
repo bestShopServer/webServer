@@ -28,11 +28,11 @@ common['refund_callback_url_for_wechat'] = "{}/{}{}{}".format(
 print(common)
 
 mysql=dict(
-	host = 'localhost',
+	host = '62.234.150.156',
 	port = 3306,
 	user = 'root',
-    name = "baseshop",
-	password = '123456',
+    name = "baseshopnew",
+	password = '!@#tc123',
     min_connections=2,
     max_connections=10,
     charset='utf8'

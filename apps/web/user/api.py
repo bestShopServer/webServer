@@ -92,6 +92,20 @@ class merchant_select_ok(BaseHandler):
 @route(None,id=True)
 class get_menu(BaseHandler):
 
+    def recursion(self,rows,res,level=0):
+
+        level += 1
+        if level == 1:
+            rows = [ item for item in res if item['parent_id'] == 0]
+            return self.recursion(rows, res, level)
+        else:
+            for row in rows:
+                row.child = [item for item in res if item['parent_id'] == row['id']]
+                if not len(row.child):
+                    return
+                return self.recursion(row.child, res, level)
+
+
     @Core_connector(isTransaction=False)
     async def get(self, pk=None):
 
@@ -105,14 +119,16 @@ class get_menu(BaseHandler):
             )
         ) ]))
 
-        obj = await self.db.execute(
+        res = MenuSerializer(await self.db.execute(
             Menu.select().where(
                 Menu.status == '0',
                 Menu.id << menus
             )
-        )
+        ),many=True).data
 
-        return {"data":MenuSerializer(obj,many=True).data}
+        rows = []
+        self.recursion(rows,res)
+        return {"data":rows}
 
 @route(None,id=True)
 class user(BaseHandler):

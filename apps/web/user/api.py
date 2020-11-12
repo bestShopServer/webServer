@@ -31,7 +31,7 @@ class userinfo(BaseHandler):
     async def get_merchants(self,user):
 
         if user.role_type == '1':
-            obj = await self.app.db.execute(
+            obj = await self.db.execute(
                 UserLinkMerchant. \
                     select(
                     UserLinkMerchant,

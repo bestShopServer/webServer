@@ -82,14 +82,14 @@ class get_menu(BaseHandler):
 
         level += 1
         if level == 1:
-            rows['child'] = [ item for item in res if item['parent_id'] == 0]
-            self.recursion(rows['child'], res, level)
+            rows['children'] = [ item for item in res if item['parent_id'] == 0]
+            self.recursion(rows['children'], res, level)
         else:
             for row in rows:
-                row['child'] = [item for item in res if item['parent_id'] == row['id']]
-                if not len(row['child']):
+                row['children'] = [item for item in res if item['parent_id'] == row['id']]
+                if not len(row['children']):
                     return
-                self.recursion(row['child'], res, level)
+                self.recursion(row['children'], res, level)
 
 
     @Core_connector(isTransaction=False)
@@ -134,7 +134,7 @@ class get_menu(BaseHandler):
         ),many=True).data))
 
         menus={
-            "child":[]
+            "children":[]
         }
         self.recursion(menus,res)
         return {"data":{

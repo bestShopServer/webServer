@@ -22,8 +22,8 @@ class Core_connector:
         #是否校验ticket
         self.isTicket = kwargs.get('isTicket', True)
 
-        #是否校验租户ID
-        self.isMerchant = kwargs.get('isMerchant', False)
+        #租户ID是否可以为空
+        self.isMerchantVoid = kwargs.get('isMerchantVoid', False)
 
         #是否获取参数
         self.isParams = kwargs.get('isParams',True)

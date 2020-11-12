@@ -51,7 +51,7 @@ class userinfo(BaseHandler):
             return MerchantLinkUserSerializer(obj, many=True).data
         return None
 
-    @Core_connector(isTransaction=False)
+    @Core_connector(isTransaction=False,isMerchantVoid=True)
     async def get(self, pk=None):
 
         # merchant_obj=None
@@ -84,7 +84,7 @@ class merchant_select_ok(BaseHandler):
         await redis_cli.set_dict(response)
         return response
 
-    @Core_connector()
+    @Core_connector(isMerchantVoid=True)
     async def put(self, pk=None):
 
         await self.merchant_token_handler(merchant_id=pk)

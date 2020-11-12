@@ -101,10 +101,10 @@ class get_menu(BaseHandler):
             return self.recursion(rows, res, level)
         else:
             for row in rows:
-                row.child = [item for item in res if item['parent_id'] == row['id']]
-                if not len(row.child):
+                row['child'] = [item for item in res if item['parent_id'] == row['id']]
+                if not len(row['child']):
                     return
-                return self.recursion(row.child, res, level)
+                return self.recursion(row['child'], res, level)
 
 
     @Core_connector(isTransaction=False)

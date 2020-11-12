@@ -159,8 +159,6 @@ class user(BaseHandler):
         email = self.data.get("email",None)
         login_name = self.data.get("login_name", None)
 
-        pk = kwargs.get("pk")
-
         async def createUserAuth(account,type):
             if await self.db.count(
                     UserAuth.select().where(UserAuth.account == account, UserAuth.type == type)) > 0:
@@ -189,7 +187,7 @@ class user(BaseHandler):
 
         if self.user.merchant_id:
             await self.db.create(UserLinkMerchant,**{
-                "userid":pk,
+                "userid":self.pk,
                 "merchant_id":self.user.merchant_id
             })
 

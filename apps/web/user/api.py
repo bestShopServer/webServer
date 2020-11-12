@@ -19,7 +19,7 @@ from apps.web.user.serializers import BranchSerializer,MerchantSerializer,\
         MerchantLinkUserSerializer,MenuLinkMerchantSettingSerializer
 from apps.web.public.serializers import MenuSerializer
 
-from apps.web.user.utils import user_query
+from apps.web.user.utils import user_query,get_merchants
 
 @route()
 class userinfo(BaseHandler):
@@ -27,29 +27,6 @@ class userinfo(BaseHandler):
     """
     用户
     """
-
-    async def get_merchants(self,user):
-
-        if user.role_type == '1':
-            obj = await self.db.execute(
-                UserLinkMerchant. \
-                    select(
-                    UserLinkMerchant,
-                    Merchant
-                ). \
-                    join(
-                    Merchant, join_type=JOIN.INNER,
-                    on=(
-                            Merchant.merchant_id == UserLinkMerchant.merchant_id
-                    )
-                ). \
-                    where(
-                    UserLinkMerchant.userid == user.userid,
-                )
-            )
-
-            return MerchantLinkUserSerializer(obj, many=True).data
-        return None
 
     @Core_connector(isTransaction=False,isMerchantVoid=True)
     async def get(self, pk=None):
@@ -64,11 +41,18 @@ class userinfo(BaseHandler):
             "rolecode": "",
             "avatar": 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604320145113&di=c0f37be5cc6331c65ec5773edbf7c1da&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F18%2F20170318012043_H4mRj.jpeg',
             "menu": [],
-            "merchants": await self.get_merchants(self.user)
+            "merchants": await get_merchants(self=self)
         }
 
         return {"data": data}
 
+@route()
+class merchant_select(BaseHandler):
+
+    @Core_connector(isTransaction=False)
+    async def get(self, pk=None):
+
+        return await get_merchants(self=self)
 
 @route(None, id=True)
 class merchant_select_ok(BaseHandler):

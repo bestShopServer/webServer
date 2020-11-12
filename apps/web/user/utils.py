@@ -2,9 +2,9 @@
 from peewee import JOIN
 from models.user import User,UserLinkRole,\
         UserLinkBranch,UserRole,Branch,UserAuth,\
-            UserLinkMerchant
+            UserLinkMerchant,Merchant
 
-from apps.web.user.serializers import UserSerializer
+from apps.web.user.serializers import UserSerializer,MerchantLinkUserSerializer
 
 async def user_query(**kwargs):
 
@@ -142,3 +142,28 @@ async def user_query(**kwargs):
                             item.userlinkbranch = [item1]
 
         return {"data":UserSerializer(obj,many=True).data,"count":count}
+
+async def get_merchants(**kwargs):
+
+    self = kwargs.get("self")
+
+    if self.user.role_type == '1':
+        obj = await self.db.execute(
+            UserLinkMerchant. \
+                select(
+                UserLinkMerchant,
+                Merchant
+            ). \
+                join(
+                Merchant, join_type=JOIN.INNER,
+                on=(
+                        Merchant.merchant_id == UserLinkMerchant.merchant_id
+                )
+            ). \
+                where(
+                UserLinkMerchant.userid == self.user.userid,
+            )
+        )
+
+        return MerchantLinkUserSerializer(obj, many=True).data
+    return None

@@ -149,7 +149,6 @@ class SettingLinkMerchant(BaseModel):
     class Meta:
         db_table = 'settinglinkmerchant'
 
-
 class Merchant(BaseModel):
     """
     商户表

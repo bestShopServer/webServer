@@ -14,6 +14,7 @@ from apps.web.public.rule import AttachMentGroupRules,AttachMentRules,MenuRules
 from router import route
 
 from models.public import Menu
+from apps.web.user.utils import get_merchant_setting_menus
 
 from apps.web.public.serializers import MenuSerializer
 
@@ -138,7 +139,7 @@ class menu(BaseHandler):
     async def delete(self,*args,**kwargs):
         pass
 
-    @Core_connector(isTicket=False)
+    @Core_connector()
     async def get(self, pk=None):
 
         parent_id = self.data.get("parent_id", 0)
@@ -157,6 +158,11 @@ class menu(BaseHandler):
             if c == 1:
                 if title:
                     query = query.where(Menu.title == title)
+
+                if self.user.merchant_id:
+                    query = query.where(
+                        Menu << await get_merchant_setting_menus(self=self,merchant_id=self.user.merchant_id)
+                    )
 
             res = await self.db.execute(
                 query

@@ -161,7 +161,7 @@ class menu(BaseHandler):
 
                 if self.user.merchant_id:
                     query = query.where(
-                        Menu << await get_merchant_setting_menus(self=self,merchant_id=self.user.merchant_id)
+                        Menu.id << await get_merchant_setting_menus(self=self,merchant_id=self.user.merchant_id)
                     )
 
             res = await self.db.execute(

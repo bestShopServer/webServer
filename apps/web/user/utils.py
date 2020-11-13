@@ -9,6 +9,8 @@ from models.user import User,UserLinkRole,\
 
 from apps.web.user.serializers import UserSerializer,MerchantLinkUserSerializer
 
+from utils.exceptions import PubErrorCustom
+
 async def user_query(**kwargs):
 
     self = kwargs.get("self")
@@ -179,6 +181,8 @@ async def get_merchant_setting_menus(**kwargs):
     self = kwargs.get("self")
     merchant_id = kwargs.get("merchant_id")
 
+    logger.info("merchant_id->{}".format(merchant_id))
+
     for linksetting in await self.db.execute (
             MenuLinkMerchantSetting.select().where(
                 MenuLinkMerchantSetting.id <<
@@ -190,7 +194,8 @@ async def get_merchant_setting_menus(**kwargs):
                                         SettingLinkMerchant.merchant_id == merchant_id
                                     )
                                 )
-                    ]
+                    ],
+                MenuLinkMerchantSetting.status == '0'
             )
         ):
             menus += json.loads(linksetting.menus)
@@ -215,3 +220,18 @@ async def get_merchant_default_setting_menus(**kwargs):
 
     logger.info("默认菜单{}".format(menus))
     return list(set(menus))
+
+async def get_merchant_default_setting_id(**kwargs):
+
+    self = kwargs.get("self")
+
+    obj = await self.db.execute(
+        MenuLinkMerchantSetting.select().where(
+            MenuLinkMerchantSetting.default == '0',
+            MenuLinkMerchantSetting.status == '0'
+        )
+    )
+    if not len(obj):
+        raise PubErrorCustom("暂无配置默认权限,请在权限规则进行配置!")
+
+    return obj[0].id

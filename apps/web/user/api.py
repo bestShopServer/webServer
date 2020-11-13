@@ -553,9 +553,9 @@ class merchant(BaseHandler):
                 User,
                 UserAuth
             ).join(
-                User, join_type=JOIN.INNER, on=(Merchant.userid == User.userid),
+                User, join_type=JOIN.LEFT_OUTER, on=(Merchant.userid == User.userid),
             ).join(
-                UserAuth, join_type=JOIN.INNER, on=(UserAuth.userid == User.userid)
+                UserAuth, join_type=JOIN.LEFT_OUTER, on=(UserAuth.userid == User.userid)
             ).where(
                 UserAuth.type == '0'
             ).paginate(self.data['page'], self.data['size'])

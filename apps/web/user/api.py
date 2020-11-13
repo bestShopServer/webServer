@@ -19,7 +19,7 @@ from apps.web.user.serializers import BranchSerializer,MerchantSerializer,\
         MerchantLinkUserSerializer,MenuLinkMerchantSettingSerializer
 from apps.web.public.serializers import MenuSerializer
 
-from apps.web.user.utils import user_query,get_merchants,get_merchant_setting_menus
+from apps.web.user.utils import user_query,get_merchants,get_merchant_setting_menus,get_merchant_default_setting_menus
 
 @route()
 class userinfo(BaseHandler):
@@ -523,7 +523,7 @@ class merchant(BaseHandler):
             "sort":1,
             "status":"0",
             "merchant_id":merchant_id,
-            "menus":json.dumps(get_merchant_setting_menus(self=self,merchant_id=merchant_id))
+            "menus":json.dumps(get_merchant_default_setting_menus(self=self,merchant_id=merchant_id))
         })
 
         await self.db.create(UserLinkRole,**{

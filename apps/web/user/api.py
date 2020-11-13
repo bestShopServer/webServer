@@ -129,8 +129,7 @@ class get_menu(BaseHandler):
         res = json.loads(json.dumps(MenuSerializer(await self.db.execute(
             Menu.select().where(
                 Menu.status == '0',
-                Menu.id << menus ,
-                Menu.type << ['0','2']
+                Menu.id << menus
             )
         ),many=True).data))
 

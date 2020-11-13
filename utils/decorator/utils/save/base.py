@@ -231,7 +231,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                                                     }
                                                     )
                     for key in [k for k in model_class._meta.fields]:
-                        if instance_data.get(key, None):
+                        if key in instance_data:
                             setattr(res, key, instance_data[key])
                     await self.connector_app.db.update(res)
                 except model_class.DoesNotExist:
@@ -247,7 +247,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                                                           }
                                                           )
                     for key in [k for k in model_class._meta.fields]:
-                        if instance_data.get(key, None):
+                        if key in instance_data:
                             setattr(res, key, instance_data[key])
                     await self.connector_app.db.update(res)
                 except model_class.DoesNotExist:

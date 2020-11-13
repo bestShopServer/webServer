@@ -148,6 +148,8 @@ class menu(BaseHandler):
 
         c = 0
 
+        menus_limit = await get_merchant_setting_menus(self=self,merchant_id=self.user.merchant_id)
+
         async def recursion(parent_id, c):
             c += 1
 
@@ -155,14 +157,18 @@ class menu(BaseHandler):
                 Menu.parent_id == parent_id
             ).order_by(Menu.sort)
 
-            if c == 1:
-                if title:
-                    query = query.where(Menu.title == title)
+            query = query.where(
+                Menu.id << menus_limit
+            )
 
-                if self.user.merchant_id:
-                    query = query.where(
-                        Menu.id << await get_merchant_setting_menus(self=self,merchant_id=self.user.merchant_id)
-                    )
+            # if c == 1:
+            #     if title:
+            #         query = query.where(Menu.title == title)
+            #
+            #     if self.user.merchant_id:
+            #         query = query.where(
+            #             Menu.id << await get_merchant_setting_menus(self=self,merchant_id=self.user.merchant_id)
+            #         )
 
             res = await self.db.execute(
                 query

@@ -74,7 +74,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                 continue
 
             if not new_data.get(key, None):
-                if form_data and key in form_data:
+                if form_data and form_data.get(key,None):
                     new_data[key] = form_data.get(key) \
                         if not (isinstance(form_data.get(key),list) or isinstance(form_data.get(key),dict))\
                             else json.dumps(form_data.get(key)).replace(" ","")

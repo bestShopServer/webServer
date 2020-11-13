@@ -95,7 +95,7 @@ class UserSerializer(serializers.Serializer):
             return None
 
     def get_login_name(self,obj):
-        if hasattr(obj,"login_name") and obj.email:
+        if hasattr(obj,"login_name") and obj.login_name:
             return UserAuthByPhoneEmailSerializer(obj.login_name,many=False).data
         else:
             return None

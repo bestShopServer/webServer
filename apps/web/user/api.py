@@ -129,17 +129,27 @@ class get_menu(BaseHandler):
         res = json.loads(json.dumps(MenuSerializer(await self.db.execute(
             Menu.select().where(
                 Menu.status == '0',
-                Menu.id << menus
+                Menu.id << menus ,
+                Menu.type << ['0','2']
             )
         ),many=True).data))
+
+        menus_res = [ item for item in res if item['type'] in ['0','2']]
+        button_res = [ item for item in res if item['type'] in ['1']]
 
         menus={
             "children":[]
         }
-        self.recursion(menus,res)
+        self.recursion(menus,menus_res)
+
+        buttons={
+            "children": []
+        }
+        self.recursion(buttons, button_res)
+
         return {"data":{
             "menus":menus,
-            "buttons":[]
+            "buttons":buttons
         }}
 
 @route(None,id=True)

@@ -273,7 +273,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
 
             if hasattr(self.connector_app, "user") and form_data:
                 form_data['userid'] = self.connector_app.user.userid \
-                    if not self.data.get("userid",None) else self.data.get("userid")
+                    if not self.connector_app.data.get("userid",None) else self.connector_app.data.get("userid")
                 if self.connector_app.user.merchant_id:
                     form_data['merchant_id'] = self.connector_app.user.merchant_id
 

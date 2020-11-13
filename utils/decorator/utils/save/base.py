@@ -74,7 +74,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                 continue
 
             if not new_data.get(key, None):
-                if form_data and form_data.get(key, None):
+                if form_data and key in form_data:
                     new_data[key] = form_data.get(key) \
                         if not (isinstance(form_data.get(key),list) or isinstance(form_data.get(key),dict))\
                             else json.dumps(form_data.get(key)).replace(" ","")
@@ -289,7 +289,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                 raise PubErrorCustom(error_str)
 
             robot_table['form_data'] = form_obj.data
-            logger.info("form_data->\n{}".format(robot_table['form_data']))
+            # logger.info("form_data->\n{}".format(robot_table['form_data']))
 
     async def robot_recursion_inner(self,robot_table,last):
 

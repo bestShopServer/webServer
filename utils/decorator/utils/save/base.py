@@ -289,6 +289,7 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
                 raise PubErrorCustom(error_str)
 
             robot_table['form_data'] = form_obj.data
+            logger.info("form_data->\n{}".format(robot_table['form_data']))
 
     async def robot_recursion_inner(self,robot_table,last):
 

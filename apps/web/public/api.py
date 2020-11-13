@@ -158,7 +158,7 @@ class menu(BaseHandler):
                 Menu.parent_id == parent_id
             ).order_by(Menu.sort)
 
-            if menus_limit:
+            if self.user.merchant_id:
                 query = query.where(
                     Menu.id << menus_limit
                 )

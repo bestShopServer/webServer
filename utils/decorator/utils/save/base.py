@@ -272,7 +272,8 @@ class ConnectorFuncsSaveBase(ConnectorFuncsBase):
             form_data = robot_table['form_data'] if robot_table.get("form_data",None) else self.connector_app.data
 
             if hasattr(self.connector_app, "user") and form_data:
-                form_data['userid'] = self.connector_app.user.userid
+                form_data['userid'] = self.connector_app.user.userid \
+                    if not self.data.get("userid",None) else self.data.get("userid")
                 if self.connector_app.user.merchant_id:
                     form_data['merchant_id'] = self.connector_app.user.merchant_id
 

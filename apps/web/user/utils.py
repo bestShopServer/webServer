@@ -1,6 +1,7 @@
 
 import json
 from peewee import JOIN
+from loguru import logger
 from models.user import User,UserLinkRole,\
         UserLinkBranch,UserRole,Branch,UserAuth,\
             UserLinkMerchant,Merchant,MenuLinkMerchantSetting,\
@@ -194,4 +195,22 @@ async def get_merchant_setting_menus(**kwargs):
         ):
             menus += json.loads(linksetting.menus)
 
+    return list(set(menus))
+
+
+async def get_merchant_default_setting_menus(**kwargs):
+
+    menus = []
+
+    self = kwargs.get("self")
+
+    for linksetting in await self.db.execute (
+            MenuLinkMerchantSetting.select().where(
+                MenuLinkMerchantSetting.default == '0'
+            )
+        ):
+            menus += json.loads(linksetting.menus)
+            break
+
+    logger.info("默认菜单{}".format(menus))
     return list(set(menus))

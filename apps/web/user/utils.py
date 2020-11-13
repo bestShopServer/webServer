@@ -1,8 +1,10 @@
 
+import json
 from peewee import JOIN
 from models.user import User,UserLinkRole,\
         UserLinkBranch,UserRole,Branch,UserAuth,\
-            UserLinkMerchant,Merchant
+            UserLinkMerchant,Merchant,MenuLinkMerchantSetting,\
+                SettingLinkMerchant
 
 from apps.web.user.serializers import UserSerializer,MerchantLinkUserSerializer
 
@@ -167,3 +169,29 @@ async def get_merchants(**kwargs):
 
         return MerchantLinkUserSerializer(obj, many=True).data
     return None
+
+
+async def get_merchant_setting_menus(**kwargs):
+
+    menus = []
+
+    self = kwargs.get("self")
+    merchant_id = kwargs.get("merchant_id")
+
+    for linksetting in await self.db.execute (
+            MenuLinkMerchantSetting.select().where(
+                MenuLinkMerchantSetting.id <<
+                    [
+                        item.setting_id \
+                            for item in  \
+                                await self.db.execute (
+                                    SettingLinkMerchant.select().where(
+                                        SettingLinkMerchant.merchant_id == merchant_id
+                                    )
+                                )
+                    ]
+            )
+        ):
+            menus += json.loads(linksetting.menus)
+
+    return list(set(menus))

@@ -19,7 +19,7 @@ from apps.web.user.serializers import BranchSerializer,MerchantSerializer,\
         MerchantLinkUserSerializer,MenuLinkMerchantSettingSerializer
 from apps.web.public.serializers import MenuSerializer
 
-from apps.web.user.utils import user_query,get_merchants
+from apps.web.user.utils import user_query,get_merchants,get_merchant_setting_menus
 
 @route()
 class userinfo(BaseHandler):
@@ -107,22 +107,22 @@ class get_menu(BaseHandler):
         ):
             menus += json.loads(role.menus)
 
-        if self.user.role_type == '1':
-            for linksetting in await self.db.execute (
-                MenuLinkMerchantSetting.select().where(
-                    MenuLinkMerchantSetting.id <<
-                        [
-                            item.setting_id \
-                                for item in  \
-                                    await self.db.execute (
-                                        SettingLinkMerchant.select().where(
-                                            SettingLinkMerchant.merchant_id == self.user.merchant_id
-                                        )
-                                    )
-                        ]
-                )
-            ):
-                menus += json.loads(linksetting.menus)
+        # if self.user.role_type == '1':
+        #     for linksetting in await self.db.execute (
+        #         MenuLinkMerchantSetting.select().where(
+        #             MenuLinkMerchantSetting.id <<
+        #                 [
+        #                     item.setting_id \
+        #                         for item in  \
+        #                             await self.db.execute (
+        #                                 SettingLinkMerchant.select().where(
+        #                                     SettingLinkMerchant.merchant_id == self.user.merchant_id
+        #                                 )
+        #                             )
+        #                 ]
+        #         )
+        #     ):
+        #         menus += json.loads(linksetting.menus)
 
         menus = list(set(menus))
 
@@ -503,7 +503,26 @@ class merchant(BaseHandler):
             }
         ]
 
-    @Core_connector(**{**MerchantRules.post(),**{"add_before_handler":add_before_handler}})
+    async def add_after_handler(self,**kwargs):
+
+        merchant_id = self.pk
+
+        role_obj = await self.db.create(UserRole,**{
+            "role_type":"1",
+            "role_name":"管理员",
+            "sort":1,
+            "status":"0",
+            "merchant_id":merchant_id,
+            "menus":json.dumps(get_merchant_setting_menus(self=self,merchant_id=merchant_id))
+        })
+
+        await self.db.create(UserLinkRole,**{
+            "userid":self.data['userid'],
+            "role_id":role_obj.role_id
+        })
+
+    @Core_connector(**{**MerchantRules.post(),\
+                       **{"add_before_handler":add_before_handler,"add_after_handler":add_after_handler}})
     async def post(self,*args,**kwargs):
         return {"data":self.pk}
 

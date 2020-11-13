@@ -195,6 +195,7 @@ async def get_merchant_setting_menus(**kwargs):
         ):
             menus += json.loads(linksetting.menus)
 
+    logger.info("get_merchant_setting_menus=>{}".format(menus))
     return list(set(menus))
 
 

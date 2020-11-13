@@ -523,7 +523,7 @@ class merchant(BaseHandler):
             "sort":1,
             "status":"0",
             "merchant_id":merchant_id,
-            "menus":json.dumps(get_merchant_default_setting_menus(self=self))
+            "menus":json.dumps( await get_merchant_default_setting_menus(self=self))
         })
 
         await self.db.create(UserLinkRole,**{

@@ -150,7 +150,7 @@ class menu(BaseHandler):
 
         menus_limit = await get_merchant_setting_menus(self=self,merchant_id=self.user.merchant_id)
 
-        async def recursion(parent_id, c):
+        async def recursion(parent_id, c,menus_limit):
             c += 1
 
             query = Menu.select().where(
@@ -180,11 +180,11 @@ class menu(BaseHandler):
                 return
 
             for item in child:
-                item['child'] = await recursion(item['id'], c)
+                item['child'] = await recursion(item['id'], c,menus_limit)
 
             return child
 
-        return {"data": await recursion(parent_id=parent_id, c=c)}
+        return {"data": await recursion(parent_id=parent_id, c=c,menus_limit=menus_limit)}
 
 @route(None,id=True)
 class citycode(BaseHandler):

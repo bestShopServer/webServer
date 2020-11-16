@@ -44,10 +44,27 @@ class ConnectorTicket(ConnectorFuncsBase):
             raise InnerErrorCustom(code="20004", msg="用户已冻结!")
 
     async def merchant_hander_app(self):
-        logger.info(self.connector_app.request.headers)
+
         merchant_id = self.connector_app.request.headers.get_list("Merchant")
 
-        logger.info("商户{}".format(merchant_id))
+        if len(merchant_id) <= 0:
+            raise InnerErrorCustom(code="40001", msg="商户为空!")
+        else:
+            merchant_id = merchant_id[0]
+
+        logger.info("商户=>{}".format(merchant_id))
+
+        try:
+            self.connector_app.merchant = await self.connector_app.db.get(Merchant, merchant_id=merchant_id)
+
+        except Merchant.DoesNotExist:
+            raise InnerErrorCustom(code="30001", msg="租户已关闭!")
+
+        if self.connector_app.merchant.status == '1':
+            raise InnerErrorCustom(code="30001", msg="租户已关闭!")
+
+        if self.connector_app.merchant.expire_time <= UtilTime().timestamp:
+            raise InnerErrorCustom(code="30002", msg="租户已过期!")
 
     async def merchant_hander(self):
 

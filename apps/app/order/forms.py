@@ -12,6 +12,8 @@ class AddressForm(Form):
     name = StringField("收货名称", validators=[DataRequired(message="请输入收货名称"), Length(min=2,max=20, message="收货名称长度2-20")])
     mobile = IntegerField("收货手机号", validators=[DataRequired(message="请输入收货手机号")])
 
+    merchant_id = IntegerField("商户ID")
+
     province_code = StringField()
     province_name = StringField()
 

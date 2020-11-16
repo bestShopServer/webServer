@@ -29,7 +29,12 @@ class goodscategorystyle(BaseHandler):
     @Core_connector(isTicket=False)
     async def get(self):
 
-        res = GoodsCateGoryStyleForAppSerializer(await self.db.execute(GoodsCateGoryStyle.select()), many=True).data
+        res = GoodsCateGoryStyleForAppSerializer(
+            await self.db.execute(
+                GoodsCateGoryStyle.select().where(
+                    GoodsCateGoryStyle.merchant_id == self.merchant.merchant_id
+                )
+            ), many=True).data
         return {"data":res[0] if res and len(res) else {}}
 
 @route()
@@ -47,7 +52,8 @@ class goodscategory(BaseHandler):
                         await self.db.execute(
                             GoodsCateGory.select().where(
                                 GoodsCateGory.gdcglastid == 0,
-                                GoodsCateGory.status == '0'
+                                GoodsCateGory.status == '0',
+                                GoodsCateGory.merchant_id == self.merchant.merchant_id
                             )
                         ), many=True).data}
 
@@ -66,7 +72,8 @@ class goodscategorybygdcglastid(BaseHandler):
             res = await self.db.execute(
                 GoodsCateGory.select().where(
                     GoodsCateGory.gdcglastid == gdcglastid,
-                    GoodsCateGory.status == '0'
+                    GoodsCateGory.status == '0',
+                    GoodsCateGory.merchant_id == self.merchant.merchant_id
                 ).order_by(GoodsCateGory.sort)
             )
 

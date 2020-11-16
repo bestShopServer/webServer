@@ -120,6 +120,7 @@ class shopcart(BaseHandler):
             await self.db.create(ShopCart,**dict(
                 userid=self.user.userid,
                 gdid=gdid,
+                merchant_id=self.merchant.merchant_id,
                 gd_sku_id=gd_sku_id,
                 gd_img=gd_img,
                 gd_name=obj.gd_name,
@@ -238,7 +239,8 @@ class order(BaseHandler):
             status_list=json.dumps([{"status": "0", "time": UtilTime().timestamp}]),
             price=price,
             pay_amount=price,
-            fare_amount=Decimal('0.00')
+            fare_amount=Decimal('0.00'),
+            merchant_id=self.merchant.merchant_id
         ))
 
         try:
@@ -275,7 +277,9 @@ class orderlist(BaseHandler):
 
         status = self.data.get("status",None)
 
-        query = Order.select(Order).where(Order.userid == self.user.userid)
+        query = Order.select(Order).where(
+            Order.userid == self.user.userid,Order.merchant_id == self.merchant.merchant_id
+        )
 
         if status and status!='all':
             query = query.where(Order.status == status)
@@ -365,7 +369,10 @@ class ordercount(BaseHandler):
             "tkz":0
         }
 
-        for item in await self.db.execute(Order.select(Order).where(Order.userid == self.user.userid)):
+        for item in await self.db.execute(Order.select(Order).where(
+                Order.userid == self.user.userid,
+                Order.merchant_id == self.merchant.merchant_id
+            )):
             if item.status == '0':
                 r_data['dfk'] += 1
             elif item.status == '1':

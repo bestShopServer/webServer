@@ -23,7 +23,13 @@ class index(BaseHandler):
     async def get(self):
 
         #获取首页模板数据
-        res = ShopPageForAppSerializer(await self.db.execute(ShopPage.select().where(ShopPage.type == '0')),many=True).data
+        res = ShopPageForAppSerializer(
+            await self.db.execute(
+                ShopPage.select().where(
+                    ShopPage.type == '0',
+                    ShopPage.merchant_id == self.merchant.merchant_id
+                )
+            ),many=True).data
         indexPage = res[0] if res and len(res) else {}
 
         return {"data":indexPage}
@@ -39,7 +45,12 @@ class menu(BaseHandler):
     async def get(self):
 
         #获取菜单数据
-        res = ShopConfigForAppSerializer(await self.db.execute(ShopConfig.select()),many=True).data
+        res = ShopConfigForAppSerializer(
+            await self.db.execute(
+                ShopConfig.select().where(
+                    ShopConfig.merchant_id == self.merchant.merchant_id
+                )
+            ),many=True).data
         menuData = res[0] if res and len(res) else {}
 
         return {"data":menuData}

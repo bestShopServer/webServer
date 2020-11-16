@@ -121,6 +121,8 @@ class ShopCart(BaseModel):
     gd_sku_name = CharField(verbose_name="规格名称",default="",max_length=60)
     gd_unit = CharField(max_length=20, verbose_name="单位", default="件")
 
+    merchant_id = BigIntegerField(verbose_name="商户ID", null=True)
+
     class Meta:
         db_table = 'shopcart'
 
@@ -148,6 +150,8 @@ class Address(BaseModel):
 
     address_detail = CharField(max_length=1024,verbose_name="详细地址",default="")
     address_default = CharField(max_length=1,verbose_name="默认,0-是,1-否",default='0')
+
+    merchant_id = BigIntegerField(verbose_name="商户ID", null=True)
 
     class Meta:
         db_table = 'address'

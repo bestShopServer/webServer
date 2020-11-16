@@ -60,6 +60,12 @@ class AddressRules:
                             "pool":"self"
                         },
                         {
+                            "key": "merchant_id",
+                            "value": "merchant.merchant_id",
+                            "data_src": "data_pool",
+                            "pool": "self"
+                        },
+                        {
                             "key": "address_default",
                             "value": "data.address_default",
                             "data_src": "data_pool",
@@ -100,6 +106,12 @@ class ShopCartRules:
                             "value":"user.userid",
                             "data_src":"data_pool",
                             "pool":"self"
+                        },
+                        {
+                            "key": "merchant_id",
+                            "value": "merchant.merchant_id",
+                            "data_src": "data_pool",
+                            "pool": "self"
                         },
                     ],
                 }

@@ -62,7 +62,7 @@ class wechatLogin(LoginBase):
             )
         )
 
-        if response['errcode'] != 0:
+        if "errcode" in response and response['errcode'] != 0:
             raise PubErrorCustom(response['errmsg'])
 
         return {"data":{

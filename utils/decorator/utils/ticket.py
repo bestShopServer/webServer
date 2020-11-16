@@ -44,6 +44,7 @@ class ConnectorTicket(ConnectorFuncsBase):
             raise InnerErrorCustom(code="20004", msg="用户已冻结!")
 
     async def merchant_hander_app(self):
+        logger.info(self.connector_app.request.headers)
         merchant_id = self.connector_app.request.headers.get_list("Merchant")
 
         logger.info("商户{}".format(merchant_id))

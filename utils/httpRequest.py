@@ -14,8 +14,10 @@ async def HttpRequestCustom(**kwargs):
     body = kwargs.get("body",None)
     herders = kwargs.get("herders",None)
 
-    logger.info("请求参数:url=>{url},method=>{method},params=>{params},body=>{body},herders=>{herders}"\
-                .format(**kwargs))
+    logger.info("请求参数:url=>{},method=>{},params=>{},body=>{},herders=>{}"\
+                .format(
+        url,method,params,body,herders
+    ))
 
     http_client = AsyncHTTPClient()
 

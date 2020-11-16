@@ -114,6 +114,8 @@ class goodslist(BaseHandler):
 
         query = Goods.select()
 
+        query = query.where(Goods.merchant_id == self.merchant_merchant_id)
+
         if gd_name:
             query = query.where(Goods.gd_name % '%{}%'.format(gd_name))
 

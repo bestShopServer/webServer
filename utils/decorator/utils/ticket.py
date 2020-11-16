@@ -1,4 +1,5 @@
 
+from loguru import logger
 from utils.decorator.utils.base import ConnectorFuncsBase
 
 from utils.exceptions import PubErrorCustom,InnerErrorCustom
@@ -42,6 +43,11 @@ class ConnectorTicket(ConnectorFuncsBase):
         elif self.connector_app.user.status == '2':
             raise InnerErrorCustom(code="20004", msg="用户已冻结!")
 
+    async def merchant_hander_app(self):
+        merchant_id = self.connector_app.request.headers.get_list("Merchant")
+
+        logger.info("商户{}".format(merchant_id))
+
     async def merchant_hander(self):
 
         merchant_id = self.token_data.get("merchant_id", None)
@@ -66,6 +72,8 @@ class ConnectorTicket(ConnectorFuncsBase):
 
     async def app_run(self):
         await self.user_handler()
+
+        await self.merchant_hander_app()
 
     async def web_run(self):
 

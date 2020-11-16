@@ -94,3 +94,6 @@ class ConnectorTicket(ConnectorFuncsBase):
                 await self.app_run()
             elif self.platform == 'web':
                 await self.web_run()
+
+        if self.platform == 'app':
+            await self.merchant_hander_app()

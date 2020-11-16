@@ -43,7 +43,7 @@ class wechatLogin(LoginBase):
     def __init__(self,**kwargs):
 
         self.appid = kwargs.get("appid","wx2c4649a77ef8edcd")
-        self.secret = kwargs.get("secret","6426ff42186d3a23deccccc890721658")
+        self.secret = kwargs.get("secret","c1c631ac430353eac46b9e90d048d7cc")
 
         self.login_type = '5'
         self.role_type = '2'

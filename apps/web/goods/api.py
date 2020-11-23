@@ -177,7 +177,29 @@ class goods(BaseHandler):
     商品管理
     """
 
-    @Core_connector(**GoodsRules.post())
+    async def add_before_handler(self):
+        if not isinstance(self.data['gd_sku_link'],list):
+            self.data['gd_sku_link'] = json.loads(self.data['gd_sku_link'])
+
+        self.data['gd_sku_link'].insert(0,{
+            "skus":[],
+            "image":self.data['gd_banners'][0][1],
+            "price":self.data['gd_show_price'],
+            "stock":self.data['gd_stock_tot'],
+            "item_no":self.data['gd_item_no'],
+            "gd_weight":self.data['gd_weight'],
+            "cost_price":self.data['gd_cost_price'],
+            "sort":0,
+            "default":'0',
+            "default_name":"默认规格"
+        })
+
+        self.data.pop("gd_stock_tot")
+        self.data.pop("gd_item_no")
+        self.data.pop("gd_weight")
+        self.data.pop("gd_cost_price")
+
+    @Core_connector(**{**GoodsRules.delete(),**{"add_before_handler":add_before_handler}})
     async def post(self, *args, **kwargs):
         return {"data":self.pk}
 

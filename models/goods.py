@@ -157,14 +157,22 @@ class GoodsLinkCateGory(BaseModel):
 
 class GoodsLinkSku(BaseModel):
 
+    """
+    Sku商品表
+    """
+
     id = BigAutoField(primary_key=True)
     gdid = BigIntegerField(verbose_name="商品ID", null=True)
     merchant_id = BigIntegerField(verbose_name="商户ID")
     skus = CharField(max_length=1024,verbose_name='sku集合 {"group_id":1,"spec_id":2}',default=[])
 
+    default = CharField(max_length=1,verbose_name='是否默认规格 0-是,1-否',default='1')
+    default_name = CharField(verbose_name="默认规格名称",max_length=60,default="")
+
     image = CharField(verbose_name="图片",max_length=255,default="")
     price = DecimalField(max_digits=18,decimal_places=6,default=0.000,verbose_name="价格")
-    stock = IntegerField(verbose_name="库存",default=0)
+    stock = IntegerField(verbose_name="实际库存",default=0)
+    occupy_stock = IntegerField(verbose_name="占用库存",default=0)
     item_no = CharField(max_length=60,verbose_name="商品货号",default="")
     weight = IntegerField(verbose_name="商品重量(单位克)",default=0)
     cost_price = DecimalField(max_digits=18,decimal_places=6,default=0.000,verbose_name="成本价")

@@ -177,7 +177,7 @@ class goods(BaseHandler):
     商品管理
     """
 
-    async def add_before_handler(self):
+    async def add_before_handler(self,**kwargs):
         if not isinstance(self.data['gd_sku_link'],list):
             self.data['gd_sku_link'] = json.loads(self.data['gd_sku_link'])
 

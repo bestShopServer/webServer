@@ -199,7 +199,7 @@ class goods(BaseHandler):
         self.data.pop("gd_weight")
         self.data.pop("gd_cost_price")
 
-    @Core_connector(**{**GoodsRules.delete(),**{"add_before_handler":add_before_handler}})
+    @Core_connector(**{**GoodsRules.post(),**{"add_before_handler":add_before_handler}})
     async def post(self, *args, **kwargs):
         return {"data":self.pk}
 
